@@ -233,7 +233,7 @@
                     <!-- 화살표: Service에서 계산한 bmiPercent 사용 -->
                     <div class="bmi-pointer" style="left:${latestBmi.bmiPercent}%;">
                         <span class="bmi-pointer-label">
-                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.0"/>
+                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.00"/>
                         </span>
                     </div>
                 </div>
@@ -259,7 +259,7 @@
 
                     <div class="bmi-pointer" style="left:${latestBmi.bmiPercent}%;">
                         <span class="bmi-pointer-label">
-                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.0"/>
+                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.00"/>
                         </span>
                     </div>
                 </div>
