@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carefinder.dao.bmi.BmiCriteriaDAO">
+    <select id="findByGenderAndAge" resultType="com.carefinder.dto.bmi.BmiCriteriaDTO">
+        SELECT bmiId, gender, minAge, maxAge, underBmi, normalBmi, obeseBmi, severeBmi
+        FROM bmicriteria
+        WHERE gender = #{gender}
+        AND #{age} BETWEEN minAge AND maxAge
+
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carefinder.dao.member.NaverDAO">
+
+    <select id="selectByNaverId" resultType="com.carefinder.dto.member.NaverDTO">
+        SELECT * FROM member WHERE naver_id = #{naver_id}
+    </select>
+
+    <select id="selectByEmail" resultType="com.carefinder.dto.member.NaverDTO">
+        SELECT * FROM member WHERE email = #{email}
+    </select>
+
+    <insert id="insertNaverMember" parameterType="com.carefinder.dto.member.NaverDTO"
+            useGeneratedKeys="true" keyProperty="mno">
+        INSERT INTO member (
+            id, pw, name, email,
+            naver_id, gender, age,
+            phonenumber, birth
+        ) VALUES (
+                     #{id}, #{password}, #{name}, #{email},
+                     #{naver_id}, #{gender}, #{age},
+                     #{mobile}, #{birth}
+                 )
+    </insert>
+
+    <update id="updateNaverMember" parameterType="com.carefinder.dto.member.NaverDTO">
+        UPDATE member
+        SET naver_id = #{naver_id},
+            gender = #{gender},
+            age = #{age},
+            phonenumber = #{mobile},
+            birth = #{birth}
+        WHERE mno = #{mno}
+    </update>
+
+</mapper>

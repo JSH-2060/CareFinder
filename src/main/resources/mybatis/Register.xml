@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carefinder.dao.member.MemberRegisterDAO">
+
+    <!-- 회원가입 -->
+    <insert id="insertNormalMember">
+        INSERT INTO member
+            (id, pw, name, email, age, gender, phonenumber)
+        VALUES
+            (#{id}, #{pw}, #{name}, #{email}, #{age}, #{gender}, #{phonenumber})
+    </insert>
+
+    <!-- 로그인 -->
+    <select id="findNormalMemberById"
+            resultType="com.carefinder.dto.member.MemberRegisterDTO">
+        SELECT *
+        FROM member
+        WHERE id = #{id}
+          AND pw IS NOT NULL
+          AND kakao_id IS NULL
+          AND naver_id IS NULL
+          AND google_id IS NULL
+    </select>
+
+    <!-- 아이디 중복 체크 -->
+    <select id="checkIdDuplicate" resultType="int">
+        SELECT COUNT(*)
+        FROM member
+        WHERE id = #{id}
+    </select>
+
+</mapper>

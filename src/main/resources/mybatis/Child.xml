@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carefinder.dao.child.ChildDAO">
+
+    <insert id="insert" parameterType="com.carefinder.dto.child.ChildDTO">
+        INSERT INTO child (mno, childName, birth, gender, createdAt)
+        VALUES (#{mno}, #{childName}, #{birth}, #{gender}, NOW())
+    </insert>
+
+    <select id="getChildList" resultType="com.carefinder.dto.child.ChildDTO">
+        SELECT * FROM child WHERE mno = #{mno} ORDER BY childName ASC
+    </select>
+
+    <select id="selectOne" resultType="com.carefinder.dto.child.ChildDTO">
+        SELECT * FROM child WHERE childId = #{childId}
+    </select>
+
+    <update id="update" parameterType="com.carefinder.dto.child.ChildDTO">
+        UPDATE child
+        SET childName = #{childName},
+            birth = #{birth},
+            gender = #{gender}
+        WHERE childId = #{childId} AND mno = #{mno}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM child WHERE childId = #{childId}
+    </delete>
+
+</mapper>

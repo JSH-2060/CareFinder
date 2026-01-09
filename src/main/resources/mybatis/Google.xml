@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carefinder.dao.member.GoogleMemberDAO">
+
+    <!-- google_id로 조회 -->
+    <select id="findByGoogleId"
+            parameterType="String"
+            resultType="com.carefinder.dto.member.GoogleMemberDTO">
+        SELECT
+        mno,
+        id,
+        pw,
+        name,
+        email,
+        google_id AS googleId,
+        kakao_id  AS kakaoId,
+        naver_id  AS naverId,
+        age,
+        gender,
+        phonenumber,
+        birth
+        FROM member
+        WHERE google_id = #{googleId}
+    </select>
+
+    <!-- email로 조회 -->
+    <select id="findByEmail"
+            parameterType="String"
+            resultType="com.carefinder.dto.member.GoogleMemberDTO">
+        SELECT
+        mno,
+        id,
+        pw,
+        name,
+        email,
+        google_id AS googleId,
+        kakao_id  AS kakaoId,
+        naver_id  AS naverId,
+        age,
+        gender,
+        phonenumber,
+        birth
+        FROM member
+        WHERE email = #{email}
+    </select>
+
+    <!-- 기존 회원 + 구글 연동 -->
+    <update id="updateGoogleIdByEmail">
+        UPDATE member
+        SET google_id = #{googleId}
+        WHERE email = #{email}
+    </update>
+
+    <update id="updateExtraInfo"
+            parameterType="com.carefinder.dto.member.GoogleMemberDTO">
+        UPDATE member
+        SET
+        gender = #{gender},
+        age = #{age},
+        phonenumber = #{phonenumber},
+        birth = #{birth}
+        WHERE
+        email = #{email}
+    </update>
+
+
+    <!-- 신규 회원 가입 -->
+    <insert id="insertGoogleMember"
+            parameterType="com.carefinder.dto.member.GoogleMemberDTO">
+        INSERT INTO member (id, pw, name, email, google_id, gender, age, phonenumber, birth ) VALUES (#{id}, #{pw}, #{name}, #{email}, #{googleId}, #{gender}, #{age}, #{phonenumber}, #{birth} )
+    </insert>
+
+</mapper>

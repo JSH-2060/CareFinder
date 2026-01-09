@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carefinder.dao.bmi.ChildBmiPercentileDAO">
+
+    <select id="findByGenderAndAgeMonth"
+            resultType="com.carefinder.dto.bmi.ChildBmiPercentileDTO">
+
+        SELECT
+            gender,
+            age_month   AS ageMonth,
+            p5,
+            p85,
+            p95
+        FROM child_bmi_percentile
+        WHERE gender = #{gender}
+          AND age_month = #{ageMonth}
+
+    </select>
+
+</mapper>

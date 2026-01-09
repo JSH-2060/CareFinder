@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carefinder.dao.bmi.BmiDAO">
+
+    <!-- ========================== -->
+    <!-- 1️⃣ BMI 저장 -->
+    <!-- ========================== -->
+    <insert id="insert"
+            useGeneratedKeys="true"
+            keyProperty="bmiNo"
+            parameterType="com.carefinder.dto.bmi.BmiDTO">
+
+        INSERT INTO bmi
+        (mno, childId, birthDate, gender, ageMonth, bmiValue, height, weight, recordDate)
+        VALUES
+        (#{mno}, #{childId}, #{birthDate}, #{gender}, #{ageMonth},
+        #{bmiValue}, #{height}, #{weight},
+        CONVERT_TZ(NOW(), '+00:00', '+09:00'))
+
+    </insert>
+
+    <!-- ========================== -->
+    <!-- 2️⃣ 첫 번째 자녀 ID 조회 -->
+    <!-- ========================== -->
+    <select id="findFirstChildIdByMno" resultType="int">
+        SELECT childId
+        FROM child
+        WHERE mno = #{mno}
+        ORDER BY childId ASC
+        LIMIT 1
+    </select>
+
+    <!-- ========================== -->
+    <!-- 3️⃣ 자녀 기준 BMI 리스트 -->
+    <!-- ========================== -->
+    <select id="findByChild" resultType="com.carefinder.dto.bmi.BmiDTO">
+        SELECT
+        b.bmiNo,
+        b.mno,
+        b.childId,
+        b.height,
+        b.weight,
+        b.bmiValue,
+        b.ageMonth,
+        b.recordDate,
+        c.birth AS birthDate,
+        c.gender
+        FROM bmi b
+        JOIN child c ON b.childId = c.childId
+        WHERE b.mno = #{mno}
+        AND b.childId = #{childId}
+        ORDER BY b.recordDate ASC
+    </select>
+
+    <!-- ========================== -->
+    <!-- 4️⃣ 날짜 + 자녀 기준 BMI 리스트 -->
+    <!-- ========================== -->
+    <select id="findByDateRangeAndChild"
+            resultType="com.carefinder.dto.bmi.BmiDTO">
+
+        SELECT *
+        FROM bmi
+        WHERE mno = #{mno}
+        AND childId = #{childId}
+        AND recordDate BETWEEN
+        CONCAT(#{startDate}, ' 00:00:00')
+        AND
+        CONCAT(#{endDate}, ' 23:59:59')
+        ORDER BY recordDate DESC
+
+    </select>
+
+    <select id="findById" resultType="com.carefinder.dto.bmi.BmiDTO">
+        SELECT
+        b.bmiNo,
+        b.mno,
+        b.childId,
+        b.height,
+        b.weight,
+        b.bmiValue,
+        b.ageMonth,
+        b.recordDate,
+        c.birth AS birthDate,
+        c.gender
+        FROM bmi b
+        JOIN child c ON b.childId = c.childId
+        WHERE b.bmiNo = #{bmiNo}
+    </select>
+
+    <update id="update">
+        UPDATE bmi
+        SET height   = #{height},
+        weight   = #{weight},
+        bmiValue = #{bmiValue}
+        WHERE bmiNo = #{bmiNo}
+    </update>
+
+    <!-- ========================== -->
+    <!-- 5️⃣ BMI 단건 삭제 -->
+    <!-- ========================== -->
+    <delete id="deleteByBmiNo">
+        DELETE
+        FROM bmi
+        WHERE bmiNo = #{bmiNo}
+    </delete>
+
+</mapper>

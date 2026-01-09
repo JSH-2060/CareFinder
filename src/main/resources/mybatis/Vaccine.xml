@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carefinder.dao.vaccine.VaccineDAO">
+
+    <select id="selectByChild" resultType="com.carefinder.dto.vaccine.VaccineDTO">
+        SELECT * FROM vaccine
+        WHERE mno = #{mno} AND childId = #{childId}
+        ORDER BY inoculationDate ASC
+    </select>
+
+    <insert id="insert">
+        INSERT INTO vaccine (childId, mno, vaccineName, chasu, inoculationDate, status)
+        VALUES (#{childId}, #{mno}, #{vaccineName}, #{chasu}, #{inoculationDate}, 'N')
+    </insert>
+
+    <update id="update">
+        UPDATE vaccine
+        SET vaccineName = #{vaccineName},
+            chasu = #{chasu},
+            inoculationDate = #{inoculationDate}
+        WHERE vaccineNo = #{vaccineNo}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE vaccine SET status = #{status} WHERE vaccineNo = #{vaccineNo}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM vaccine WHERE vaccineNo = #{vaccineNo}
+    </delete>
+
+    <select id="getChildIdByVacId" resultType="int">
+        SELECT childId FROM vaccine WHERE vaccineNo = #{vaccineNo}
+    </select>
+
+</mapper>
