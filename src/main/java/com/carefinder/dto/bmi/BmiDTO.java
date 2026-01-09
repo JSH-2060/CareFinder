@@ -24,6 +24,14 @@ public class BmiDTO {
     private int ageMonth; // 만 나이 (개월)
     private Double bmiValue;
     private String result;
+    private Boolean adult;
+    private Double bmiPercent;
+    // ===== BMI 기준 표시용 =====
+    private Double cut1;
+    private Double cut2;
+    private Double cut3;
+    private Double cut4; // 성인만 사용 (고도비만 기준)
+
 
     // 화면용 (자동 계산)
     public String getDateStr() {

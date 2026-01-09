@@ -22,6 +22,12 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.12);
             padding: 30px;
         }
+        .hint-text {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            margin-bottom: 16px;
+        }
     </style>
 </head>
 
@@ -29,9 +35,16 @@
 
 <div class="popup-card">
 
-    <h4 class="mb-4 fw-bold text-center">
+    <h4 class="mb-3 fw-bold text-center">
         ${childName} BMI 계산
     </h4>
+
+    <!-- 🔹 이전 기록 안내 -->
+    <c:if test="${not empty latestBmi}">
+        <div class="hint-text">
+            이전 기록(${latestBmi.recordDate}) 기준으로 자동 입력되었습니다.
+        </div>
+    </c:if>
 
     <!-- ==========================
          BMI 계산 / 저장 폼
@@ -52,6 +65,7 @@
                    min="80"
                    max="250"
                    placeholder="예) 120.5 (80cm 이상)"
+                   value="${latestBmi != null ? latestBmi.height : ''}"
                    required>
         </div>
 
@@ -65,6 +79,7 @@
                    min="9"
                    max="149.9"
                    placeholder="예) 25.3 (9kg 이상 150kg 미만)"
+                   value="${latestBmi != null ? latestBmi.weight : ''}"
                    required>
         </div>
 

@@ -45,7 +45,6 @@ public class BmiController {
 
         List<BmiDTO> list;
 
-        // 날짜 조건 여부
         if (startDate != null && endDate != null &&
                 !startDate.isEmpty() && !endDate.isEmpty()) {
 
@@ -57,16 +56,20 @@ public class BmiController {
             list = bmiService.getBmiListByChild(mno, childId);
         }
 
-        // 🔥 NPE 완전 차단
         if (list == null) {
             list = new ArrayList<>();
         }
 
+        // ✅ [추가 1] 최근 BMI (기준 바용)
+        BmiDTO latestBmi = bmiService.getLatestBmi(childId);
 
         model.addAttribute("bmiList", list);
         model.addAttribute("graphList", list);
         model.addAttribute("childId", childId);
         model.addAttribute("childName", childName);
+
+        // ✅ [추가 2] model에 담기
+        model.addAttribute("latestBmi", latestBmi);
 
         return "bmi/bmiList";
     }
@@ -83,8 +86,13 @@ public class BmiController {
 
         if (getUserPk(session) == null) return "redirect:/Nologin";
 
+        // ✅ 최근 BMI 기록 조회 (추가)
+        BmiDTO latestBmi = bmiService.getLatestBmi(childId);
+
         model.addAttribute("childId", childId);
         model.addAttribute("childName", childName);
+        model.addAttribute("latestBmi", latestBmi); // ✅ 추가
+
         return "bmi/bmiForm";
     }
 
