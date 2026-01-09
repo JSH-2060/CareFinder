@@ -3,9 +3,11 @@ package com.carefinder.service.bmi;
 import com.carefinder.dao.bmi.BmiCriteriaDAO;
 import com.carefinder.dao.bmi.BmiDAO;
 import com.carefinder.dao.bmi.ChildBmiPercentileDAO;
+import com.carefinder.dao.child.ChildDAO;
 import com.carefinder.dto.bmi.BmiCriteriaDTO;
 import com.carefinder.dto.bmi.BmiDTO;
 import com.carefinder.dto.bmi.ChildBmiPercentileDTO;
+import com.carefinder.dto.child.ChildDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,120 +21,162 @@ import java.util.List;
 public class BmiService {
 
     private final BmiDAO bmiDAO;
+    private final ChildDAO childDAO;
     private final BmiCriteriaDAO bmiCriteriaDAO;
     private final ChildBmiPercentileDAO childBmiPercentileDAO;
 
     /* ==================================================
        만나이(개월) 계산
     ================================================== */
-    private int calculateAgeMonth(LocalDate birthDate, LocalDate 기준일) {
-        Period p = Period.between(birthDate, 기준일);
+    private int calculateAgeMonth(LocalDate birth, LocalDate 기준일) {
+        Period p = Period.between(birth, 기준일);
         return p.getYears() * 12 + p.getMonths();
     }
 
     /* ==================================================
-       BMI 계산 + 판정 (공통 로직)
+       🔥 bmi 테이블에 없는 birth/gender 보충
     ================================================== */
-    private void calculateAndJudge(BmiDTO dto, LocalDate 기준일) {
+    private boolean fillChildInfoIfMissing(BmiDTO dto) {
 
-        // ===== 필수값 체크 =====
-        if (dto.getBirthDate() == null || dto.getGender() == null) {
-            dto.setResult("기준 없음");
-            return;
+        if (dto.getBirthDate() != null && dto.getGender() != null) {
+            return true;
         }
 
-        if (dto.getHeight() == null || dto.getWeight() == null) {
-            dto.setResult("입력 오류");
-            return;
-        }
+        if (dto.getChildId() == null) return false;
 
-        // ===== 키 / 몸무게 범위 =====
-        if (dto.getHeight() < 80 || dto.getWeight() < 9 || dto.getWeight() >= 150) {
-            dto.setResult("입력 범위 오류");
-            return;
-        }
+        ChildDTO child = childDAO.selectOne(dto.getChildId());
+        if (child == null) return false;
 
-        // ===== 나이 계산 =====
+        dto.setBirthDate(LocalDate.parse(child.getBirth()));
+        dto.setGender(child.getGender());
+        return true;
+    }
+
+    /* ==================================================
+       BMI 계산 + 판정 + 기준바 퍼센트
+    ================================================== */
+    private boolean calculate(BmiDTO dto, LocalDate 기준일) {
+
+        if (!fillChildInfoIfMissing(dto)) return false;
+        if (dto.getHeight() == null || dto.getWeight() == null) return false;
+
+        // 키 / 몸무게 범위
+        if (dto.getHeight() < 80) return false;
+        if (dto.getWeight() < 9 || dto.getWeight() >= 150) return false;
+
+        // 나이
         int ageMonth = calculateAgeMonth(dto.getBirthDate(), 기준일);
-
-        if (ageMonth < 24 || ageMonth > 1440) {
-            dto.setResult("계산 불가");
-            return;
-        }
+        if (ageMonth < 24 || ageMonth > 1440) return false;
 
         dto.setAgeMonth(ageMonth);
+        dto.setAdult(ageMonth >= 228); // 🔥 19세 이상 성인
 
-        // ===== BMI 계산 =====
-        double heightM = dto.getHeight() / 100.0;
-        double bmi = dto.getWeight() / (heightM * heightM);
+        // BMI 계산
+        double h = dto.getHeight() / 100.0;
+        double bmi = dto.getWeight() / (h * h);
         bmi = Math.round(bmi * 100) / 100.0;
         dto.setBmiValue(bmi);
 
-        // ===== 판정 =====
         String result;
+        double percent = 0;
 
-        if (ageMonth < 228) {
-            // 소아
+        /* ==========================
+           👶 소아 · 청소년
+        ========================== */
+        if (!dto.getAdult()) {
+
             ChildBmiPercentileDTO c =
                     childBmiPercentileDAO.findByGenderAndAgeMonth(
                             dto.getGender(), ageMonth
                     );
+            if (c == null) return false;
 
-            if (c == null) {
-                result = "기준 없음";
-            } else if (bmi < c.getP5()) result = "저체중";
-            else if (bmi < c.getP85()) result = "정상";
-            else if (bmi < c.getP95()) result = "과체중";
-            else result = "비만";
+            dto.setCut1(c.getP5());
+            dto.setCut2(c.getP85());
+            dto.setCut3(c.getP95());
+            dto.setCut4(null);
 
-        } else {
-            // 성인
+            if (bmi < c.getP5()) {
+                result = "저체중";
+                percent = (bmi / c.getP5()) * 20;
+            } else if (bmi < c.getP85()) {
+                result = "정상";
+                percent = 20 + ((bmi - c.getP5()) / (c.getP85() - c.getP5())) * 20;
+            } else if (bmi < c.getP95()) {
+                result = "과체중";
+                percent = 40 + ((bmi - c.getP85()) / (c.getP95() - c.getP85())) * 20;
+            } else {
+                result = "비만";
+                percent = 80;
+            }
+        }
+
+        /* ==========================
+           🧑 성인
+        ========================== */
+        else {
+
             int ageYear = ageMonth / 12;
 
             BmiCriteriaDTO c =
                     bmiCriteriaDAO.findByGenderAndAge(
                             dto.getGender(), ageYear
                     );
+            if (c == null) return false;
 
-            if (c == null) {
-                result = "기준 없음";
+            dto.setCut1(c.getUnderBmi());
+            dto.setCut2(c.getNormalBmi());
+            dto.setCut3(c.getObeseBmi());
+            dto.setCut4(c.getSevereBmi());
+
+            if (bmi < c.getUnderBmi()) {
+                result = "저체중";
+                percent = (bmi / c.getUnderBmi()) * 20;
+            } else if (bmi < c.getNormalBmi()) {
+                result = "정상";
+                percent = 20 + ((bmi - c.getUnderBmi()) / (c.getNormalBmi() - c.getUnderBmi())) * 20;
+            } else if (bmi < c.getObeseBmi()) {
+                result = "과체중";
+                percent = 40 + ((bmi - c.getNormalBmi()) / (c.getObeseBmi() - c.getNormalBmi())) * 20;
+            } else if (bmi < c.getSevereBmi()) {
+                result = "비만";
+                percent = 60 + ((bmi - c.getObeseBmi()) / (c.getSevereBmi() - c.getObeseBmi())) * 20;
             } else {
-                result = calculateAdultResult(bmi, c);
+                result = "고도비만";
+                percent = 100;
             }
         }
 
         dto.setResult(result);
+        dto.setBmiPercent(Math.min(100, Math.max(0, percent)));
+        return true;
     }
 
     /* ==================================================
        BMI 계산 + 저장
     ================================================== */
-    public void calculateAndSave(BmiDTO dto, Long mno) {
-
+    public BmiDTO calculateAndSave(BmiDTO dto, Long mno) {
         dto.setMno(mno);
-
-        calculateAndJudge(dto, LocalDate.now());
-
+        if (!calculate(dto, LocalDate.now())) return dto;
         bmiDAO.insert(dto);
+        return dto;
     }
 
     /* ==================================================
        자녀 기준 BMI 리스트
     ================================================== */
     public List<BmiDTO> getBmiListByChild(Long mno, Integer childId) {
-
         List<BmiDTO> list = bmiDAO.findByChild(mno, childId);
         if (list == null) return new ArrayList<>();
 
         for (BmiDTO dto : list) {
-            calculateAndJudge(dto, dto.getRecordDate().toLocalDate());
+            calculate(dto, dto.getRecordDate().toLocalDate());
         }
-
         return list;
     }
 
     /* ==================================================
-       날짜 조건 + 자녀 기준
+       날짜 조건
     ================================================== */
     public List<BmiDTO> getBmiListByDate(
             Long mno, Integer childId, String startDate, String endDate) {
@@ -143,14 +187,33 @@ public class BmiService {
         if (list == null) return new ArrayList<>();
 
         for (BmiDTO dto : list) {
-            calculateAndJudge(dto, dto.getRecordDate().toLocalDate());
+            calculate(dto, dto.getRecordDate().toLocalDate());
         }
-
         return list;
     }
 
     /* ==================================================
-       수정 (키 / 몸무게만)
+       단건 조회
+    ================================================== */
+    public BmiDTO getBmiById(Long bmiNo) {
+        BmiDTO dto = bmiDAO.findById(bmiNo);
+        if (dto == null) return null;
+        calculate(dto, dto.getRecordDate().toLocalDate());
+        return dto;
+    }
+
+    /* ==================================================
+       최근 BMI (기준바용)
+    ================================================== */
+    public BmiDTO getLatestBmi(Integer childId) {
+        BmiDTO dto = bmiDAO.findLatestByChildId(childId);
+        if (dto == null) return null;
+        calculate(dto, dto.getRecordDate().toLocalDate());
+        return dto;
+    }
+
+    /* ==================================================
+       수정
     ================================================== */
     public void updateBmi(BmiDTO dto) {
 
@@ -163,8 +226,7 @@ public class BmiService {
         dto.setGender(origin.getGender());
         dto.setRecordDate(origin.getRecordDate());
 
-        calculateAndJudge(dto, origin.getRecordDate().toLocalDate());
-
+        if (!calculate(dto, origin.getRecordDate().toLocalDate())) return;
         bmiDAO.update(dto);
     }
 
@@ -173,19 +235,5 @@ public class BmiService {
     ================================================== */
     public void deleteBmi(Long bmiNo) {
         bmiDAO.deleteByBmiNo(bmiNo);
-    }
-
-    /* ==================================================
-       성인 BMI 판정
-    ================================================== */
-    private String calculateAdultResult(double bmi, BmiCriteriaDTO c) {
-        if (bmi < c.getUnderBmi()) return "저체중";
-        else if (bmi < c.getNormalBmi()) return "정상";
-        else if (bmi < c.getObeseBmi()) return "과체중";
-        else if (bmi < c.getSevereBmi()) return "비만";
-        else return "고도비만";
-    }
-    public BmiDTO getBmiById(Long bmiNo) {
-        return bmiDAO.findById(bmiNo);
     }
 }

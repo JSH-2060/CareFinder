@@ -14,47 +14,103 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body {
-            background: #f0f2f5;
-        }
+        body { background:#f0f2f5; }
 
         /* ===== 아바타 ===== */
-        .avatar-circle {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #34d399, #059669);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            box-shadow: 0 4px 10px rgba(5, 150, 105, 0.35);
+        .avatar-circle{
+            width:44px;height:44px;border-radius:50%;
+            background:linear-gradient(135deg,#34d399,#059669);
+            color:#fff;font-weight:700;
+            display:flex;align-items:center;justify-content:center;
+            font-size:18px;
+            box-shadow:0 4px 10px rgba(5,150,105,.35);
         }
 
         /* ===== 카드 ===== */
-        .card-box {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
+        .card-box{
+            background:#fff;
+            border-radius:16px;
+            box-shadow:0 4px 20px rgba(0,0,0,.05);
+            margin-bottom:20px;
         }
 
         /* ===== 판정 뱃지 ===== */
-        .badge-status {
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 600;
+        .badge-status{ padding:6px 12px;border-radius:999px;font-size:.85rem;font-weight:600; }
+        .badge-under  { background:#dbeafe;color:#2563eb; }
+        .badge-normal { background:#dcfce7;color:#16a34a; }
+        .badge-over   { background:#ffedd5;color:#f97316; }
+        .badge-obese  { background:#fee2e2;color:#ef4444; }
+        .badge-severe { background:#fecaca;color:#b91c1c; }
+        .badge-none   { background:#f1f5f9;color:#64748b; }
+
+        /* ===== BMI 기준바 ===== */
+        .bmi-wrapper{ position:relative; margin-top:12px; }
+        .bmi-track{
+            display:flex;
+            height:38px;
+            border-radius:999px;
+            overflow:hidden;
+        }
+        .bmi-seg{
+            flex:0 0 auto;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:.85rem;
+            font-weight:600;
+            color:#fff;
+        }
+        /* 성인 5등분 / 청소년 4등분 */
+        .bmi-track[data-type="adult"] .bmi-seg{ width:20%; }
+        .bmi-track[data-type="child"] .bmi-seg{ width:25%; }
+
+        .seg-1{background:#93c5fd;}
+        .seg-2{background:#60a5fa;}
+        .seg-3{background:#fbbf24;}
+        .seg-4{background:#f87171;}
+        .seg-5{background:#fb7185;}
+
+        /* 화살표(overflow 잘림 방지: track 밖, wrapper 안) */
+        .bmi-pointer{
+            position:absolute;
+            top:-22px;
+            transform:translateX(-50%);
+            pointer-events:none;
+            z-index:10;
+        }
+        .bmi-pointer::after{
+            content:"▼";
+            display:block;
+            text-align:center;
+            font-size:12px;
+            color:#111827;
+            line-height:12px;
+        }
+        .bmi-pointer-label{
+            background:#111827;
+            color:#fff;
+            padding:2px 6px;
+            border-radius:8px;
+            font-size:11px;
+            font-weight:600;
+            display:inline-block;
+            margin-bottom:2px;
         }
 
-        .badge-under  { background: #dbeafe; color: #2563eb; }
-        .badge-normal { background: #dcfce7; color: #16a34a; }
-        .badge-over   { background: #ffedd5; color: #f97316; }
-        .badge-obese  { background: #fee2e2; color: #ef4444; }
-        .badge-severe { background: #fecaca; color: #b91c1c; }
-        .badge-none   { background: #f1f5f9; color: #64748b; }
+        /* 경계 숫자 */
+        .bmi-cuts{
+            position:relative;
+            height:20px;
+            margin-top:6px;
+        }
+        .bmi-cuts .cut{
+            position:absolute;
+            transform:translateX(-50%);
+            font-size:11px;
+            color:#374151;
+            white-space:nowrap;
+        }
+        .bmi-desc{ font-size:12px;color:#6b7280;margin-top:4px; }
     </style>
 
     <script>
@@ -63,15 +119,8 @@
             const width = 900;
             const height = 750;
 
-            const left = Math.round(
-                (window.screenX || window.screenLeft) +
-                (window.outerWidth - width) / 2
-            );
-
-            const top = Math.round(
-                (window.screenY || window.screenTop) +
-                (window.outerHeight - height) / 2
-            );
+            const left = Math.round((window.screenX || window.screenLeft) + (window.outerWidth - width) / 2);
+            const top  = Math.round((window.screenY || window.screenTop) + (window.outerHeight - height) / 2);
 
             const options =
                 "width=" + width +
@@ -87,22 +136,13 @@
             const box = document.getElementById('dateSearchBox');
             box.style.display = (box.style.display === 'none') ? 'block' : 'none';
         }
-    </script>
 
-    <script>
         function openEdit(bmiNo) {
             const width = 500;
             const height = 600;
 
-            const left = Math.round(
-                (window.screenX || window.screenLeft) +
-                (window.outerWidth - width) / 2
-            );
-
-            const top = Math.round(
-                (window.screenY || window.screenTop) +
-                (window.outerHeight - height) / 2
-            );
+            const left = Math.round((window.screenX || window.screenLeft) + (window.outerWidth - width) / 2);
+            const top  = Math.round((window.screenY || window.screenTop) + (window.outerHeight - height) / 2);
 
             const options =
                 "width=" + width +
@@ -114,37 +154,26 @@
             window.open('/bmi/edit?bmiNo=' + bmiNo, 'bmiEdit', options);
         }
     </script>
-
 </head>
 
 <body>
-
-<div class="container mt-4" style="max-width: 900px;">
+<div class="container mt-4" style="max-width:900px;">
 
     <!-- ===== 헤더 ===== -->
     <div class="card-box p-3 d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center gap-3">
-            <div class="avatar-circle">
-                ${fn:substring(childName, 0, 1)}
-            </div>
+            <div class="avatar-circle">${fn:substring(childName,0,1)}</div>
             <div>
                 <h5 class="mb-0 fw-bold">${childName}</h5>
                 <small class="text-muted">BMI 기록</small>
             </div>
         </div>
-
-        <a href="/heat/select" class="btn btn-sm btn-outline-secondary">
-            뒤로
-        </a>
+        <a href="/heat/select" class="btn btn-sm btn-outline-secondary">뒤로</a>
     </div>
 
     <!-- ===== 버튼 ===== -->
     <div class="d-flex justify-content-end gap-2 my-3">
-        <button class="btn btn-outline-secondary btn-sm"
-                onclick="toggleDateSearch()">
-            날짜 검색
-        </button>
-
+        <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">날짜 검색</button>
         <button class="btn btn-primary btn-sm"
                 onclick="openPopup('/bmi/form?childId=${childId}&childName=${childName}')">
             BMI 계산
@@ -158,19 +187,15 @@
             <input type="hidden" name="childName" value="${childName}">
 
             <div class="col">
-                <input type="date" name="startDate" class="form-control"
-                       value="${param.startDate}">
+                <input type="date" name="startDate" class="form-control" value="${param.startDate}">
             </div>
             <div class="col">
-                <input type="date" name="endDate" class="form-control"
-                       value="${param.endDate}">
+                <input type="date" name="endDate" class="form-control" value="${param.endDate}">
             </div>
             <div class="col-auto">
                 <button class="btn btn-secondary">검색</button>
                 <a href="/bmi/list?childId=${childId}&childName=${childName}"
-                   class="btn btn-outline-secondary">
-                    전체
-                </a>
+                   class="btn btn-outline-secondary">전체</a>
             </div>
         </form>
     </div>
@@ -181,15 +206,73 @@
 
         <c:choose>
             <c:when test="${empty graphList}">
-                <div class="text-center text-muted py-5">
-                    데이터가 없습니다.
-                </div>
+                <div class="text-center text-muted py-5">데이터가 없습니다.</div>
             </c:when>
             <c:otherwise>
                 <canvas id="bmiChart" height="120"></canvas>
             </c:otherwise>
         </c:choose>
     </div>
+
+    <!-- ===== BMI 기준바 + 경계 숫자 + 화살표 ===== -->
+    <c:if test="${latestBmi ne null}">
+        <div class="card-box p-3">
+            <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+
+            <!-- 성인 -->
+            <c:if test="${latestBmi.adult}">
+                <div class="bmi-wrapper">
+                    <div class="bmi-track" data-type="adult">
+                        <div class="bmi-seg seg-1">저체중</div>
+                        <div class="bmi-seg seg-2">정상</div>
+                        <div class="bmi-seg seg-3">과체중</div>
+                        <div class="bmi-seg seg-4">비만</div>
+                        <div class="bmi-seg seg-5">고도비만</div>
+                    </div>
+
+                    <!-- 화살표: Service에서 계산한 bmiPercent 사용 -->
+                    <div class="bmi-pointer" style="left:${latestBmi.bmiPercent}%;">
+                        <span class="bmi-pointer-label">
+                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.0"/>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bmi-cuts">
+                    <span class="cut" style="left:20%">${latestBmi.cut1}</span>
+                    <span class="cut" style="left:40%">${latestBmi.cut2}</span>
+                    <span class="cut" style="left:60%">${latestBmi.cut3}</span>
+                    <span class="cut" style="left:80%">${latestBmi.cut4}</span>
+                </div>
+                <div class="bmi-desc">WHO BMI 기준</div>
+            </c:if>
+
+            <!-- 청소년 -->
+            <c:if test="${!latestBmi.adult}">
+                <div class="bmi-wrapper">
+                    <div class="bmi-track" data-type="child">
+                        <div class="bmi-seg seg-1">저체중</div>
+                        <div class="bmi-seg seg-2">정상</div>
+                        <div class="bmi-seg seg-3">과체중</div>
+                        <div class="bmi-seg seg-4">비만</div>
+                    </div>
+
+                    <div class="bmi-pointer" style="left:${latestBmi.bmiPercent}%;">
+                        <span class="bmi-pointer-label">
+                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.0"/>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="bmi-cuts">
+                    <span class="cut" style="left:25%">${latestBmi.cut1}</span>
+                    <span class="cut" style="left:50%">${latestBmi.cut2}</span>
+                    <span class="cut" style="left:75%">${latestBmi.cut3}</span>
+                </div>
+                <div class="bmi-desc">P5 / P85 / P95 기준</div>
+            </c:if>
+        </div>
+    </c:if>
 
     <!-- ===== 테이블 ===== -->
     <div class="card-box p-3">
@@ -210,39 +293,22 @@
             <c:choose>
                 <c:when test="${empty bmiList}">
                     <tr>
-                        <td colspan="6" class="text-muted py-4">
-                            BMI 기록이 없습니다.
-                        </td>
+                        <td colspan="6" class="text-muted py-4">BMI 기록이 없습니다.</td>
                     </tr>
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="bmi" items="${bmiList}">
-                        <tr onclick="openEdit('${bmi.bmiNo}')"
-                            style="cursor:pointer;">
+                        <tr onclick="openEdit('${bmi.bmiNo}')" style="cursor:pointer;">
                             <td>${bmi.dateStr}</td>
-                            <td>
-                                <fmt:formatNumber value="${bmi.bmiValue}" pattern="0.00"/>
-                            </td>
+                            <td><fmt:formatNumber value="${bmi.bmiValue}" pattern="0.00"/></td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${bmi.result == '저체중'}">
-                                        <span class="badge-status badge-under">저체중</span>
-                                    </c:when>
-                                    <c:when test="${bmi.result == '정상'}">
-                                        <span class="badge-status badge-normal">정상</span>
-                                    </c:when>
-                                    <c:when test="${bmi.result == '과체중'}">
-                                        <span class="badge-status badge-over">과체중</span>
-                                    </c:when>
-                                    <c:when test="${bmi.result == '비만'}">
-                                        <span class="badge-status badge-obese">비만</span>
-                                    </c:when>
-                                    <c:when test="${bmi.result == '고도비만'}">
-                                        <span class="badge-status badge-severe">고도비만</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="badge-status badge-none">기준 없음</span>
-                                    </c:otherwise>
+                                    <c:when test="${bmi.result == '저체중'}"><span class="badge-status badge-under">저체중</span></c:when>
+                                    <c:when test="${bmi.result == '정상'}"><span class="badge-status badge-normal">정상</span></c:when>
+                                    <c:when test="${bmi.result == '과체중'}"><span class="badge-status badge-over">과체중</span></c:when>
+                                    <c:when test="${bmi.result == '비만'}"><span class="badge-status badge-obese">비만</span></c:when>
+                                    <c:when test="${bmi.result == '고도비만'}"><span class="badge-status badge-severe">고도비만</span></c:when>
+                                    <c:otherwise><span class="badge-status badge-none">기준 없음</span></c:otherwise>
                                 </c:choose>
                             </td>
                             <td>${bmi.height}</td>
@@ -254,9 +320,7 @@
                                     <input type="hidden" name="bmiNo" value="${bmi.bmiNo}">
                                     <input type="hidden" name="childId" value="${childId}">
                                     <input type="hidden" name="childName" value="${childName}">
-                                    <button class="btn btn-danger btn-sm">
-                                        삭제
-                                    </button>
+                                    <button class="btn btn-danger btn-sm">삭제</button>
                                 </form>
                             </td>
                         </tr>
@@ -272,19 +336,16 @@
 <c:if test="${not empty graphList}">
     <script>
         const labels = [
-            <c:forEach var="bmi" items="${graphList}" varStatus="s">
-            "${bmi.dateStr}"<c:if test="${!s.last}">,</c:if>
+            <c:forEach var="b" items="${graphList}" varStatus="s">
+            "${b.dateStr}"<c:if test="${!s.last}">,</c:if>
             </c:forEach>
         ];
 
         const values = [
-            <c:forEach var="bmi" items="${graphList}" varStatus="s">
-            ${bmi.bmiValue}<c:if test="${!s.last}">,</c:if>
+            <c:forEach var="b" items="${graphList}" varStatus="s">
+            ${b.bmiValue}<c:if test="${!s.last}">,</c:if>
             </c:forEach>
         ];
-
-        // labels.reverse();
-        // values.reverse();
 
         new Chart(document.getElementById('bmiChart'), {
             type: 'line',
