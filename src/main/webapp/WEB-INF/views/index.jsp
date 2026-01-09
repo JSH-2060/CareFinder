@@ -55,11 +55,46 @@
 <div class="main">
     <div class="center-box">
         <h2>AI 기반 실시간 병원 추천</h2>
-        <p style="color:#64748b;">증상을 자연스럽게 입력하면 가장 가까운 병원을 추천합니다</p>
-        <div class="search-box">
-            <input type="text" placeholder="예: 스키 타다 넘어져서 갈비뼈가 아파요" disabled>
+        <p style="color:#64748b;">
+            증상을 자연스럽게 입력하면 가장 가까운 병원을 추천합니다
+        </p>
+        <div class="search-box" style="position: relative;">
+            <input
+                    type="text"
+                    id="aiSearchInput"
+                    placeholder="예: 스키 타다 넘어져서 갈비뼈가 아파요"
+                    autocomplete="off"
+            >
+            <button
+                    type="button"
+                    id="aiSearchBtn"
+                    style="
+            position:absolute;
+            right:12px;
+            top:50%;
+            transform:translateY(-50%);
+            padding:12px 20px;
+            border:none;
+            border-radius:999px;
+            background:#1E40AF;
+            color:white;
+            font-weight:bold;
+            cursor:pointer;
+        "
+            >
+                검색
+            </button>
         </div>
+
+
     </div>
+
+    <!-- 공통 챗봇 -->
+    <div id="chatbot-container"></div>
+
+    <script src="/js/chatbot.js"></script>
+    <script src="/js/index-ai-search.js"></script>
+
 
     <div class="left-bottom">
         <button type="button" class="main-btn" onclick="openModal('hospitalModal')">🏥 병원 찾기</button>
