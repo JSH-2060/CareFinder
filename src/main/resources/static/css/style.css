@@ -76,6 +76,7 @@ html, body {
 }
 
 #listPanel {
+    transition: transform 0.3s ease;
     position: absolute;
     left: 0;
     top: 0;
@@ -86,7 +87,7 @@ html, body {
     -webkit-backdrop-filter: blur(20px);
     border-right: 1px solid rgba(255, 255, 255, 0.3);
     overflow-y: auto;
-    z-index: 10;
+    z-index: 2;
 }
 
 .list-header {
@@ -94,6 +95,45 @@ html, body {
     font-weight: 800;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     background: rgba(255, 255, 255, 0.2);
+}
+
+/* 접힌 상태 */
+#listPanel.closed {
+    transform: translateX(-95%);
+}
+
+/* 토글 버튼 */
+.list-toggle-btn {
+    position: absolute;
+    left: 320px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+
+    width: 28px;
+    height: 60px;
+
+    background: #fff;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+
+    box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+}
+
+/* 리스트가 접혔을 때 버튼 위치 */
+#listPanel.closed + .list-toggle-btn {
+    left: 0;
+}
+
+/* 버튼 hover */
+.list-toggle-btn:hover {
+    background: #f5f5f5;
 }
 
 .place-meta {

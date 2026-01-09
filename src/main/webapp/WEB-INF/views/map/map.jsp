@@ -40,6 +40,9 @@
         <ul id="placeList"></ul>
     </div>
 
+    <!-- ✅ 리스트 접기/펼치기 버튼 -->
+    <button id="listToggleBtn" class="list-toggle-btn">❮</button>
+
     <div id="map">
         <div class="radius-dropdown" id="radiusDropdown">
             <div class="radius-toggle" id="radiusToggle">
@@ -495,6 +498,20 @@
         });
     }
     window.fetchGoogleDetail = fetchGoogleDetail;
+
+    /* =========================
+       리스트 접기 / 펼치기
+    ========================= */
+    const listPanel = document.getElementById("listPanel");
+    const listToggleBtn = document.getElementById("listToggleBtn");
+
+    listToggleBtn.addEventListener("click", () => {
+        const isClosed = listPanel.classList.toggle("closed");
+
+        // 버튼 방향 변경
+        listToggleBtn.textContent = isClosed ? "❯" : "❮";
+    });
+
 </script>
 
 </body>
