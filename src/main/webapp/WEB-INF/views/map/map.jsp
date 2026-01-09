@@ -122,7 +122,7 @@
     if (hospitalType) titleByMode = hospitalType;
 
     document.title = "내 주변 " + titleByMode;
-    document.getElementById("listTitle").textContent = titleByMode;
+    document.getElementById("listTitle").textContent = titleByMode
 
     /* =========================
        2. 지도 생성 및 모듈 초기화
@@ -159,6 +159,7 @@
     let myPos = null;
     let rangeCircle = null;
     let currentRadius = 1000;
+    let ignoreNextMapClick = false;
     const places = new kakao.maps.services.Places();
     const placeListEl = document.getElementById("placeList");
 
@@ -544,6 +545,16 @@
         // 버튼 방향 변경
         listToggleBtn.textContent = isClosed ? "❯" : "❮";
     });
+
+    /* =========================
+       지도 클릭 시 상세 카드 닫기
+    ========================= */
+    kakao.maps.event.addListener(map, 'click', function () {
+        if (window.markerModule) {
+            window.markerModule.closeDetailCard();
+        }
+    });
+
 
 </script>
 
