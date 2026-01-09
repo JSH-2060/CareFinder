@@ -218,7 +218,7 @@
         });
         rangeCircle.setMap(map);
 
-        // ✅ 팀원 기능 추가: 진료과목별 키워드 검색
+        // 진료과목별 키워드 검색
         let keywords = (mode === "hospital") ?
             (hospitalType ? [hospitalType, hospitalType + "병원", hospitalType + "의원"] : ["종합병원", "병원"]) :
             (mode === "emergency") ? ["응급실", "응급의료센터"] :
@@ -230,13 +230,13 @@
         bounds.extend(myPos);
 
         function runSearch() {
-            // ✅ 팀원 기능: pagination 매개변수 활용
+            // pagination 매개변수 활용
             places.keywordSearch(keywords[idx], (data, status, pagination) => {
                 if (status === kakao.maps.services.Status.OK) {
                     data.forEach(place => {
                         if (addedIds.has(place.id)) return;
 
-                        // ✅ 팀원 기능 추가: 외과 검색 시 성형외과 제외
+                        // 외과 검색 시 성형외과 제외
                         if (hospitalType === "외과") {
                             if (place.category_name?.includes("성형외과") || place.place_name.includes("성형")) {
                                 return;
