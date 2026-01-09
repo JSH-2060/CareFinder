@@ -44,6 +44,7 @@ html, body {
 .place-item:hover {
     background: rgba(255, 255, 255, 0.4);
 }
+
 .place-name {
     font-weight: 600;
     display: flex;
@@ -87,6 +88,7 @@ html, body {
     overflow-y: auto;
     z-index: 10;
 }
+
 .list-header {
     padding: 14px;
     font-weight: 800;
@@ -105,7 +107,7 @@ html, body {
 }
 
 /* =========================
-   ✅ 리스트용 영업 상태 뱃지 (새로 추가)
+   리스트용 영업 상태 뱃지
 ========================= */
 .list-open-badge {
     display: inline-flex;
@@ -144,19 +146,18 @@ html, body {
 }
 
 /* =========================
-   [수정됨] 하단 상세정보 카드 (글래스모피즘 적용)
-   - 기존 #detailCard 스타일을 대체함
+   하단 상세정보 카드 (글래스모피즘)
 ========================= */
 #detailCard {
     position: fixed;
-    bottom: 30px; /* 바닥에서 띄움 */
-    left: 330px;  /* 왼쪽 리스트 영역(320px) + 여백 */
+    bottom: 30px;
+    left: 330px;
     right: 20px;
-    max-width: 1000px; /* 너무 길어지지 않게 제한 */
-    margin: 0 auto;   /* 중앙 정렬 보정 */
+    max-width: 1000px;
+    margin: 0 auto;
 
     /* 글래스모피즘 스타일 */
-    background: rgba(255, 255, 255, 0.11); /* 요청하신 투명도 */
+    background: rgba(255, 255, 255, 0.11);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -195,29 +196,38 @@ html, body {
     margin-bottom: 8px;
 }
 
-
-
 /* 강조된 영업 상태 뱃지 */
 .main-open-badge {
-    padding: 5px 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 12px;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     font-weight: bold;
     color: #fff;
-    background-color: #bbb; /* 기본 회색 */
+    background-color: #bbb;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
 /* 영업중 - 밝은 녹색 + 그림자 효과 */
 .main-open-badge.open {
-    background-color: #2ecc71;
-    box-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
-    animation: pulse-green 2s infinite; /* 부드럽게 깜빡이는 효과 추가 가능 */
+    background-color: #2ecc71 !important;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+    animation: pulse-green 2s infinite;
 }
 
 /* 영업종료 - 진한 빨간색 */
 .main-open-badge.closed {
-    background-color: #e74c3c;
+    background-color: #e74c3c !important;
+}
+
+@keyframes pulse-green {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
 }
 
 /* 거리 태그 스타일 */
@@ -238,13 +248,9 @@ html, body {
     line-height: 1.6;
 }
 
-@keyframes pulse-green {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.03); }
-    100% { transform: scale(1); }
-}
-
-/* 왼쪽 정보 영역 */
+/* =========================
+   하단 상세 카드 - 정보 영역
+========================= */
 .detail-info-section {
     display: flex;
     flex-direction: column;
@@ -253,46 +259,17 @@ html, body {
     min-width: 0;
 }
 
-/* 기존 detail-title 수정 또는 확인 */
 .detail-title {
     margin: 0;
-    font-size: 20px; /* 크기를 살짝 키움 */
+    font-size: 20px;
     font-weight: 800;
     color: #1a1a1a;
     display: flex;
-    align-items: center; /* 세로 중앙 정렬 */
-    gap: 10px; /* 이름과 뱃지 사이 간격 */
-    flex-wrap: wrap; /* 이름이 너무 길면 아래로 자연스럽게 흐르게 함 */
-}
-
-/* 영업 상태 뱃지 */
-.main-open-badge {
-    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: #fff;
-    background-color: #bbb;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    white-space: nowrap;
-    vertical-align: middle;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
-/* 영업중 - 녹색 강조 */
-.main-open-badge.open {
-    background-color: #2ecc71 !important;
-    box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
-}
-
-/* 영업종료 - 빨간색 강조 */
-.main-open-badge.closed {
-    background-color: #e74c3c !important;
-}
-
-/* 거리 뱃지 등 */
 .detail-badge {
     font-size: 11px;
     padding: 3px 8px;
@@ -319,58 +296,86 @@ html, body {
     color: #555;
 }
 
-/* 오른쪽 버튼 영역 */
+/* =========================
+   하단 상세 카드 - 버튼 영역 (도보/차량/닫기)
+========================= */
 .detail-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     flex-shrink: 0;
 }
 
-/* 길찾기 버튼 */
+/* 길찾기 버튼 공통 */
 .route-btn {
-    background: #4a7c59;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
+    flex: 1;
+    min-width: 80px;
+    padding: 12px 16px;
     border: none;
-    box-shadow: 0 4px 12px rgba(74, 124, 89, 0.3);
+    border-radius: 12px;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    color: white;
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
-.route-btn:hover {
+/* 도보 버튼 - 보라색 그라디언트 */
+.walk-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.walk-btn:hover {
     transform: translateY(-2px);
-    background: #3d6849;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 차량 버튼 - 핑크 그라디언트 */
+.drive-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.drive-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
 }
 
 /* 닫기 버튼 */
 .detail-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.4);
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
-    color: #333;
-    cursor: pointer;
-    transition: background 0.2s;
+    flex-shrink: 0;
 }
 
 .detail-close:hover {
     background: rgba(255, 255, 255, 0.6);
 }
 
-/* 아코디언 전체 박스 */
+/* =========================
+   경로 정보 표시 영역
+========================= */
+.route-info {
+    padding: 15px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* =========================
+   아코디언 전체 박스
+========================= */
 .hours-accordion {
     border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 12px;
@@ -383,10 +388,10 @@ html, body {
 .hours-accordion summary {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 텍스트와 뱃지를 양끝으로 */
+    justify-content: space-between;
     padding: 12px 15px;
     cursor: pointer;
-    list-style: none; /* 기본 화살표 제거 */
+    list-style: none;
     outline: none;
     user-select: none;
 }
@@ -394,15 +399,6 @@ html, body {
 /* 브라우저 기본 화살표 숨기기(Safari 등) */
 .hours-accordion summary::-webkit-details-marker {
     display: none;
-}
-
-/* 상세 영업시간 리스트 (펼쳐지는 부분) */
-.opening-hours {
-    padding: 0 15px 12px 15px;
-    font-size: 0.85rem;
-    color: #555;
-    line-height: 1.8;
-    border-top: 1px solid rgba(0, 0, 0, 0.03);
 }
 
 /* 펼쳐질 때 애니메이션 느낌 주기 */
@@ -446,6 +442,7 @@ html, body {
     max-width: 500px;
     width: 90%;
 }
+
 /* 주소 검색 모달 내부 조정 */
 .address-modal-content {
     padding: 32px;
@@ -458,7 +455,10 @@ html, body {
     text-align: center;
     color: #333;
 }
-.address-modal-content h2 { margin-bottom: 8px; }
+
+.address-modal-content h2 {
+    margin-bottom: 8px;
+}
 
 .hospital-type-grid {
     display: grid;
@@ -582,16 +582,6 @@ html, body {
     margin-right: 8px;
 }
 
-.place-meta {
-    font-size: 13px;
-    color: #555;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
-}
-
 /* =========================
    반경 선택 드롭다운
 ========================= */
@@ -625,10 +615,24 @@ html, body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
-.radius-toggle .label { color: #666; }
-.radius-toggle .value { color: #2196F3; font-weight: 700; }
-.radius-toggle .arrow { font-size: 10px; color: #999; transition: transform 0.2s ease; }
-.radius-dropdown.open .arrow { transform: rotate(180deg); }
+.radius-toggle .label {
+    color: #666;
+}
+
+.radius-toggle .value {
+    color: #2196F3;
+    font-weight: 700;
+}
+
+.radius-toggle .arrow {
+    font-size: 10px;
+    color: #999;
+    transition: transform 0.2s ease;
+}
+
+.radius-dropdown.open .arrow {
+    transform: rotate(180deg);
+}
 
 .radius-menu {
     position: absolute;
@@ -665,8 +669,26 @@ html, body {
     transition: background 0.15s ease;
 }
 
-.radius-option:hover { background: rgba(33, 150, 243, 0.1); }
-.radius-option.active { color: #2196F3; font-weight: 600; background: rgba(33, 150, 243, 0.08); }
-.radius-option .check { opacity: 0; color: #2196F3; font-size: 12px; }
-.radius-option.active .check { opacity: 1; }
-.radius-option + .radius-option { border-top: 1px solid rgba(0, 0, 0, 0.06); }
+.radius-option:hover {
+    background: rgba(33, 150, 243, 0.1);
+}
+
+.radius-option.active {
+    color: #2196F3;
+    font-weight: 600;
+    background: rgba(33, 150, 243, 0.08);
+}
+
+.radius-option .check {
+    opacity: 0;
+    color: #2196F3;
+    font-size: 12px;
+}
+
+.radius-option.active .check {
+    opacity: 1;
+}
+
+.radius-option + .radius-option {
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
