@@ -40,7 +40,15 @@
         <ul id="placeList"></ul>
     </div>
 
+    <!-- ✅ 리스트 접기/펼치기 버튼 -->
+    <button id="listToggleBtn" class="list-toggle-btn">❮</button>
+
     <div id="map">
+        <!-- ✅ 내 위치로 돌아가기 버튼 -->
+        <button class="my-location-btn" id="myLocationBtn" title="내 위치로 이동">
+            <img src="/img/UserLocation.png" alt="내 위치">
+        </button>
+
         <div class="radius-dropdown" id="radiusDropdown">
             <div class="radius-toggle" id="radiusToggle">
                 <span class="label">반경</span>
@@ -199,6 +207,34 @@
     });
 
     /* =========================
+       ✅ 내 위치로 돌아가기 버튼
+    ========================= */
+    document.getElementById('myLocationBtn').addEventListener('click', () => {
+        if (myPos) {
+            // 1️⃣ 위치 이동은 panTo()로 부드럽게
+            map.panTo(myPos);
+
+            // 2️⃣ 줌 레벨도 단계별로 부드럽게
+            const currentLevel = map.getLevel();
+            if (currentLevel !== 3) {
+                let step = currentLevel < 3 ? 1 : -1;  // 확대/축소 방향 결정
+                let level = currentLevel;
+
+                const zoomInterval = setInterval(() => {
+                    level += step;
+                    map.setLevel(level);
+
+                    if (level === 3) {
+                        clearInterval(zoomInterval);  // 목표 레벨 도달 시 중단
+                    }
+                }, 50); // 50ms마다 한 단계씩 줌
+            }
+        } else {
+            alert('현재 위치를 찾을 수 없습니다.');
+        }
+    });
+
+    /* =========================
        6. 장소 검색 및 결과 표시
     ========================= */
     const addedIds = new Set();
@@ -272,7 +308,7 @@
                             '</div>';
                         placeListEl.appendChild(li);
 
-// ✅ 영업 상태 뱃지 업데이트
+                        // ✅ 영업 상태 뱃지 업데이트
                         const badgeEl = li.querySelector("[data-open-badge]");
                         if (badgeEl && typeof window.fetchGoogleDetail === 'function') {
                             window.fetchGoogleDetail(
@@ -303,7 +339,7 @@
                             );
                         }
 
-// 이벤트 연결 (상세 카드 호출)
+                        // 이벤트 연결 (상세 카드 호출)
                         const openDetail = () => {
                             if (window.markerModule) {
                                 window.markerModule.showDetailCard(place, map, myPos, distText);
@@ -495,6 +531,20 @@
         });
     }
     window.fetchGoogleDetail = fetchGoogleDetail;
+
+    /* =========================
+   리스트 접기 / 펼치기
+========================= */
+    const listPanel = document.getElementById("listPanel");
+    const listToggleBtn = document.getElementById("listToggleBtn");
+
+    listToggleBtn.addEventListener("click", () => {
+        const isClosed = listPanel.classList.toggle("closed");
+
+        // 버튼 방향 변경
+        listToggleBtn.textContent = isClosed ? "❯" : "❮";
+    });
+
 </script>
 
 </body>
