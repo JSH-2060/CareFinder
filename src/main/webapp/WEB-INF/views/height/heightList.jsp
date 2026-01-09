@@ -27,18 +27,31 @@
         table th {
             background: #f1f3f8;
         }
+        tr.data-row {
+            cursor: pointer;
+        }
+        tr.data-row:hover {
+            background-color: #f1f5ff;
+        }
     </style>
 
     <script>
         function openHeightForm() {
             const url =
                 '/height/form?childId=${childId}&childName=${childName}';
+            window.open(url, 'heightForm', 'width=500,height=450');
+        }
 
-            window.open(
-                url,
-                'heightForm',
-                'width=500,height=450,scrollbars=no'
-            );
+        function openHeightEdit(heightId, recordDate, height) {
+            const url =
+                '/height/edit'
+                + '?heightId=' + heightId
+                + '&childId=${childId}'
+                + '&childName=${childName}'
+                + '&recordDate=' + recordDate
+                + '&height=' + height;
+
+            window.open(url, 'heightEdit', 'width=500,height=450');
         }
     </script>
 </head>
@@ -49,10 +62,10 @@
     <!-- 제목 -->
     <div class="text-center mb-4">
         <h2 class="title">${childName} 키 성장 기록</h2>
-        <p class="text-muted">아이의 키 변화를 한눈에 확인하세요</p>
+        <p class="text-muted">기록을 클릭하면 수정할 수 있습니다</p>
     </div>
 
-    <!-- 키 성장 그래프 -->
+    <!-- 그래프 -->
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="fw-bold mb-3 text-center">키 성장 그래프</h5>
@@ -62,13 +75,10 @@
 
     <!-- 상단 버튼 -->
     <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-primary"
-                onclick="openHeightForm()">
-            키 추가
-        </button>
+        <button class="btn btn-primary" onclick="openHeightForm()">키 추가</button>
     </div>
 
-    <!-- 키 기록 목록 -->
+    <!-- 리스트 -->
     <div class="card">
         <div class="card-body p-0">
             <table class="table table-hover mb-0 text-center">
@@ -90,11 +100,18 @@
                     </c:when>
                     <c:otherwise>
                         <c:forEach var="h" items="${list}">
-                            <tr>
+                            <tr class="data-row"
+                                onclick="openHeightEdit(
+                                        '${h.heightId}',
+                                        '${h.recordDate}',
+                                        '${h.height}'
+                                        )">
                                 <td>${h.recordDate}</td>
                                 <td><strong>${h.height}</strong></td>
                                 <td>
-                                    <form action="/height/delete" method="post" style="display:inline;">
+                                    <form action="/height/delete" method="post"
+                                          style="display:inline;"
+                                          onclick="event.stopPropagation();">
                                         <input type="hidden" name="heightId" value="${h.heightId}">
                                         <input type="hidden" name="childId" value="${childId}">
                                         <input type="hidden" name="childName" value="${childName}">
@@ -113,13 +130,11 @@
         </div>
     </div>
 
-    <!-- 하단 버튼 -->
     <div class="text-center mt-4">
         <a href="/heat/childSelect" class="btn btn-secondary rounded-pill px-4">
             대상 선택으로
         </a>
     </div>
-
 </div>
 
 <!-- 그래프 데이터 -->
@@ -132,16 +147,12 @@
     heightData.push(${h.height});
     </c:forEach>
 
-    // 날짜 오름차순
     heightLabels.reverse();
     heightData.reverse();
 </script>
 
-<!-- Chart.js -->
 <script>
-    const ctx = document.getElementById('heightChart').getContext('2d');
-
-    new Chart(ctx, {
+    new Chart(document.getElementById('heightChart'), {
         type: 'line',
         data: {
             labels: heightLabels,
@@ -150,23 +161,15 @@
                 data: heightData,
                 tension: 0.3,
                 fill: true,
-                backgroundColor: 'rgba(13,110,253,0.15)',
-                borderColor: '#0d6efd',
-                borderWidth: 3,
-                pointRadius: 4,
-                pointBackgroundColor: '#0d6efd'
+                borderWidth: 3
             }]
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: { display: true }
-            },
             scales: {
                 y: {
-                    beginAtZero: false,
                     ticks: {
-                        callback: value => value + ' cm'
+                        callback: v => v + ' cm'
                     }
                 }
             }

@@ -57,6 +57,24 @@ public class HeightController {
                 + childName;
     }
 
+    @GetMapping("/edit")
+    public String edit(
+            @RequestParam Long heightId,
+            @RequestParam int childId,
+            @RequestParam String childName,
+            @RequestParam String recordDate,
+            @RequestParam Double height,
+            Model model
+    ) {
+        model.addAttribute("heightId", heightId);
+        model.addAttribute("childId", childId);
+        model.addAttribute("childName", childName);
+        model.addAttribute("recordDate", recordDate);
+        model.addAttribute("height", height);
+
+        return "height/heightEdit";
+    }
+
     /**
      * 키 기록 수정
      */
