@@ -1,9 +1,11 @@
 // ========================================
-// ✅ TMAP 보행자 경로 모듈 (깔끔한 버전)
+// 길찾기 관련 변수
 // ========================================
 let routeLayers = [];
-const apiKey = window.TMAP_APP_KEY;
 
+// ========================================
+// 🚶 TMAP 보행자 경로 (도보)
+// ========================================
 async function showWalkingRoute(place, map, myPos) {
     if (!myPos) return;
     clearRoute();
@@ -24,7 +26,7 @@ async function showWalkingRoute(place, map, myPos) {
         const response = await fetch(url, {
             method: "POST",
             headers: {
-                "appKey": TMAP_APP_KEY,
+                "appKey": window.TMAP_APP_KEY,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(body)
@@ -42,55 +44,194 @@ async function showWalkingRoute(place, map, myPos) {
                 }
             });
 
-            // 1. 경로 그리기 (애니메이션 없이 즉시 혹은 부드럽게)
-            renderPath(path, map);
+            // 경로 그리기
+            const line = new kakao.maps.Polyline({
+                path: path,
+                strokeWeight: 6,
+                strokeColor: '#3897FF',
+                strokeOpacity: 0.8,
+                strokeStyle: 'shortdash',
+                map: map
+            });
+            routeLayers.push(line);
 
-            // 2. 현실적인 시간 계산 (중요!)
-            const totalDist = data.features[0].properties.totalDistance; // 미터(m)
-
-            // 티맵 시간 대신 직접 계산: 1분당 67m (성인 보통 걸음)
+            // 시간 계산
+            const totalDist = data.features[0].properties.totalDistance;
             const walkingTime = Math.ceil(totalDist / 67);
             const kcal = (totalDist * 0.04).toFixed(1);
 
-            // 3. UI 업데이트
+            // UI 업데이트
             const infoHTML = `
-                <div style="padding: 15px; background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center;">
-                    <div style="font-size: 1.2rem; font-weight: bold; color: #3897FF; margin-bottom: 5px;">
-                        약 ${walkingTime}분 소요
+                <div style="padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
+                    <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
+                        🚶 도보 약 ${walkingTime}분
                     </div>
-                    <div style="font-size: 0.9rem; color: #666;">
-                        남은 거리: ${totalDist}m | 소모 칼로리: ${kcal}kcal
+                    <div style="font-size: 0.95rem; opacity: 0.9;">
+                        거리 ${totalDist}m · 칼로리 ${kcal}kcal
                     </div>
                 </div>
             `;
 
             if (window.markerModule?.updateRouteInfo) {
-                window.markerModule.updateRouteInfo(infoHTML, "티맵 실시간 보행 안내");
+                window.markerModule.updateRouteInfo(infoHTML, "도보 경로");
             }
 
-            // 4. 지도 줌 조절
+            // 지도 줌 조절
             const bounds = new kakao.maps.LatLngBounds();
             path.forEach(p => bounds.extend(p));
             map.setBounds(bounds, 80, 80, 80, 80);
         }
     } catch (e) {
-        console.error("Route Error:", e);
+        console.error("도보 경로 오류:", e);
+        alert("도보 경로를 찾을 수 없습니다.");
     }
 }
 
-function renderPath(path, map) {
-    const line = new kakao.maps.Polyline({
-        path: path,
-        strokeWeight: 6,
-        strokeColor: '#3897FF',
-        strokeOpacity: 0.8,
-        strokeStyle: 'shortdash', // 점선 스타일 유지 (보행자 느낌)
-        map: map
-    });
-    routeLayers.push(line);
+// ========================================
+// 🚗 카카오 자동차 경로
+// ========================================
+async function showDrivingRoute(place, map, myPos) {
+    if (!myPos) return;
+    clearRoute();
+
+    const url = 'https://apis-navi.kakaomobility.com/v1/waypoints/directions';
+    const body = {
+        origin: {
+            x: myPos.getLng(),
+            y: myPos.getLat()
+        },
+        destination: {
+            x: parseFloat(place.x),
+            y: parseFloat(place.y)
+        },
+        priority: 'RECOMMEND',
+        car_fuel: 'GASOLINE',
+        car_hipass: false,
+        alternatives: false,
+        road_details: false
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `KakaoAK ${window.KAKAO_REST_API_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            alert('자동차 경로를 찾을 수 없습니다.');
+            return;
+        }
+
+        const data = await response.json();
+
+        if (data.routes && data.routes.length > 0) {
+            const route = data.routes[0];
+            const path = [];
+
+            // 경로 좌표 추출
+            route.sections.forEach(section => {
+                section.roads.forEach(road => {
+                    road.vertexes.forEach((vertex, idx) => {
+                        if (idx % 2 === 0) {
+                            path.push(new kakao.maps.LatLng(
+                                road.vertexes[idx + 1],
+                                road.vertexes[idx]
+                            ));
+                        }
+                    });
+                });
+            });
+
+            // 3중 레이어 경로선 (글로우 효과)
+            const layer1 = new kakao.maps.Polyline({
+                path: path,
+                strokeWeight: 12,
+                strokeColor: '#FF6B35',
+                strokeOpacity: 0.3,
+                map: map
+            });
+
+            const layer2 = new kakao.maps.Polyline({
+                path: path,
+                strokeWeight: 8,
+                strokeColor: '#FF8C42',
+                strokeOpacity: 0.6,
+                map: map
+            });
+
+            const layer3 = new kakao.maps.Polyline({
+                path: path,
+                strokeWeight: 5,
+                strokeColor: '#FFB84D',
+                strokeOpacity: 1.0,
+                map: map
+            });
+
+            routeLayers.push(layer1, layer2, layer3);
+
+            // 거리/시간 정보
+            const distance = route.summary.distance;
+            const duration = route.summary.duration; // 초 단위
+
+            const distText = distance >= 1000
+                ? `${(distance / 1000).toFixed(1)}km`
+                : `${distance}m`;
+
+            const timeMinutes = Math.ceil(duration / 60);
+            const timeText = timeMinutes >= 60
+                ? `${Math.floor(timeMinutes / 60)}시간 ${timeMinutes % 60}분`
+                : `${timeMinutes}분`;
+
+            // UI 업데이트
+            const infoHTML = `
+                <div style="padding: 15px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
+                    <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
+                        🚗 차량 약 ${timeText}
+                    </div>
+                    <div style="font-size: 0.95rem; opacity: 0.9;">
+                        거리 ${distText}
+                    </div>
+                </div>
+            `;
+
+            if (window.markerModule?.updateRouteInfo) {
+                window.markerModule.updateRouteInfo(infoHTML, "자동차 경로");
+            }
+
+            // 지도 줌 조절
+            const bounds = new kakao.maps.LatLngBounds();
+            path.forEach(p => bounds.extend(p));
+            map.setBounds(bounds, 80, 80, 80, 80);
+        }
+
+    } catch (error) {
+        console.error('자동차 경로 오류:', error);
+        alert('자동차 경로를 찾을 수 없습니다.');
+    }
 }
 
+// ========================================
+// 경로 지우기
+// ========================================
 function clearRoute() {
     routeLayers.forEach(l => l.setMap(null));
     routeLayers = [];
+
+    if (window.markerModule?.updateRouteInfo) {
+        window.markerModule.updateRouteInfo('', '');
+    }
 }
+
+// ========================================
+// 외부 export
+// ========================================
+window.showWalkingRoute = showWalkingRoute;
+window.showDrivingRoute = showDrivingRoute;
+window.clearRoute = clearRoute;
+window.routeModule = {
+    clearAllLayers: clearRoute
+};

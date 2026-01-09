@@ -207,6 +207,9 @@ function showDetailCard(place, map, myPos, distanceText) {
     if (!detailCard) detailCard = document.getElementById('detailCard');
     if (!detailCard) return;
 
+    // ✅ currentPlace 저장 (길찾기 버튼에서 사용)
+    window.markerModule.currentPlace = place;
+
     detailCard.innerHTML = `
     <div class="detail-card-inner">
       <div class="detail-info-section">
@@ -220,12 +223,10 @@ function showDetailCard(place, map, myPos, distanceText) {
         </p>
         <p class="detail-phone">${place.phone ? esc(place.phone) : "전화번호 없음"}</p>
 
-
         <div class="detail-google">
             <details class="hours-accordion">
                 <summary class="detail-hours-head">
                     <b>🕒 상세 영업시간 보기</b>
-                    <span id="googleOpenNowBadge" class="main-open-badge" style="display: none;"></span>
                     <span class="chevron">▼</span>
                 </summary>
                 <div id="googleOpeningHours" class="opening-hours">
@@ -236,16 +237,34 @@ function showDetailCard(place, map, myPos, distanceText) {
       </div>
 
       <div class="detail-actions">
-        <button class="route-btn" 
-          onclick='window.showWalkingRoute(${JSON.stringify(place).replace(/"/g, "&quot;")}, map, myPos)'>
-          길찾기
-        </button>
+        <button id="cardWalkBtn" class="route-btn walk-btn" title="도보 길찾기">🚶 도보</button>
+        <button id="cardDriveBtn" class="route-btn drive-btn" title="자동차 길찾기">🚗 차량</button>
         <button class="detail-close" onclick="window.markerModule.closeDetailCard()">✕</button>
       </div>
     </div>
     <div id="routeInfo" class="route-info"></div>
   `;
     detailCard.classList.add('active');
+
+    // ✅ 버튼 이벤트 연결
+    const walkBtn = document.getElementById("cardWalkBtn");
+    const driveBtn = document.getElementById("cardDriveBtn");
+
+    if (walkBtn) {
+        walkBtn.onclick = () => {
+            if (typeof window.showWalkingRoute === 'function') {
+                window.showWalkingRoute(place, map, myPos);
+            }
+        };
+    }
+
+    if (driveBtn) {
+        driveBtn.onclick = () => {
+            if (typeof window.showDrivingRoute === 'function') {
+                window.showDrivingRoute(place, map, myPos);
+            }
+        };
+    }
 
     // ✅ 팀원 기능: Google 운영시간 로드
     const badgeEl = document.getElementById("googleOpenNowBadge");
@@ -415,6 +434,7 @@ window.markerModule = {
     updateRouteInfo,
     calculateDistance,
     formatDistance,
-    createMarker,  // ✅ 추가
-    esc
+    createMarker,
+    esc,
+    currentPlace: null
 };
