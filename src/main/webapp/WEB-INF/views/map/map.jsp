@@ -265,11 +265,45 @@
                         const li = document.createElement("li");
                         li.className = "place-item";
                         li.innerHTML = '<div class="place-name">' + esc(place.place_name) + '</div>' +
-                            '<div class="place-meta"><span class="distance">' + distText + '</span>' +
-                            esc(place.road_address_name || place.address_name) + '</div>';
+                            '<div class="place-meta">' +
+                            '<span class="distance">' + distText + '</span>' +
+                            '<span class="list-open-badge" data-open-badge>확인중...</span>' +
+                            esc(place.road_address_name || place.address_name) +
+                            '</div>';
                         placeListEl.appendChild(li);
 
-                        // 이벤트 연결 (상세 카드 호출)
+// ✅ 영업 상태 뱃지 업데이트
+                        const badgeEl = li.querySelector("[data-open-badge]");
+                        if (badgeEl && typeof window.fetchGoogleDetail === 'function') {
+                            window.fetchGoogleDetail(
+                                place.place_name,
+                                Number(place.y),
+                                Number(place.x),
+                                (googleDetail) => {
+                                    if (!document.body.contains(badgeEl)) return;
+
+                                    if (googleDetail?.opening_hours && typeof googleDetail.opening_hours.open_now === 'boolean') {
+                                        const isOpen = googleDetail.opening_hours.open_now;
+                                        badgeEl.classList.remove("open", "closed");
+                                        if (isOpen) {
+                                            badgeEl.textContent = "영업중";
+                                            badgeEl.classList.add("open");
+
+                                            placeListEl.insertBefore(li, placeListEl.firstChild);  // 영업중부터 상단으로
+
+                                        } else {
+                                            badgeEl.textContent = "영업종료";
+                                            badgeEl.classList.add("closed");
+                                        }
+                                    } else {
+                                        badgeEl.textContent = "정보없음";
+                                        badgeEl.style.display = "none";
+                                    }
+                                }
+                            );
+                        }
+
+// 이벤트 연결 (상세 카드 호출)
                         const openDetail = () => {
                             if (window.markerModule) {
                                 window.markerModule.showDetailCard(place, map, myPos, distText);
