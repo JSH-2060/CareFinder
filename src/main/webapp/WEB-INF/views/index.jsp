@@ -16,7 +16,13 @@
         .main { position: relative; height: calc(100vh - 70px); }
         .center-box { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 60%; }
         .center-box h2 { font-size: 32px; margin-bottom: 10px; color: #1e293b; }
-        .search-box input { width: 100%; height: 78px; border-radius: 999px; border: none; padding: 0 36px; font-size: 18px; background: linear-gradient(135deg, #2563EB, #1E40AF); color: white; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3); }
+        .search-box { display: flex; align-items: center; gap: 12px;}
+        .search-box input { flex: 1; height: 78px; border-radius: 999px; border: none; padding: 0 36px; font-size: 18px; background: linear-gradient(135deg, #2563EB, #1E40AF); color: white;box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);}
+        .search-box button { height: 78px; padding: 0 32px; border-radius: 999px; border: none; background: #1E3A8A; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 8px 20px rgba(30, 58, 138, 0.35); transition: 0.2s;}
+        .search-box button:hover { background: #1e40af; transform: translateY(-2px); }
+
+
+
 
         /* 좌측 하단 메뉴바 */
         .left-bottom { position: absolute; left: 24px; bottom: 24px; width: 240px; display: flex; flex-direction: column; gap: 10px; }
@@ -36,7 +42,11 @@
             background: white; color: #1e293b; font-weight: 600; cursor: pointer; transition: 0.2s;
         }
         .dept-btn:hover { background: #eff6ff; border-color: #2563EB; color: #2563EB; }
+
     </style>
+        <%-- 챗봇 css 공용    --%>
+    <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
+
 </head>
 <body>
 
@@ -58,42 +68,22 @@
         <p style="color:#64748b;">
             증상을 자연스럽게 입력하면 가장 가까운 병원을 추천합니다
         </p>
-        <div class="search-box" style="position: relative;">
+
+        <div class="search-box">
             <input
                     type="text"
                     id="aiSearchInput"
                     placeholder="예: 스키 타다 넘어져서 갈비뼈가 아파요"
                     autocomplete="off"
             >
-            <button
-                    type="button"
-                    id="aiSearchBtn"
-                    style="
-            position:absolute;
-            right:12px;
-            top:50%;
-            transform:translateY(-50%);
-            padding:12px 20px;
-            border:none;
-            border-radius:999px;
-            background:#1E40AF;
-            color:white;
-            font-weight:bold;
-            cursor:pointer;
-        "
-            >
-                검색
-            </button>
+            <button id="aiSearchBtn">검색</button>
         </div>
 
 
     </div>
 
-    <!-- 공통 챗봇 -->
-    <div id="chatbot-container"></div>
 
-    <script src="/js/chatbot.js"></script>
-    <script src="/js/index-ai-search.js"></script>
+
 
 
     <div class="left-bottom">
@@ -175,6 +165,17 @@
         }
         location.href = url;
     }
+
 </script>
+
+
+
+
+
+<jsp:include page="common/chatbot.jsp"/>
+<script src="/js/chatbot.js"></script>
+<script src="/js/index-ai-search.js"></script>
+<script src="/js/map-chatbot-init.js"></script>
+
 </body>
 </html>

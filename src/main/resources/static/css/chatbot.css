@@ -1,0 +1,110 @@
+/* =========================
+   Chatbot Base (SAFE)
+========================= */
+
+/* ❌ all: unset 절대 쓰지 말 것 */
+
+#chatbot-fab,
+#chatbot-panel {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "Segoe UI",
+    sans-serif;
+    display: none;
+}
+
+/* =========================
+   Floating Button
+========================= */
+#chatbot-fab {
+    position: fixed;
+    right: 200px;              /* map 버튼 겹침 방지 */
+    bottom: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #2563EB;
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+/* =========================
+   Chatbot Panel
+========================= */
+#chatbot-panel {
+    position: fixed;
+    right: 200px;
+    bottom: 90px;
+    width: 320px;
+    height: 420px;
+    background: #fff;
+    border-radius: 16px;
+    display: none;
+    flex-direction: column;
+    z-index: 9999;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    overflow: hidden;
+}
+#chatbot-panel.open {
+    display: flex;
+}
+
+/* =========================
+   Header
+========================= */
+.chatbot-header {
+    background: #2563EB;
+    color: #fff;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* =========================
+   Messages
+========================= */
+#chatbot-messages {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #111;
+}
+
+/* =========================
+   Input Area
+========================= */
+.chatbot-input {
+    display: flex;
+    border-top: 1px solid #e5e7eb;
+}
+
+.chatbot-input input {
+    flex: 1;
+    border: none;
+    padding: 12px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+}
+
+.chatbot-input button {
+    border: none;
+    background: #2563EB;
+    color: #fff;
+    padding: 0 16px;
+    font-size: 14px;
+    cursor: pointer;
+}
