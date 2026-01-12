@@ -790,4 +790,44 @@ html, body {
     transform: scale(0.95);
 }
 
+/* ========================================
+   홈 버튼 (맵 화면 좌상단)
+======================================== */
+.home-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 68px;
+    height: 68px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.home-btn:hover {
+    background: #f0f9ff;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+}
+
+.home-btn:active {
+    transform: scale(0.95);
+}
+
+/* 리스트 패널이 열려있을 때 홈 버튼 위치 조정 */
+#listPanel:not(.closed) ~ #map .home-btn {
+    left: calc(320px + 20px); /* 리스트 너비 + 여백 */
+}
+
+#listPanel.closed ~ #map .home-btn {
+    left: 20px;
+}
 
