@@ -143,7 +143,7 @@
     const myMarker = new kakao.maps.Marker({
         map,
         image: new kakao.maps.MarkerImage("/img/UserLocation.png", new kakao.maps.Size(40, 44), { offset: new kakao.maps.Point(18, 40) }),
-        zIndex: 1
+        zIndex: 1000  // ✅ 내 위치 마커는 항상 최상단
     });
 
     let markerImg = "/img/AnimalHosLocation.png";
@@ -334,6 +334,7 @@
                         const placeItem = {
                             place,
                             li,
+                            marker,  // ✅ 마커도 저장
                             distance: dist,
                             isOpen: null
                         };
@@ -375,13 +376,24 @@
                             );
                         }
 
-                        // 이벤트 연결 (상세 카드 호출)
+                        // ✅ 이벤트 연결 (마커 확대/축소 포함)
                         const openDetail = () => {
                             if (window.markerModule) {
                                 window.markerModule.showDetailCard(place, map, myPos, distText);
+
+                                // ✅ 이전 선택된 마커가 있으면 복원
+                                if (window.markerModule.selectedMarker && window.markerModule.selectedMarker !== marker) {
+                                    window.markerModule.restoreMarker(window.markerModule.selectedMarker);
+                                }
+
+                                // ✅ 새로 선택된 마커 저장 및 확대/숨김
+                                window.markerModule.selectedMarker = marker;
+                                window.markerModule.enlargeMarker(marker, markerImg);
+                                window.markerModule.hideOtherMarkers(marker, resultMarkers);
                             }
                             map.panTo(pos);
                         };
+
                         kakao.maps.event.addListener(marker, "click", openDetail);
                         li.onclick = openDetail;
                     });
@@ -582,11 +594,13 @@
     });
 
     /* =========================
-        지도 클릭 시 상세 카드 닫기
+        ✅ 지도 클릭 시 상세 카드 닫기 + 모든 마커 복원
     ========================= */
     kakao.maps.event.addListener(map, 'click', function () {
         if (window.markerModule) {
             window.markerModule.closeDetailCard();
+            // ✅ 모든 마커 다시 표시 (marker.js 모듈 활용)
+            window.markerModule.showAllMarkers(resultMarkers);
         }
     });
 

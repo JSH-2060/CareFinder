@@ -8,6 +8,10 @@ let resultMarkers = [];
 let hoverOverlay = null;
 let detailCard = null;
 
+// ✅ 마커 확대/축소 관리 변수
+let selectedMarker = null;
+let originalMarkerImages = new Map(); // 각 마커의 원본 이미지 저장
+
 // ✅ 팀원 기능 추가: 구글 영업상태/상세 캐시 & 동시요청 제한
 const openStatusCache = new Map();     // key -> { text, state }  (영업중/종료)
 const googleDetailCache = new Map();   // key -> googleDetail (opening_hours 등)
@@ -172,6 +176,120 @@ function processOpenStatusQueue() {
 }
 
 // ========================================
+// ✅ 새로운 기능: 마커 확대 함수
+// ========================================
+function enlargeMarker(marker, markerImage) {
+    // 원본 이미지 저장
+    if (!originalMarkerImages.has(marker)) {
+        originalMarkerImages.set(marker, marker.getImage());
+    }
+
+    // 확대된 이미지 생성 (1.5배)
+    const enlargedImage = new kakao.maps.MarkerImage(
+        markerImage.getSrc(),
+        new kakao.maps.Size(60, 66), // 원본 40x44 -> 60x66
+        { offset: new kakao.maps.Point(24, 48) } // 중심점도 비례 조정
+    );
+
+    // 부드러운 애니메이션 효과
+    marker.setZIndex(999);
+    marker.setImage(enlargedImage);
+}
+
+// ========================================
+// ✅ 새로운 기능: 마커 원래 크기로 복원
+// ========================================
+function restoreMarker(marker) {
+    if (originalMarkerImages.has(marker)) {
+        marker.setImage(originalMarkerImages.get(marker));
+        marker.setZIndex(1);
+    }
+}
+
+// ========================================
+// ✅ 새로운 기능: 선택된 마커 제외 나머지 숨기기
+// ========================================
+function hideOtherMarkers(selectedMarker) {
+    resultMarkers.forEach(marker => {
+        if (marker !== selectedMarker) {
+            marker.setVisible(false);
+        }
+    });
+}
+
+// ========================================
+// ✅ 새로운 기능: 모든 마커 다시 표시
+// ========================================
+function showAllMarkers() {
+    resultMarkers.forEach(marker => {
+        marker.setVisible(true);
+    });
+
+    // 선택된 마커가 있으면 원래 크기로 복원
+    if (selectedMarker) {
+        restoreMarker(selectedMarker);
+        selectedMarker = null;
+    }
+}
+
+// ========================================
+// ✅ 새로운 기능: 마커 확대 함수
+// ========================================
+function enlargeMarker(marker, markerImgSrc) {
+    // 원본 이미지 저장
+    if (!originalMarkerImages.has(marker)) {
+        originalMarkerImages.set(marker, marker.getImage());
+    }
+
+    // 확대된 이미지 생성 (1.5배)
+    const enlargedImage = new kakao.maps.MarkerImage(
+        markerImgSrc,
+        new kakao.maps.Size(60, 66), // 원본 40x44 -> 60x66
+        { offset: new kakao.maps.Point(24, 48) } // 중심점도 비례 조정
+    );
+
+    // 부드러운 애니메이션 효과
+    marker.setZIndex(999);
+    marker.setImage(enlargedImage);
+}
+
+// ========================================
+// ✅ 새로운 기능: 마커 원래 크기로 복원
+// ========================================
+function restoreMarker(marker) {
+    if (originalMarkerImages.has(marker)) {
+        marker.setImage(originalMarkerImages.get(marker));
+        marker.setZIndex(1);
+    }
+}
+
+// ========================================
+// ✅ 새로운 기능: 선택된 마커 제외 나머지 숨기기
+// ========================================
+function hideOtherMarkers(selectedMarker, allMarkers) {
+    allMarkers.forEach(marker => {
+        if (marker !== selectedMarker) {
+            marker.setVisible(false);
+        }
+    });
+}
+
+// ========================================
+// ✅ 새로운 기능: 모든 마커 다시 표시
+// ========================================
+function showAllMarkers(allMarkers) {
+    allMarkers.forEach(marker => {
+        marker.setVisible(true);
+    });
+
+    // ✅ 선택된 마커가 있으면 원래 크기로 복원
+    if (window.markerModule && window.markerModule.selectedMarker) {
+        restoreMarker(window.markerModule.selectedMarker);
+        window.markerModule.selectedMarker = null;
+    }
+}
+
+// ========================================
 // 마커 관리 (추가 및 삭제)
 // ========================================
 
@@ -187,6 +305,8 @@ function clearAllMarkers() {
 
     resultMarkers.forEach(m => m.setMap(null));
     resultMarkers = [];
+    originalMarkerImages.clear();
+    selectedMarker = null;
 
     if (hoverOverlay) hoverOverlay.setMap(null);
     closeDetailCard();
@@ -409,11 +529,19 @@ function createMarker(place, markerImage, map, myPos, placeListEl) {
         hoverOverlay.setMap(null);
     });
 
-    // 클릭 이벤트 - 하단 카드에 정보 표시
+    // ✅ 클릭 이벤트 - 마커 확대 및 나머지 숨기기
     const openDetail = () => {
         showDetailCard(place, map, myPos, distanceText);
         map.panTo(pos);
         hoverOverlay.setMap(null);
+
+        // ✅ 선택된 마커 확대 및 나머지 숨기기
+        if (selectedMarker && selectedMarker !== marker) {
+            restoreMarker(selectedMarker);
+        }
+        selectedMarker = marker;
+        enlargeMarker(marker, markerImage);
+        hideOtherMarkers(marker);
     };
 
     kakao.maps.event.addListener(marker, "click", openDetail);
@@ -436,5 +564,10 @@ window.markerModule = {
     formatDistance,
     createMarker,
     esc,
-    currentPlace: null
+    currentPlace: null,
+    enlargeMarker,      // ✅ 새로 추가
+    restoreMarker,      // ✅ 새로 추가
+    hideOtherMarkers,   // ✅ 새로 추가
+    showAllMarkers,     // ✅ 새로 추가
+    selectedMarker: null // ✅ 외부에서 접근 가능하도록 추가
 };
