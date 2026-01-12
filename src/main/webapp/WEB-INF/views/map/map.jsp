@@ -363,6 +363,7 @@
                             distance: dist,
                             isOpen: null
                         };
+
                         placeResults.push(placeItem);
 
                         // 영업 상태 뱃지 업데이트
@@ -377,7 +378,7 @@
 
                                     if (googleDetail?.opening_hours && typeof googleDetail.opening_hours.open_now === 'boolean') {
                                         const isOpen = googleDetail.opening_hours.open_now;
-                                        badgeEl.classList.remove("open", "closed");
+                                        badgeEl.classList.remove("open", "closed", "no-info");  // ✅ no-info 추가
 
                                         // ✅ 배열에 영업 상태 저장
                                         placeItem.isOpen = isOpen;
@@ -390,8 +391,11 @@
                                             badgeEl.classList.add("closed");
                                         }
                                     } else {
-                                        badgeEl.textContent = "정보없음";
-                                        badgeEl.style.display = "none";
+                                        // ✅ 이 부분을 수정
+                                        badgeEl.classList.remove("open", "closed");
+                                        badgeEl.textContent = "영업 정보 없음";
+                                        badgeEl.classList.add("no-info");
+                                        // badgeEl.style.display = "none";  ← 이 줄 삭제!
                                         placeItem.isOpen = null;
                                     }
 

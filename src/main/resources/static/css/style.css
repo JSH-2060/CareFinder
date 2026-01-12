@@ -162,6 +162,11 @@ html, body {
     white-space: nowrap;
 }
 
+.list-open-badge.no-info {
+    background-color: #95a5a6;  /* 회색 */
+    color: #ecf0f1;             /* 밝은 회색 텍스트 */
+}
+
 .list-open-badge.open {
     background-color: #2ecc71;
     box-shadow: 0 0 6px rgba(46, 204, 113, 0.3);
@@ -191,9 +196,9 @@ html, body {
 #detailCard {
     position: fixed;
     bottom: 30px;
-    left: 330px;
+    left: 190px;
     right: 20px;
-    max-width: 1000px;
+    max-width: 700px;
     margin: 0 auto;
 
     /* 글래스모피즘 스타일 */
