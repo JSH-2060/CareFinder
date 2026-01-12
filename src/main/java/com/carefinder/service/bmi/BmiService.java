@@ -4,10 +4,12 @@ import com.carefinder.dao.bmi.BmiCriteriaDAO;
 import com.carefinder.dao.bmi.BmiDAO;
 import com.carefinder.dao.bmi.ChildBmiPercentileDAO;
 import com.carefinder.dao.child.ChildDAO;
+import com.carefinder.dao.member.MemberProfileDAO;
 import com.carefinder.dto.bmi.BmiCriteriaDTO;
 import com.carefinder.dto.bmi.BmiDTO;
 import com.carefinder.dto.bmi.ChildBmiPercentileDTO;
 import com.carefinder.dto.child.ChildDTO;
+import com.carefinder.dto.member.MemberProfileDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ public class BmiService {
 
     private final BmiDAO bmiDAO;
     private final ChildDAO childDAO;
+    private final MemberProfileDAO memberProfileDAO;
     private final BmiCriteriaDAO bmiCriteriaDAO;
     private final ChildBmiPercentileDAO childBmiPercentileDAO;
 
@@ -34,22 +37,47 @@ public class BmiService {
     }
 
     /* ==================================================
-       🔥 bmi 테이블에 없는 birth/gender 보충
+       👤 부모 / 👶 자녀 birth & gender 채우기
     ================================================== */
-    private boolean fillChildInfoIfMissing(BmiDTO dto) {
+    private boolean fillPersonInfo(BmiDTO dto) {
 
+        // 이미 있으면 OK
         if (dto.getBirthDate() != null && dto.getGender() != null) {
             return true;
         }
 
-        // 🔥 나(부모)는 통과
-        if (dto.getChildId() == null) return true;
+        // 👶 자녀
+        if (dto.getChildId() != null && dto.getChildId() != 0) {
+            ChildDTO child = childDAO.selectOne(dto.getChildId());
+            if (child == null) return false;
 
-        ChildDTO child = childDAO.selectOne(dto.getChildId());
-        if (child == null) return false;
+            dto.setBirthDate(LocalDate.parse(child.getBirth()));
+            dto.setGender(child.getGender());
+            return true;
+        }
 
-        dto.setBirthDate(LocalDate.parse(child.getBirth()));
-        dto.setGender(child.getGender());
+        // 👤 부모(나)
+        MemberProfileDTO profile =
+                memberProfileDAO.findByMno(dto.getMno());
+
+        if (profile == null ||
+                profile.getBirth() == null ||
+                profile.getGender() == null) {
+            return false;
+        }
+
+        dto.setBirthDate(profile.getBirth());
+
+        // 🔥 gender 정규화 (이게 핵심)
+        String g = profile.getGender().toLowerCase();
+        if (g.equals("male")) {
+            dto.setGender("M");
+        } else if (g.equals("female")) {
+            dto.setGender("F");
+        } else {
+            dto.setGender(profile.getGender());
+        }
+
         return true;
     }
 
@@ -58,31 +86,18 @@ public class BmiService {
     ================================================== */
     private boolean calculate(BmiDTO dto, LocalDate 기준일) {
 
-        if (!fillChildInfoIfMissing(dto)) return false;
+        if (!fillPersonInfo(dto)) return false;
         if (dto.getHeight() == null || dto.getWeight() == null) return false;
 
         // 키 / 몸무게 범위
         if (dto.getHeight() < 80) return false;
         if (dto.getWeight() < 9 || dto.getWeight() >= 150) return false;
 
-        int ageMonth = 0; // 🔥 여기서 먼저 선언
+        int ageMonth = calculateAgeMonth(dto.getBirthDate(), 기준일);
+        dto.setAgeMonth(ageMonth);
 
-        // =========================
-        // 나(부모)
-        // =========================
-        if (dto.getChildId() == null) {
-            dto.setAdult(true);
-        }
-        // =========================
-        // 자녀
-        // =========================
-        else {
-            ageMonth = calculateAgeMonth(dto.getBirthDate(), 기준일);
-            if (ageMonth < 24 || ageMonth > 1440) return false;
-
-            dto.setAgeMonth(ageMonth);
-            dto.setAdult(ageMonth >= 228);
-        }
+        boolean adult = ageMonth >= 228; // 19세 이상
+        dto.setAdult(adult);
 
         // BMI 계산
         double h = dto.getHeight() / 100.0;
@@ -91,17 +106,17 @@ public class BmiService {
         dto.setBmiValue(bmi);
 
         String result;
-        double percent = 0;
+        double percent;
 
-    /* ==========================
-       👶 소아 · 청소년
-    ========================== */
-        if (!dto.getAdult()) {
+        /* ==========================
+           👶 소아 · 청소년
+        ========================== */
+        if (!adult) {
 
             ChildBmiPercentileDTO c =
-                    childBmiPercentileDAO.findByGenderAndAgeMonth(
-                            dto.getGender(), ageMonth   // ✅ 이제 정상
-                    );
+                    childBmiPercentileDAO
+                            .findByGenderAndAgeMonth(dto.getGender(), ageMonth);
+
             if (c == null) return false;
 
             dto.setCut1(c.getP5());
@@ -111,35 +126,31 @@ public class BmiService {
 
             if (bmi < c.getP5()) {
                 result = "저체중";
-                percent = (bmi / c.getP5()) * 20;
+                percent = 10;
             } else if (bmi < c.getP85()) {
                 result = "정상";
-                percent = 20 + ((bmi - c.getP5()) / (c.getP85() - c.getP5())) * 20;
+                percent = 30;
             } else if (bmi < c.getP95()) {
                 result = "과체중";
-                percent = 40 + ((bmi - c.getP85()) / (c.getP95() - c.getP85())) * 20;
+                percent = 60;
             } else {
                 result = "비만";
-                percent = 80;
+                percent = 85;
             }
         }
 
-    /* ==========================
-       🧑 성인
-    ========================== */
+        /* ==========================
+           🧑 성인
+        ========================== */
         else {
 
-            int ageYear = ageMonth / 12; // 부모는 ageMonth=0 → 사용 안 됨
+            int ageYear = ageMonth / 12;
 
             BmiCriteriaDTO c =
-                    bmiCriteriaDAO.findByGenderAndAge(dto.getGender(), ageYear);
+                    bmiCriteriaDAO
+                            .findByGenderAndAge(dto.getGender(), ageYear);
 
-// 🔥 부모 + 기준 없음 → 기본 성인 처리
-            if (c == null) {
-                dto.setResult("정상");
-                dto.setBmiPercent(Double.valueOf(50));
-                return true;   // ❗ 여기서 통과시켜 insert 되게 함
-            }
+            if (c == null) return false;
 
             dto.setCut1(c.getUnderBmi());
             dto.setCut2(c.getNormalBmi());
@@ -148,24 +159,24 @@ public class BmiService {
 
             if (bmi < c.getUnderBmi()) {
                 result = "저체중";
-                percent = (bmi / c.getUnderBmi()) * 20;
+                percent = 10;
             } else if (bmi < c.getNormalBmi()) {
                 result = "정상";
-                percent = 20 + ((bmi - c.getUnderBmi()) / (c.getNormalBmi() - c.getUnderBmi())) * 20;
+                percent = 30;
             } else if (bmi < c.getObeseBmi()) {
                 result = "과체중";
-                percent = 40 + ((bmi - c.getNormalBmi()) / (c.getObeseBmi() - c.getNormalBmi())) * 20;
+                percent = 60;
             } else if (bmi < c.getSevereBmi()) {
                 result = "비만";
-                percent = 60 + ((bmi - c.getObeseBmi()) / (c.getSevereBmi() - c.getObeseBmi())) * 20;
+                percent = 80;
             } else {
                 result = "고도비만";
-                percent = 100;
+                percent = 95;
             }
         }
 
         dto.setResult(result);
-        dto.setBmiPercent(Math.min(100, Math.max(0, percent)));
+        dto.setBmiPercent(percent);
         return true;
     }
 
@@ -173,24 +184,19 @@ public class BmiService {
        BMI 계산 + 저장
     ================================================== */
     public BmiDTO calculateAndSave(BmiDTO dto, Long mno) {
+
         dto.setMno(mno);
 
-        System.out.println(">>> [BMI] before calculate: childId=" + dto.getChildId());
 
         boolean ok = calculate(dto, LocalDate.now());
-        System.out.println(">>> [BMI] calculate result = " + ok);
-
         if (!ok) return dto;
 
-        System.out.println(">>> [BMI] before insert");
         bmiDAO.insert(dto);
-        System.out.println(">>> [BMI] after insert");
-
         return dto;
     }
 
     /* ==================================================
-       자녀 기준 BMI 리스트
+       자녀 / 부모 BMI 리스트
     ================================================== */
     public List<BmiDTO> getBmiListByChild(Long mno, Integer childId) {
         List<BmiDTO> list = bmiDAO.findByChild(mno, childId);
@@ -220,21 +226,12 @@ public class BmiService {
     }
 
     /* ==================================================
-       단건 조회
-    ================================================== */
-    public BmiDTO getBmiById(Long bmiNo) {
-        BmiDTO dto = bmiDAO.findById(bmiNo);
-        if (dto == null) return null;
-        calculate(dto, dto.getRecordDate().toLocalDate());
-        return dto;
-    }
-
-    /* ==================================================
        최근 BMI (기준바용)
     ================================================== */
     public BmiDTO getLatestBmi(Integer childId) {
         BmiDTO dto = bmiDAO.findLatestByChildId(childId);
         if (dto == null) return null;
+
         calculate(dto, dto.getRecordDate().toLocalDate());
         return dto;
     }
@@ -264,7 +261,30 @@ public class BmiService {
         bmiDAO.deleteByBmiNo(bmiNo);
     }
 
+    /* ==================================================
+       자녀 목록
+    ================================================== */
     public List<ChildDTO> getChildList(Long mno) {
         return bmiDAO.selectChildList(mno);
     }
+
+    /* ==================================================
+   단건 조회 (수정 팝업용)
+================================================== */
+    public BmiDTO getBmiById(Long bmiNo) {
+
+        BmiDTO dto = bmiDAO.findById(bmiNo);
+        if (dto == null) return null;
+
+        // 🔥 부모면 childId = 0 보정
+        if (dto.getChildId() == null) {
+            dto.setChildId(0);
+        }
+
+        // 🔥 계산 다시 (기준바/판정용)
+        calculate(dto, dto.getRecordDate().toLocalDate());
+
+        return dto;
+    }
+
 }
