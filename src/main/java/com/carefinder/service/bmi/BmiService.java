@@ -126,16 +126,23 @@ public class BmiService {
 
             if (bmi < c.getP5()) {
                 result = "저체중";
-                percent = 10;
+                percent = (bmi / c.getP5()) * 25;
+
             } else if (bmi < c.getP85()) {
                 result = "정상";
-                percent = 30;
+                percent = 25
+                        + ((bmi - c.getP5())
+                        / (c.getP85() - c.getP5())) * 25;
+
             } else if (bmi < c.getP95()) {
                 result = "과체중";
-                percent = 60;
+                percent = 50
+                        + ((bmi - c.getP85())
+                        / (c.getP95() - c.getP85())) * 25;
+
             } else {
                 result = "비만";
-                percent = 85;
+                percent = 100;
             }
         }
 
@@ -147,8 +154,7 @@ public class BmiService {
             int ageYear = ageMonth / 12;
 
             BmiCriteriaDTO c =
-                    bmiCriteriaDAO
-                            .findByGenderAndAge(dto.getGender(), ageYear);
+                    bmiCriteriaDAO.findByGenderAndAge(dto.getGender(), ageYear);
 
             if (c == null) return false;
 
@@ -159,19 +165,29 @@ public class BmiService {
 
             if (bmi < c.getUnderBmi()) {
                 result = "저체중";
-                percent = 10;
+                percent = (bmi / c.getUnderBmi()) * 20;
+
             } else if (bmi < c.getNormalBmi()) {
                 result = "정상";
-                percent = 30;
+                percent = 20
+                        + ((bmi - c.getUnderBmi())
+                        / (c.getNormalBmi() - c.getUnderBmi())) * 20;
+
             } else if (bmi < c.getObeseBmi()) {
                 result = "과체중";
-                percent = 60;
+                percent = 40
+                        + ((bmi - c.getNormalBmi())
+                        / (c.getObeseBmi() - c.getNormalBmi())) * 20;
+
             } else if (bmi < c.getSevereBmi()) {
                 result = "비만";
-                percent = 80;
+                percent = 60
+                        + ((bmi - c.getObeseBmi())
+                        / (c.getSevereBmi() - c.getObeseBmi())) * 20;
+
             } else {
                 result = "고도비만";
-                percent = 95;
+                percent = 100;
             }
         }
 
