@@ -1,7 +1,7 @@
 package com.carefinder.controller.chatbot;
 
-import com.carefinder.dto.chatbot.ChatResponse;
 import com.carefinder.dto.chatbot.ChatRequest;
+import com.carefinder.dto.chatbot.ChatResponse;
 import com.carefinder.service.chatbot.ChatService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +15,7 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping(
-            produces = "application/json; charset=UTF-8"
-    )
+    @PostMapping(produces = "application/json; charset=UTF-8")
     public ChatResponse chat(@RequestBody ChatRequest req) {
         return chatService.ask(req.getMessage());
     }
