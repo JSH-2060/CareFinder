@@ -236,4 +236,8 @@ public class BmiService {
     public void deleteBmi(Long bmiNo) {
         bmiDAO.deleteByBmiNo(bmiNo);
     }
+
+    public List<ChildDTO> getChildList(Long mno) {
+        return bmiDAO.selectChildList(mno);
+    }
 }

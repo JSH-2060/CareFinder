@@ -138,4 +138,10 @@
         WHERE bmiNo = #{bmiNo}
     </delete>
 
+    <select id="selectChildList" resultType="com.carefinder.dto.child.ChildDTO">
+        SELECT * FROM child
+        WHERE mno = #{mno}
+        ORDER BY childId ASC
+    </select>
+
 </mapper>

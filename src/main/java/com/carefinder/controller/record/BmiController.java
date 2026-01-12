@@ -128,6 +128,22 @@ public class BmiController {
         """.formatted(childId, childName);
     }
 
+    @GetMapping("/select")
+    public String select(HttpSession session, Model model) {
+        Long mno = getUserPk(session);
+        if (mno == null) return "redirect:/Nologin";
+
+        // 자녀 목록 가져오기
+        model.addAttribute("childList", bmiService.getChildList(mno));
+
+        // ★ 중요: JSP에게 "나는 BMI(bmi)다"라고 알려줌
+        model.addAttribute("mode", "bmi");
+
+        // 기존 childSelect.jsp 재사용
+        return "heat/childSelect";
+    }
+
+
     @GetMapping("/edit")
     public String bmiEditPopup(
             @RequestParam("bmiNo") Long bmiNo,
