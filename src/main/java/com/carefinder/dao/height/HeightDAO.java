@@ -1,6 +1,7 @@
 package com.carefinder.dao.height;
 
 import com.carefinder.dto.height.HeightDTO;
+import com.carefinder.dto.child.ChildDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,15 +10,35 @@ import java.util.List;
 @Mapper
 public interface HeightDAO {
 
-    // 키 기록 추가
+    // ==========================
+    // 키 목록 조회
+    // ==========================
+
+    // 본인 키 기록 (childId = null)
+    List<HeightDTO> findByMno(@Param("mno") Long mno);
+
+    // 자녀 키 기록
+    List<HeightDTO> findByChildId(
+            @Param("mno") Long mno,
+            @Param("childId") Integer childId
+    );
+
+    // ==========================
+    // 단건 조회 (수정용)
+    // ==========================
+    HeightDTO findById(@Param("heightId") Long heightId);
+
+    // ==========================
+    // CUD
+    // ==========================
     void insert(HeightDTO dto);
 
-    // 아이별 키 목록 조회
-    List<HeightDTO> findByChildId(@Param("childId") int childId);
-
-    // 키 기록 수정
     void update(HeightDTO dto);
 
-    // 키 기록 삭제
     void delete(@Param("heightId") Long heightId);
+
+    // ==========================
+    // 자녀 목록 (childSelect 재사용)
+    // ==========================
+    List<ChildDTO> getChildList(@Param("mno") Long mno);
 }

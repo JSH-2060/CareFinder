@@ -17,13 +17,34 @@
         body { background:#f0f2f5; }
 
         /* ===== 아바타 ===== */
-        .avatar-circle{
-            width:44px;height:44px;border-radius:50%;
-            background:linear-gradient(135deg,#34d399,#059669);
-            color:#fff;font-weight:700;
-            display:flex;align-items:center;justify-content:center;
-            font-size:18px;
-            box-shadow:0 4px 10px rgba(5,150,105,.35);
+        .avatar-circle-bmi{
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* ===== BMI 탭 ===== */
+        .nav-pills .nav-link.bmi-active{
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white;
+        }
+
+        /* ===== BMI 계산 버튼 ===== */
+        .btn-bmi{
+            background: linear-gradient(135deg, #34d399, #059669);
+            border: none;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-bmi:hover{
+            filter: brightness(0.95);
+            color: white;
         }
 
         /* ===== 카드 ===== */
@@ -117,10 +138,13 @@
             color: #555 !important;
             font-weight: 600;
         }
-        .nav-pills .nav-link.active {
-            background-color: #2563eb; /* BMI 메인 */
+        .nav-pills .nav-link.bmi-active{
+            background: linear-gradient(135deg, #34d399, #059669);
             color: #fff !important;
+            font-weight: 700;
         }
+
+
 
     </style>
 
@@ -174,7 +198,7 @@
     <div class="card-box p-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex align-items-center gap-3">
-                <div class="avatar-circle">
+                <div class="avatar-circle-bmi">
                     <c:choose>
                         <c:when test="${not empty childName}">
                             ${fn:substring(childName,0,1)}
@@ -212,8 +236,17 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link active">BMI</a>
+                    <a class="nav-link bmi-active" href="#">BMI</a>
                 </li>
+
+                <li class="nav-item">
+                    <c:url value="/height/list" var="heightUrl">
+                        <c:param name="childId" value="${childId}"/>
+                        <c:param name="childName" value="${childName}"/>
+                    </c:url>
+                    <a class="nav-link" href="${heightUrl}">키성장</a>
+                </li>
+
             </ul>
 
             <!-- ✅ 프로필 : 나 → 자녀 → + -->
@@ -250,7 +283,7 @@
     <!-- ===== 버튼 (기존 BMI 기능 그대로) ===== -->
     <div class="d-flex justify-content-end gap-2 my-3">
         <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">날짜 검색</button>
-        <button class="btn btn-primary btn-sm"
+        <button class="btn btn-bmi"
                 onclick="openPopup('/bmi/form?childId=${childId}&childName=${childName}')">
             BMI 계산
         </button>

@@ -56,6 +56,15 @@
                     <c:url value="/bmi/list" var="bUrl"><c:param name="childId" value="${childId}"/><c:param name="childName" value="${childName}"/></c:url>
                     <a class="nav-link" href="${bUrl}">BMI</a>
                 </li>
+
+                <li class="nav-item">
+                    <c:url value="/height/list" var="heightUrl">
+                        <c:param name="childId" value="${childId}"/>
+                        <c:param name="childName" value="${childName}"/>
+                    </c:url>
+                    <a class="nav-link" href="${heightUrl}">키성장</a>
+                </li>
+
             </ul>
             <div class="d-flex gap-1">
                 <c:url value="/heat/list" var="meUrl">
