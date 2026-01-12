@@ -8,6 +8,7 @@
     <title>내 주변 병원</title>
 
     <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
 
     <%-- 1. 카카오 맵 API --%>
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapsKey}&libraries=services"></script>
@@ -28,6 +29,30 @@
     <%-- 3. 커스텀 JS 파일들 --%>
     <script src="<c:url value='/js/route.js'/>"></script>
     <script src="<c:url value='/js/marker.js'/>"></script>
+
+    <style>
+        /* map.jsp 전용 보정 */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: block !important;
+        }
+
+        #mapWrap {
+            height: 100vh;
+        }
+        #map {
+            position: relative;
+            width: 100%;
+            height: 100vh !important;
+            min-height: 100vh;
+        }
+    </style>
+
+
 </head>
 
 <body>
@@ -159,6 +184,7 @@
     let myPos = null;
     let rangeCircle = null;
     let currentRadius = 1000;
+
     let ignoreNextMapClick = false;
     const places = new kakao.maps.services.Places();
     const placeListEl = document.getElementById("placeList");
@@ -568,9 +594,15 @@
     }
     window.fetchGoogleDetail = fetchGoogleDetail;
 
+</script>
+<jsp:include page="../common/chatbot.jsp"/>
+<script src="/js/chatbot.js"></script> <%--챗봇 자바스크립트 입니다--%>
+<script src="/js/map-chatbot-init.js"></script>
+
+<script>console.log("map element:", document.getElementById("map"));
+console.log("map height:", document.getElementById("map")?.offsetHeight);
     /* =========================
    리스트 접기 / 펼치기
-========================= */
     const listPanel = document.getElementById("listPanel");
     const listToggleBtn = document.getElementById("listToggleBtn");
 
