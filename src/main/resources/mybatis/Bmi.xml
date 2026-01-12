@@ -24,12 +24,12 @@
         recordDate
         ) VALUES (
         #{mno},
-        #{childId, jdbcType=INTEGER},
+        #{childId},
         #{height},
         #{weight},
         #{bmiValue},
         #{ageMonth},
-        NOW()
+        #{recordDate}
         )
     </insert>
 
@@ -85,14 +85,16 @@
         c.birth AS birthDate,
         c.gender
         FROM bmi b
-        LEFT JOIN child c
-        ON b.childId = c.childId
+        LEFT JOIN child c ON b.childId = c.childId
         WHERE b.mno = #{mno}
 
         <choose>
+            <!-- 부모(나) -->
             <when test="childId == 0 or childId == null">
                 AND b.childId IS NULL
             </when>
+
+            <!-- 자녀 -->
             <otherwise>
                 AND b.childId = #{childId}
             </otherwise>

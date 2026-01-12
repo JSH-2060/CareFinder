@@ -187,8 +187,14 @@ public class BmiService {
 
         dto.setMno(mno);
 
+        // ✅ 반드시 필요 (KST 기준)
+        dto.setRecordDate(
+                java.time.LocalDateTime.now(
+                        java.time.ZoneId.of("Asia/Seoul")
+                )
+        );
 
-        boolean ok = calculate(dto, LocalDate.now());
+        boolean ok = calculate(dto, dto.getRecordDate().toLocalDate());
         if (!ok) return dto;
 
         bmiDAO.insert(dto);
@@ -203,7 +209,9 @@ public class BmiService {
         if (list == null) return new ArrayList<>();
 
         for (BmiDTO dto : list) {
-            calculate(dto, dto.getRecordDate().toLocalDate());
+            if (dto.getRecordDate() != null) {
+                calculate(dto, dto.getRecordDate().toLocalDate());
+            }
         }
         return list;
     }
@@ -220,7 +228,9 @@ public class BmiService {
         if (list == null) return new ArrayList<>();
 
         for (BmiDTO dto : list) {
-            calculate(dto, dto.getRecordDate().toLocalDate());
+            if (dto.getRecordDate() != null) {
+                calculate(dto, dto.getRecordDate().toLocalDate());
+            }
         }
         return list;
     }
@@ -228,11 +238,24 @@ public class BmiService {
     /* ==================================================
        최근 BMI (기준바용)
     ================================================== */
-    public BmiDTO getLatestBmi(Integer childId) {
-        BmiDTO dto = bmiDAO.findLatestByChildId(childId);
+    public BmiDTO getLatestBmi(Long mno, Integer childId) {
+
+        BmiDTO dto;
+
+        // 🔥 부모(나)
+        if (childId == null || childId == 0) {
+            dto = bmiDAO.findLatestByParent(mno);
+        }
+        // 👶 자녀
+        else {
+            dto = bmiDAO.findLatestByChildId(childId);
+        }
+
         if (dto == null) return null;
 
-        calculate(dto, dto.getRecordDate().toLocalDate());
+        if (dto.getRecordDate() != null) {
+            calculate(dto, dto.getRecordDate().toLocalDate());
+        }
         return dto;
     }
 
@@ -282,7 +305,9 @@ public class BmiService {
         }
 
         // 🔥 계산 다시 (기준바/판정용)
-        calculate(dto, dto.getRecordDate().toLocalDate());
+        if (dto.getRecordDate() != null) {
+            calculate(dto, dto.getRecordDate().toLocalDate());
+        }
 
         return dto;
     }

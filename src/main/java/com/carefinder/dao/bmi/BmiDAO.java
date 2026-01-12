@@ -46,4 +46,6 @@ public interface BmiDAO {
     BmiDTO findLatestByChildId(Integer childId);
 
     List<ChildDTO> selectChildList(Long mno);
+
+    BmiDTO findLatestByParent(Long mno);
 }

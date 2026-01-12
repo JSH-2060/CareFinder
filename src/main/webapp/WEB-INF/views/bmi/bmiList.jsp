@@ -256,6 +256,42 @@
         </button>
     </div>
 
+    <!-- ===== 날짜 검색 박스 ===== -->
+    <div id="dateSearchBox" style="display:none;">
+        <div class="card-box p-3 mb-3">
+            <form action="/bmi/list" method="get" class="row g-2 align-items-end">
+
+                <!-- child 유지 -->
+                <input type="hidden" name="childId" value="${childId}">
+                <input type="hidden" name="childName" value="${childName}">
+
+                <div class="col">
+                    <label class="form-label mb-1">시작 날짜</label>
+                    <input type="date"
+                           name="startDate"
+                           class="form-control"
+                           value="${param.startDate}">
+                </div>
+
+                <div class="col">
+                    <label class="form-label mb-1">종료 날짜</label>
+                    <input type="date"
+                           name="endDate"
+                           class="form-control"
+                           value="${param.endDate}">
+                </div>
+
+                <div class="col-auto">
+                    <button class="btn btn-secondary">검색</button>
+                    <a href="/bmi/list?childId=${childId}&childName=${childName}"
+                       class="btn btn-outline-secondary">
+                        전체
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ===== 그래프 ===== -->
     <div class="card-box p-3">
         <h6 class="fw-bold mb-3">📈 BMI 변화</h6>

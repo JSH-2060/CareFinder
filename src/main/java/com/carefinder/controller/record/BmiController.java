@@ -76,7 +76,7 @@ public class BmiController {
         // =========================
         // ✅ [추가 3] 최근 BMI (기준 바용)
         // =========================
-        BmiDTO latestBmi = bmiService.getLatestBmi(childId);
+        BmiDTO latestBmi = bmiService.getLatestBmi(mno, childId);
 
         // =========================
         // model 전달
@@ -102,14 +102,15 @@ public class BmiController {
             HttpSession session,
             Model model) {
 
-        if (getUserPk(session) == null) return "redirect:/Nologin";
+        Long mno = getUserPk(session);
+        if (mno == null) return "redirect:/Nologin";
 
-        // ✅ 최근 BMI 기록 조회 (추가)
-        BmiDTO latestBmi = bmiService.getLatestBmi(childId);
+        // ✅ 부모/자녀 공통 최신 BMI
+        BmiDTO latestBmi = bmiService.getLatestBmi(mno, childId);
 
         model.addAttribute("childId", childId);
         model.addAttribute("childName", childName);
-        model.addAttribute("latestBmi", latestBmi); // ✅ 추가
+        model.addAttribute("latestBmi", latestBmi);
 
         return "bmi/bmiForm";
     }
