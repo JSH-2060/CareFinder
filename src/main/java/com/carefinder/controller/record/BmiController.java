@@ -33,7 +33,7 @@ public class BmiController {
     // ==========================
     @GetMapping("/list")
     public String bmiList(
-            @RequestParam("childId") Integer childId,
+            @RequestParam(value = "childId", required = false) Integer childId,
             @RequestParam(value = "childName", required = false) String childName,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
@@ -42,6 +42,19 @@ public class BmiController {
 
         Long mno = getUserPk(session);
         if (mno == null) return "redirect:/Nologin";
+
+        // =========================
+        // ✅ [추가 1] childId 기본값 처리 (나)
+        // =========================
+        if (childId == null) {
+            childId = 0;
+            childName = (String) session.getAttribute("userName");
+        }
+
+        // =========================
+        // ✅ [추가 2] 자녀 목록 (프로필 버튼용)
+        // =========================
+        model.addAttribute("childList", bmiService.getChildList(mno));
 
         List<BmiDTO> list;
 
@@ -60,19 +73,24 @@ public class BmiController {
             list = new ArrayList<>();
         }
 
-        // ✅ [추가 1] 최근 BMI (기준 바용)
-        BmiDTO latestBmi = bmiService.getLatestBmi(childId);
+        // =========================
+        // ✅ [추가 3] 최근 BMI (기준 바용)
+        // =========================
+        BmiDTO latestBmi = bmiService.getLatestBmi(mno, childId);
 
+        // =========================
+        // model 전달
+        // =========================
         model.addAttribute("bmiList", list);
-        model.addAttribute("graphList", list);
+        model.addAttribute("graphList", list);   // 기존 유지
+        model.addAttribute("latestBmi", latestBmi);
+
         model.addAttribute("childId", childId);
         model.addAttribute("childName", childName);
 
-        // ✅ [추가 2] model에 담기
-        model.addAttribute("latestBmi", latestBmi);
-
         return "bmi/bmiList";
     }
+
 
     // ==========================
     // 2. BMI 입력 화면
@@ -84,14 +102,15 @@ public class BmiController {
             HttpSession session,
             Model model) {
 
-        if (getUserPk(session) == null) return "redirect:/Nologin";
+        Long mno = getUserPk(session);
+        if (mno == null) return "redirect:/Nologin";
 
-        // ✅ 최근 BMI 기록 조회 (추가)
-        BmiDTO latestBmi = bmiService.getLatestBmi(childId);
+        // ✅ 부모/자녀 공통 최신 BMI
+        BmiDTO latestBmi = bmiService.getLatestBmi(mno, childId);
 
         model.addAttribute("childId", childId);
         model.addAttribute("childName", childName);
-        model.addAttribute("latestBmi", latestBmi); // ✅ 추가
+        model.addAttribute("latestBmi", latestBmi);
 
         return "bmi/bmiForm";
     }
@@ -113,20 +132,47 @@ public class BmiController {
         }
 
         dto.setMno(mno);
-        dto.setChildId(childId);
+
+        // =========================
+        // ✅ 핵심: DB 저장용 childId 처리
+        // =========================
+        if (childId != null && childId == 0) {
+            dto.setChildId(null);   // DB에는 NULL
+        } else {
+            dto.setChildId(childId);
+        }
 
         // 계산 + 저장
         bmiService.calculateAndSave(dto, mno);
 
-        // 🔥 부모창 갱신 + 팝업 닫기
+        // =========================
+        // 🔥 화면용 childId는 그대로 0 유지
+        // =========================
         return """
-        <script>
-            window.opener.location.href =
-                '/bmi/list?childId=%d&childName=%s';
-            window.close();
-        </script>
-        """.formatted(childId, childName);
+    <script>
+        window.opener.location.href =
+            '/bmi/list?childId=%d&childName=%s';
+        window.close();
+    </script>
+    """.formatted(childId, childName);
     }
+
+
+    @GetMapping("/select")
+    public String select(HttpSession session, Model model) {
+        Long mno = getUserPk(session);
+        if (mno == null) return "redirect:/Nologin";
+
+        // 자녀 목록 가져오기
+        model.addAttribute("childList", bmiService.getChildList(mno));
+
+        // ★ 중요: JSP에게 "나는 BMI(bmi)다"라고 알려줌
+        model.addAttribute("mode", "bmi");
+
+        // 기존 childSelect.jsp 재사용
+        return "heat/childSelect";
+    }
+
 
     @GetMapping("/edit")
     public String bmiEditPopup(

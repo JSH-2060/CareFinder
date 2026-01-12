@@ -1,6 +1,7 @@
 package com.carefinder.dao.bmi;
 
 import com.carefinder.dto.bmi.BmiDTO;
+import com.carefinder.dto.child.ChildDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -43,4 +44,8 @@ public interface BmiDAO {
     void update(BmiDTO dto);
 
     BmiDTO findLatestByChildId(Integer childId);
+
+    List<ChildDTO> selectChildList(Long mno);
+
+    BmiDTO findLatestByParent(Long mno);
 }

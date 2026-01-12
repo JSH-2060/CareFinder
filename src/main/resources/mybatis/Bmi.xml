@@ -29,7 +29,7 @@
         #{weight},
         #{bmiValue},
         #{ageMonth},
-        NOW()
+        #{recordDate}
         )
     </insert>
 
@@ -51,9 +51,19 @@
         c.birth AS birthDate,
         c.gender
         FROM bmi b
-        JOIN child c ON b.childId = c.childId
+        LEFT JOIN child c
+        ON b.childId = c.childId
         WHERE b.mno = #{mno}
-        AND b.childId = #{childId}
+
+        <choose>
+            <when test="childId == 0 or childId == null">
+                AND b.childId IS NULL
+            </when>
+            <otherwise>
+                AND b.childId = #{childId}
+            </otherwise>
+        </choose>
+
         ORDER BY b.recordDate DESC
     </select>
 
@@ -75,12 +85,25 @@
         c.birth AS birthDate,
         c.gender
         FROM bmi b
-        JOIN child c ON b.childId = c.childId
+        LEFT JOIN child c ON b.childId = c.childId
         WHERE b.mno = #{mno}
-        AND b.childId = #{childId}
+
+        <choose>
+            <!-- 부모(나) -->
+            <when test="childId == 0 or childId == null">
+                AND b.childId IS NULL
+            </when>
+
+            <!-- 자녀 -->
+            <otherwise>
+                AND b.childId = #{childId}
+            </otherwise>
+        </choose>
+
         AND b.recordDate BETWEEN
         CONCAT(#{startDate}, ' 00:00:00')
         AND CONCAT(#{endDate}, ' 23:59:59')
+
         ORDER BY b.recordDate DESC
     </select>
 
@@ -102,7 +125,8 @@
         c.birth AS birthDate,
         c.gender
         FROM bmi b
-        JOIN child c ON b.childId = c.childId
+        LEFT JOIN child c
+        ON b.childId = c.childId
         WHERE b.bmiNo = #{bmiNo}
     </select>
 
@@ -110,6 +134,16 @@
         SELECT *
         FROM bmi
         WHERE childId = #{childId}
+        ORDER BY recordDate DESC
+        LIMIT 1
+    </select>
+
+    <select id="findLatestByParent"
+            resultType="com.carefinder.dto.bmi.BmiDTO">
+        SELECT *
+        FROM bmi
+        WHERE mno = #{mno}
+        AND childId IS NULL
         ORDER BY recordDate DESC
         LIMIT 1
     </select>
@@ -137,5 +171,11 @@
         DELETE FROM bmi
         WHERE bmiNo = #{bmiNo}
     </delete>
+
+    <select id="selectChildList" resultType="com.carefinder.dto.child.ChildDTO">
+        SELECT * FROM child
+        WHERE mno = #{mno}
+        ORDER BY childId ASC
+    </select>
 
 </mapper>

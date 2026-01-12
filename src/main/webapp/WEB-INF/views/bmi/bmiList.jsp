@@ -111,6 +111,17 @@
             white-space:nowrap;
         }
         .bmi-desc{ font-size:12px;color:#6b7280;margin-top:4px; }
+
+        /* 비활성 탭 색상 통일 */
+        .nav-pills .nav-link {
+            color: #555 !important;
+            font-weight: 600;
+        }
+        .nav-pills .nav-link.active {
+            background-color: #2563eb; /* BMI 메인 */
+            color: #fff !important;
+        }
+
     </style>
 
     <script>
@@ -160,18 +171,83 @@
 <div class="container mt-4" style="max-width:900px;">
 
     <!-- ===== 헤더 ===== -->
-    <div class="card-box p-3 d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center gap-3">
-            <div class="avatar-circle">${fn:substring(childName,0,1)}</div>
-            <div>
-                <h5 class="mb-0 fw-bold">${childName}</h5>
-                <small class="text-muted">BMI 기록</small>
+    <div class="card-box p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar-circle">
+                    <c:choose>
+                        <c:when test="${not empty childName}">
+                            ${fn:substring(childName,0,1)}
+                        </c:when>
+                        <c:otherwise>Me</c:otherwise>
+                    </c:choose>
+                </div>
+                <div>
+                    <h5 class="mb-0 fw-bold">${childName}</h5>
+                    <small class="text-muted">BMI 기록장</small>
+                </div>
+            </div>
+            <a href="/" class="btn btn-sm btn-outline-secondary">홈으로</a>
+        </div>
+
+        <!-- ===== 탭 + 프로필 ===== -->
+        <div class="d-flex justify-content-between align-items-end border-top pt-3">
+
+            <!-- ✅ 탭 : 체온 → 백신 → BMI -->
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <c:url value="/heat/list" var="heatUrl">
+                        <c:param name="childId" value="${childId}"/>
+                        <c:param name="childName" value="${childName}"/>
+                    </c:url>
+                    <a class="nav-link" href="${heatUrl}">체온</a>
+                </li>
+
+                <li class="nav-item">
+                    <c:url value="/vaccine/list" var="vacUrl">
+                        <c:param name="childId" value="${childId}"/>
+                        <c:param name="childName" value="${childName}"/>
+                    </c:url>
+                    <a class="nav-link" href="${vacUrl}">백신</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active">BMI</a>
+                </li>
+            </ul>
+
+            <!-- ✅ 프로필 : 나 → 자녀 → + -->
+            <div class="d-flex gap-1">
+
+                <!-- 나 -->
+                <c:url value="/bmi/list" var="meUrl">
+                    <c:param name="childId" value="0"/>
+                    <c:param name="childName" value="${sessionScope.userName}"/>
+                </c:url>
+                <a href="${meUrl}"
+                   class="profile-sm-btn ${empty param.childId or param.childId eq '0' ? 'active' : ''}">
+                    나
+                </a>
+
+                <!-- 자녀 -->
+                <c:forEach var="c" items="${childList}">
+                    <c:url value="/bmi/list" var="childUrl">
+                        <c:param name="childId" value="${c.childId}"/>
+                        <c:param name="childName" value="${c.childName}"/>
+                    </c:url>
+                    <a href="${childUrl}"
+                       class="profile-sm-btn ${param.childId eq c.childId ? 'active' : ''}">
+                            ${c.childName}
+                    </a>
+                </c:forEach>
+
+                <!-- 추가 -->
+                <a href="/child/add" class="profile-sm-btn">+</a>
             </div>
         </div>
-        <a href="/heat/select" class="btn btn-sm btn-outline-secondary">뒤로</a>
     </div>
 
-    <!-- ===== 버튼 ===== -->
+    <!-- ===== 버튼 (기존 BMI 기능 그대로) ===== -->
     <div class="d-flex justify-content-end gap-2 my-3">
         <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">날짜 검색</button>
         <button class="btn btn-primary btn-sm"
@@ -180,24 +256,40 @@
         </button>
     </div>
 
-    <!-- ===== 날짜 검색 ===== -->
+    <!-- ===== 날짜 검색 박스 ===== -->
     <div id="dateSearchBox" style="display:none;">
-        <form action="/bmi/list" method="get" class="row g-2 mb-3">
-            <input type="hidden" name="childId" value="${childId}">
-            <input type="hidden" name="childName" value="${childName}">
+        <div class="card-box p-3 mb-3">
+            <form action="/bmi/list" method="get" class="row g-2 align-items-end">
 
-            <div class="col">
-                <input type="date" name="startDate" class="form-control" value="${param.startDate}">
-            </div>
-            <div class="col">
-                <input type="date" name="endDate" class="form-control" value="${param.endDate}">
-            </div>
-            <div class="col-auto">
-                <button class="btn btn-secondary">검색</button>
-                <a href="/bmi/list?childId=${childId}&childName=${childName}"
-                   class="btn btn-outline-secondary">전체</a>
-            </div>
-        </form>
+                <!-- child 유지 -->
+                <input type="hidden" name="childId" value="${childId}">
+                <input type="hidden" name="childName" value="${childName}">
+
+                <div class="col">
+                    <label class="form-label mb-1">시작 날짜</label>
+                    <input type="date"
+                           name="startDate"
+                           class="form-control"
+                           value="${param.startDate}">
+                </div>
+
+                <div class="col">
+                    <label class="form-label mb-1">종료 날짜</label>
+                    <input type="date"
+                           name="endDate"
+                           class="form-control"
+                           value="${param.endDate}">
+                </div>
+
+                <div class="col-auto">
+                    <button class="btn btn-secondary">검색</button>
+                    <a href="/bmi/list?childId=${childId}&childName=${childName}"
+                       class="btn btn-outline-secondary">
+                        전체
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- ===== 그래프 ===== -->

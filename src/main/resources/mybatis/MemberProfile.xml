@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.carefinder.dao.member.MemberProfileDAO">
+
+    <select id="findByMno"
+            resultType="com.carefinder.dto.member.MemberProfileDTO">
+        SELECT
+            mno,
+            STR_TO_DATE(birth, '%Y%m%d') AS birth,
+            gender
+        FROM member
+        WHERE mno = #{mno}
+    </select>
+
+</mapper>
