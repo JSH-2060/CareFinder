@@ -69,6 +69,11 @@
     <button id="listToggleBtn" class="list-toggle-btn">❮</button>
 
     <div id="map">
+        <!-- ✅ 홈 버튼 -->
+        <button class="home-btn" onclick="location.href='/'" title="메인으로 돌아가기">
+            🏠
+        </button>
+
         <!-- ✅ 내 위치로 돌아가기 버튼 -->
         <button class="my-location-btn" id="myLocationBtn" title="내 위치로 이동">
             <img src="/img/UserLocation.png" alt="내 위치">
