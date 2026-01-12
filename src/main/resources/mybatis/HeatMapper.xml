@@ -1,40 +1,48 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.carefinder.dao.heat.HeatDAO">
 
-    <select id="getChildList" resultType="com.carefinder.dto.child.ChildDTO">
-        SELECT * FROM child
+    <select id="selectByChild" resultType="com.carefinder.dto.heat.HeatDTO">
+        SELECT * FROM heat
         WHERE mno = #{mno}
-        ORDER BY childName ASC
+        <choose>
+            <when test="childId == 0 or childId == null">
+                AND childId IS NULL
+            </when>
+            <otherwise>
+                AND childId = #{childId}
+            </otherwise>
+        </choose>
+        ORDER BY recordDate DESC
     </select>
 
-    <select id="selectHeatListByChild" resultType="com.carefinder.dto.heat.HeatDTO">
-        SELECT h.*, c.childName
-        FROM heat h
-                 JOIN child c ON h.childId = c.childId
-        WHERE h.mno = #{mno} AND h.childId = #{childId}
-        ORDER BY h.recordDate DESC
-    </select>
-
-    <select id="getHeatById" resultType="com.carefinder.dto.heat.HeatDTO">
-        SELECT * FROM heat WHERE heatNo = #{heatNo}
-    </select>
-
-    <insert id="insertHeat" parameterType="com.carefinder.dto.heat.HeatDTO">
-        INSERT INTO heat (childId, mno, temperature, memo, recordDate)
-        VALUES (#{childId}, #{mno}, #{temperature}, #{memo}, DATE_ADD(NOW(), INTERVAL 9 HOUR))
+    <insert id="insertHeat">
+        INSERT INTO heat (
+            mno,
+            childId,
+            temperature,
+            memo,
+            recordDate
+        ) VALUES (
+                     #{mno},
+                     #{childId, jdbcType=INTEGER},
+                     #{temperature},
+                     #{memo},
+                     #{recordDate}
+                 )
     </insert>
-
-    <update id="updateHeat" parameterType="com.carefinder.dto.heat.HeatDTO">
-        UPDATE heat
-        SET temperature = #{temperature},
-            memo = #{memo},
-            recordDate = DATE_ADD(NOW(), INTERVAL 9 HOUR)
-        WHERE heatNo = #{heatNo}
-    </update>
 
     <delete id="deleteHeat">
         DELETE FROM heat WHERE heatNo = #{heatNo}
     </delete>
+
+    <select id="selectChildList" resultType="com.carefinder.dto.child.ChildDTO">
+        SELECT * FROM child
+        WHERE mno = #{mno}
+        ORDER BY childId ASC
+    </select>
 
 </mapper>

@@ -1,6 +1,7 @@
 package com.carefinder.service.vaccine;
 
 import com.carefinder.dao.vaccine.VaccineDAO;
+import com.carefinder.dto.child.ChildDTO;
 import com.carefinder.dto.vaccine.VaccineDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,10 @@ public class VaccineServiceImple implements VaccineService {
         // 취소(미접종) 상태('N')로 변경
         vaccineDAO.updateStatus(vaccineNo, "N");
         return null;
+    }
+
+    @Override
+    public List<ChildDTO> getChildList(Long mno) {
+        return vaccineDAO.selectChildList(mno);
     }
 }

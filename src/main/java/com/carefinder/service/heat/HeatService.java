@@ -5,6 +5,8 @@ import com.carefinder.dto.child.ChildDTO;
 import com.carefinder.dto.heat.HeatDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -13,31 +15,25 @@ public class HeatService {
 
     private final HeatDAO heatDAO;
 
-    // 자녀 목록 (int -> Long 수정)
+    // [1] 자녀 목록 조회 (상단 프로필바용)
     public List<ChildDTO> getChildList(Long mno) {
-        return heatDAO.getChildList(mno);
+        return heatDAO.selectChildList(mno);
     }
 
-    // 체온 리스트 (String childName -> Integer childId 수정)
+    // [2] 체온 기록 조회 (특정 자녀 or 본인)
     public List<HeatDTO> getHeatListByChild(Long mno, Integer childId) {
-        return heatDAO.selectHeatListByChild(mno, childId);
+        return heatDAO.selectByChild(mno, childId);
     }
 
+    // [3] 체온 기록 저장
+    @Transactional
     public void insertHeat(HeatDTO dto) {
         heatDAO.insertHeat(dto);
     }
 
-    public void updateHeat(HeatDTO dto) {
-        heatDAO.updateHeat(dto);
-    }
-
-    // 삭제 (int -> Long 수정)
+    // [4] 체온 기록 삭제
+    @Transactional
     public void deleteHeat(Long heatNo) {
         heatDAO.deleteHeat(heatNo);
-    }
-
-    // 단건 조회 (int -> Long 수정)
-    public HeatDTO getHeatById(Long heatNo) {
-        return heatDAO.getHeatById(heatNo);
     }
 }
