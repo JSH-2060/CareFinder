@@ -1,12 +1,16 @@
 /**
  * marker.js
- * 마커 관리 및 상세 카드 제어 모듈 (✅ Google 영업시간 기능 추가)
+ * 마커 관리 및 상세 카드 제어 모듈 (✅ Google 영업시간 기능 + 마커 확대/축소)
  */
 
 // [중요] 변수는 여기서만 선언합니다.
 let resultMarkers = [];
 let hoverOverlay = null;
 let detailCard = null;
+
+// ✅ 마커 확대/축소 관리 변수
+let selectedMarker = null;
+const originalMarkerImages = new Map();
 
 // ✅ 팀원 기능 추가: 구글 영업상태/상세 캐시 & 동시요청 제한
 const openStatusCache = new Map();     // key -> { text, state }  (영업중/종료)
@@ -172,6 +176,70 @@ function processOpenStatusQueue() {
 }
 
 // ========================================
+// ✅ 새로운 기능: 마커 확대 함수
+// ========================================
+function enlargeMarker(marker, markerImgSrc) {
+    // 원본 이미지 저장
+    if (!originalMarkerImages.has(marker)) {
+        originalMarkerImages.set(marker, marker.getImage());
+    }
+
+    // 확대된 이미지 생성 (1.5배)
+    const enlargedImage = new kakao.maps.MarkerImage(
+        markerImgSrc,
+        new kakao.maps.Size(60, 66), // 원본 40x44 -> 60x66
+        { offset: new kakao.maps.Point(24, 48) } // 중심점도 비례 조정
+    );
+
+    marker.setZIndex(999);
+    marker.setImage(enlargedImage);
+
+    // ✅ 내부 변수도 업데이트
+    selectedMarker = marker;
+}
+
+// ========================================
+// ✅ 새로운 기능: 마커 원래 크기로 복원
+// ========================================
+function restoreMarker(marker) {
+    if (originalMarkerImages.has(marker)) {
+        marker.setImage(originalMarkerImages.get(marker));
+        marker.setZIndex(1);
+    }
+}
+
+// ========================================
+// ✅ 새로운 기능: 선택된 마커 제외 나머지 숨기기
+// ========================================
+function hideOtherMarkers(selectedMkr, allMarkers) {
+    allMarkers.forEach(marker => {
+        if (marker !== selectedMkr) {
+            marker.setVisible(false);
+        }
+    });
+}
+
+// ========================================
+// ✅ 새로운 기능: 모든 마커 다시 표시
+// ========================================
+function showAllMarkers(allMarkers) {
+    allMarkers.forEach(marker => {
+        marker.setVisible(true);
+    });
+
+    // ✅ 선택된 마커가 있으면 원래 크기로 복원
+    if (selectedMarker) {
+        restoreMarker(selectedMarker);
+        selectedMarker = null;
+
+        // ✅ 외부에서 접근 가능한 속성도 초기화
+        if (window.markerModule) {
+            window.markerModule.selectedMarker = null;
+        }
+    }
+}
+
+// ========================================
 // 마커 관리 (추가 및 삭제)
 // ========================================
 
@@ -187,6 +255,8 @@ function clearAllMarkers() {
 
     resultMarkers.forEach(m => m.setMap(null));
     resultMarkers = [];
+    originalMarkerImages.clear();  // ✅ 마커 이미지 맵 초기화
+    selectedMarker = null;  // ✅ 선택된 마커 초기화
 
     if (hoverOverlay) hoverOverlay.setMap(null);
     closeDetailCard();
@@ -436,5 +506,19 @@ window.markerModule = {
     formatDistance,
     createMarker,
     esc,
-    currentPlace: null
+    currentPlace: null,
+    enlargeMarker,      // ✅ 마커 확대
+    restoreMarker,      // ✅ 마커 복원
+    hideOtherMarkers,   // ✅ 나머지 마커 숨기기
+    showAllMarkers,     // ✅ 모든 마커 표시
+    selectedMarker      // ✅ 선택된 마커 (외부에서 접근 가능)
 };
+
+window.clickNearestMarker = function() {
+    if (resultMarkers && resultMarkers.length > 0) {
+        // resultMarkers[0]은 보통 가장 가까운 병원입니다.
+        // 그 병원의 리스트 아이템(li)을 강제로 클릭합니다.
+        console.log("📍 가장 가까운 병원 자동 선택 실행");
+        resultMarkers[0].li.click();
+    }
+}

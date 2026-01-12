@@ -14,12 +14,12 @@
 }
 
 /* =========================
-   Floating Button - 글래스모피즘
+   Floating Button
 ========================= */
 #chatbot-fab {
     position: fixed;
-    right: 200px;
-    bottom: 24px;
+    right: 110px;
+    bottom: 130px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -47,12 +47,12 @@
 }
 
 /* =========================
-   Chatbot Panel - 글래스모피즘
+   Chatbot Panel
 ========================= */
 #chatbot-panel {
     position: fixed;
-    right: 200px;
-    bottom: 95px;
+    right: 60px;
+    bottom: 205px;
     width: 360px;
     height: 480px;
 
