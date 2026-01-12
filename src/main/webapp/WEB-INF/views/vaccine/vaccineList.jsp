@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-<!DOCTYPE html>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %> <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         body { background: #f0f2f5; font-family: 'Pretendard', sans-serif; }
@@ -108,6 +110,51 @@
         </button>
     </div>
 
+    <c:set var="totalCount" value="${fn:length(list)}" />
+    <c:set var="doneCount" value="0" />
+    <c:forEach var="v" items="${list}">
+        <c:if test="${v.status eq 'Y'}">
+            <c:set var="doneCount" value="${doneCount + 1}" />
+        </c:if>
+    </c:forEach>
+
+    <c:if test="${totalCount > 0}">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card-box p-3 h-100 d-flex flex-column align-items-center justify-content-center">
+                    <h6 class="fw-bold mb-3">접종 달성률</h6>
+                    <div style="width: 200px; height: 200px; position: relative;">
+                        <canvas id="vaccineChart"></canvas>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <span class="fs-4 fw-bold text-primary">
+                                <fmt:formatNumber value="${doneCount / totalCount * 100}" maxFractionDigits="0"/>%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card-box p-3 h-100 d-flex flex-column justify-content-center">
+                    <h6 class="fw-bold mb-3">접종 현황 요약</h6>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            전체 일정
+                            <span class="badge bg-secondary rounded-pill">${totalCount}건</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            접종 완료
+                            <span class="badge bg-success rounded-pill">${doneCount}건</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            미접종 / 예정
+                            <span class="badge bg-danger rounded-pill">${totalCount - doneCount}건</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </c:if>
     <div class="card-box p-3">
         <h6 class="fw-bold mb-3">접종 상세 내역</h6>
         <table class="table table-hover text-center align-middle">
@@ -180,6 +227,35 @@
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 <script>
     flatpickr(".datepicker", { locale: "ko", dateFormat: "Y-m-d", defaultDate: new Date() });
+
+    // ★ 차트 그리기 로직 추가
+    <c:if test="${totalCount > 0}">
+    const vCtx = document.getElementById('vaccineChart').getContext('2d');
+    const doneCnt = ${doneCount};
+    const yetCnt = ${totalCount - doneCount};
+
+    new Chart(vCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['접종 완료', '미접종'],
+            datasets: [{
+                data: [doneCnt, yetCnt],
+                backgroundColor: ['#3b82f6', '#fee2e2'], // 파랑, 연한 빨강
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true }
+            }
+        }
+    });
+    </c:if>
 </script>
 </body>
 </html>

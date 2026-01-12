@@ -56,4 +56,17 @@ public class ChildController {
         childService.updateChild(dto);
         return "redirect:/heat/select";
     }
+    // ★★★ [추가] 삭제 요청 처리 메서드 ★★★
+    @GetMapping("/delete")
+    public String deleteChild(@RequestParam("childId") Integer childId, HttpSession session) {
+        // 1. 로그인 체크
+        Object userPk = session.getAttribute("userPk");
+        if (userPk == null) return "redirect:/Nologin";
+
+        // 2. 서비스 호출 (삭제)
+        childService.deleteChild(childId);
+
+        // 3. 삭제 후 다시 대상 선택 화면으로
+        return "redirect:/heat/select";
+    }
 }

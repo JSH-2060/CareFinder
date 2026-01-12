@@ -162,6 +162,7 @@
     let ignoreNextMapClick = false;
     const places = new kakao.maps.services.Places();
     const placeListEl = document.getElementById("placeList");
+    const placeResults = [];  // 정렬용 배열 추가
 
     function esc(s) {
         return String(s ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[m]));
@@ -171,9 +172,29 @@
         resultMarkers.forEach(m => m.setMap(null));
         resultMarkers = [];
         placeListEl.innerHTML = "";
+        placeResults.length = 0;  // ✅ 배열 초기화 추가
         if (rangeCircle) rangeCircle.setMap(null);
         if (window.markerModule) window.markerModule.clearAllMarkers();
         if (window.routeModule) window.routeModule.clearAllLayers();
+    }
+
+    // 정렬 함수
+    function sortAndRenderList() {
+        // 정렬: 영업중(거리순) > 정보없음(거리순) > 영업종료(거리순)
+        placeResults.sort((a, b) => {
+            const openOrder = (item) => item.isOpen === true ? 0 : item.isOpen === null ? 1 : 2;
+
+            const orderDiff = openOrder(a) - openOrder(b);
+            if (orderDiff !== 0) return orderDiff;
+
+            return a.distance - b.distance;
+        });
+
+        // DOM 업데이트
+        placeListEl.innerHTML = '';
+        placeResults.forEach(item => {
+            placeListEl.appendChild(item.li);
+        });
     }
 
     /* =========================
@@ -309,7 +330,16 @@
                             '</div>';
                         placeListEl.appendChild(li);
 
-                        // ✅ 영업 상태 뱃지 업데이트
+                        // 정렬용 배열에 저장
+                        const placeItem = {
+                            place,
+                            li,
+                            distance: dist,
+                            isOpen: null
+                        };
+                        placeResults.push(placeItem);
+
+                        // 영업 상태 뱃지 업데이트
                         const badgeEl = li.querySelector("[data-open-badge]");
                         if (badgeEl && typeof window.fetchGoogleDetail === 'function') {
                             window.fetchGoogleDetail(
@@ -322,12 +352,13 @@
                                     if (googleDetail?.opening_hours && typeof googleDetail.opening_hours.open_now === 'boolean') {
                                         const isOpen = googleDetail.opening_hours.open_now;
                                         badgeEl.classList.remove("open", "closed");
+
+                                        // ✅ 배열에 영업 상태 저장
+                                        placeItem.isOpen = isOpen;
+
                                         if (isOpen) {
                                             badgeEl.textContent = "영업중";
                                             badgeEl.classList.add("open");
-
-                                            placeListEl.insertBefore(li, placeListEl.firstChild);  // 영업중부터 상단으로
-
                                         } else {
                                             badgeEl.textContent = "영업종료";
                                             badgeEl.classList.add("closed");
@@ -335,7 +366,11 @@
                                     } else {
                                         badgeEl.textContent = "정보없음";
                                         badgeEl.style.display = "none";
+                                        placeItem.isOpen = null;
                                     }
+
+                                    // ✅ 재정렬
+                                    sortAndRenderList();
                                 }
                             );
                         }
@@ -353,7 +388,7 @@
 
                     map.setBounds(bounds);
 
-                    // ✅ 팀원 기능: 다음 페이지가 있으면 계속 검색
+                    // 다음 페이지가 있으면 계속 검색
                     if (pagination.hasNextPage) {
                         pagination.nextPage();
                     } else if (++idx < keywords.length) {
