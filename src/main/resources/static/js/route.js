@@ -44,25 +44,41 @@ async function showWalkingRoute(place, map, myPos) {
                 }
             });
 
-            // 경로 그리기
-            const line = new kakao.maps.Polyline({
+            // 올리브 그라디언트 3중 레이어 경로선 (실선)
+            const layer1 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 6,
-                strokeColor: '#3897FF',
-                strokeOpacity: 0.8,
-                strokeStyle: 'shortdash',
+                strokeWeight: 14,
+                strokeColor: '#808000',  // 다크 올리브
+                strokeOpacity: 0.3,
                 map: map
             });
-            routeLayers.push(line);
+
+            const layer2 = new kakao.maps.Polyline({
+                path: path,
+                strokeWeight: 10,
+                strokeColor: '#9a9850',  // 미디엄 올리브
+                strokeOpacity: 0.6,
+                map: map
+            });
+
+            const layer3 = new kakao.maps.Polyline({
+                path: path,
+                strokeWeight: 6,
+                strokeColor: '#bab86c',  // 라이트 올리브
+                strokeOpacity: 1.0,
+                map: map
+            });
+
+            routeLayers.push(layer1, layer2, layer3);
 
             // 시간 계산
             const totalDist = data.features[0].properties.totalDistance;
             const walkingTime = Math.ceil(totalDist / 67);
             const kcal = (totalDist * 0.04).toFixed(1);
 
-            // UI 업데이트
+            // UI 업데이트 (올리브 그라디언트)
             const infoHTML = `
-                <div style="padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
+                <div style="padding: 15px; background: linear-gradient(135deg, #bab86c 0%, #808000 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
                     <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
                         🚶 도보 약 ${walkingTime}분
                     </div>
@@ -146,11 +162,11 @@ async function showDrivingRoute(place, map, myPos) {
                 });
             });
 
-            // 3중 레이어 경로선 (글로우 효과)
+            // 3중 레이어 경로선
             const layer1 = new kakao.maps.Polyline({
                 path: path,
                 strokeWeight: 12,
-                strokeColor: '#FF6B35',
+                strokeColor: '#FFB1B1',
                 strokeOpacity: 0.3,
                 map: map
             });
@@ -158,7 +174,7 @@ async function showDrivingRoute(place, map, myPos) {
             const layer2 = new kakao.maps.Polyline({
                 path: path,
                 strokeWeight: 8,
-                strokeColor: '#FF8C42',
+                strokeColor: '#FF8A9B',
                 strokeOpacity: 0.6,
                 map: map
             });
@@ -166,7 +182,7 @@ async function showDrivingRoute(place, map, myPos) {
             const layer3 = new kakao.maps.Polyline({
                 path: path,
                 strokeWeight: 5,
-                strokeColor: '#FFB84D',
+                strokeColor: '#F06292',
                 strokeOpacity: 1.0,
                 map: map
             });

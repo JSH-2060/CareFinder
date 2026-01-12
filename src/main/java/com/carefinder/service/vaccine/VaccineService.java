@@ -1,5 +1,6 @@
 package com.carefinder.service.vaccine;
 
+import com.carefinder.dto.child.ChildDTO;
 import com.carefinder.dto.vaccine.VaccineDTO;
 import java.util.List;
 
@@ -22,4 +23,7 @@ public interface VaccineService {
 
     // 6. 접종 취소: vacId(int) -> vaccineNo(Long)
     Integer cancelVaccination(Long vaccineNo);
+
+    // 7. 자녀목록 가져오기
+    List<ChildDTO> getChildList(Long mno);
 }

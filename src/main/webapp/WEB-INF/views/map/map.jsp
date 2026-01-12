@@ -65,7 +65,15 @@
         <ul id="placeList"></ul>
     </div>
 
+    <!-- ✅ 리스트 접기/펼치기 버튼 -->
+    <button id="listToggleBtn" class="list-toggle-btn">❮</button>
+
     <div id="map">
+        <!-- ✅ 내 위치로 돌아가기 버튼 -->
+        <button class="my-location-btn" id="myLocationBtn" title="내 위치로 이동">
+            <img src="/img/UserLocation.png" alt="내 위치">
+        </button>
+
         <div class="radius-dropdown" id="radiusDropdown">
             <div class="radius-toggle" id="radiusToggle">
                 <span class="label">반경</span>
@@ -177,8 +185,10 @@
     let rangeCircle = null;
     let currentRadius = 1000;
 
+    let ignoreNextMapClick = false;
     const places = new kakao.maps.services.Places();
     const placeListEl = document.getElementById("placeList");
+    const placeResults = [];  // 정렬용 배열 추가
 
     function esc(s) {
         return String(s ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[m]));
@@ -188,9 +198,29 @@
         resultMarkers.forEach(m => m.setMap(null));
         resultMarkers = [];
         placeListEl.innerHTML = "";
+        placeResults.length = 0;  // ✅ 배열 초기화 추가
         if (rangeCircle) rangeCircle.setMap(null);
         if (window.markerModule) window.markerModule.clearAllMarkers();
         if (window.routeModule) window.routeModule.clearAllLayers();
+    }
+
+    // 정렬 함수
+    function sortAndRenderList() {
+        // 정렬: 영업중(거리순) > 정보없음(거리순) > 영업종료(거리순)
+        placeResults.sort((a, b) => {
+            const openOrder = (item) => item.isOpen === true ? 0 : item.isOpen === null ? 1 : 2;
+
+            const orderDiff = openOrder(a) - openOrder(b);
+            if (orderDiff !== 0) return orderDiff;
+
+            return a.distance - b.distance;
+        });
+
+        // DOM 업데이트
+        placeListEl.innerHTML = '';
+        placeResults.forEach(item => {
+            placeListEl.appendChild(item.li);
+        });
     }
 
     /* =========================
@@ -221,6 +251,34 @@
     document.addEventListener('click', (e) => {
         if (!radiusDropdown.contains(e.target)) {
             radiusDropdown.classList.remove('open');
+        }
+    });
+
+    /* =========================
+       ✅ 내 위치로 돌아가기 버튼
+    ========================= */
+    document.getElementById('myLocationBtn').addEventListener('click', () => {
+        if (myPos) {
+            // 1️⃣ 위치 이동은 panTo()로 부드럽게
+            map.panTo(myPos);
+
+            // 2️⃣ 줌 레벨도 단계별로 부드럽게
+            const currentLevel = map.getLevel();
+            if (currentLevel !== 3) {
+                let step = currentLevel < 3 ? 1 : -1;  // 확대/축소 방향 결정
+                let level = currentLevel;
+
+                const zoomInterval = setInterval(() => {
+                    level += step;
+                    map.setLevel(level);
+
+                    if (level === 3) {
+                        clearInterval(zoomInterval);  // 목표 레벨 도달 시 중단
+                    }
+                }, 50); // 50ms마다 한 단계씩 줌
+            }
+        } else {
+            alert('현재 위치를 찾을 수 없습니다.');
         }
     });
 
@@ -298,7 +356,16 @@
                             '</div>';
                         placeListEl.appendChild(li);
 
-// ✅ 영업 상태 뱃지 업데이트
+                        // 정렬용 배열에 저장
+                        const placeItem = {
+                            place,
+                            li,
+                            distance: dist,
+                            isOpen: null
+                        };
+                        placeResults.push(placeItem);
+
+                        // 영업 상태 뱃지 업데이트
                         const badgeEl = li.querySelector("[data-open-badge]");
                         if (badgeEl && typeof window.fetchGoogleDetail === 'function') {
                             window.fetchGoogleDetail(
@@ -311,12 +378,13 @@
                                     if (googleDetail?.opening_hours && typeof googleDetail.opening_hours.open_now === 'boolean') {
                                         const isOpen = googleDetail.opening_hours.open_now;
                                         badgeEl.classList.remove("open", "closed");
+
+                                        // ✅ 배열에 영업 상태 저장
+                                        placeItem.isOpen = isOpen;
+
                                         if (isOpen) {
                                             badgeEl.textContent = "영업중";
                                             badgeEl.classList.add("open");
-
-                                            placeListEl.insertBefore(li, placeListEl.firstChild);  // 영업중부터 상단으로
-
                                         } else {
                                             badgeEl.textContent = "영업종료";
                                             badgeEl.classList.add("closed");
@@ -324,12 +392,16 @@
                                     } else {
                                         badgeEl.textContent = "정보없음";
                                         badgeEl.style.display = "none";
+                                        placeItem.isOpen = null;
                                     }
+
+                                    // ✅ 재정렬
+                                    sortAndRenderList();
                                 }
                             );
                         }
 
-// 이벤트 연결 (상세 카드 호출)
+                        // 이벤트 연결 (상세 카드 호출)
                         const openDetail = () => {
                             if (window.markerModule) {
                                 window.markerModule.showDetailCard(place, map, myPos, distText);
@@ -342,7 +414,7 @@
 
                     map.setBounds(bounds);
 
-                    // ✅ 팀원 기능: 다음 페이지가 있으면 계속 검색
+                    // 다음 페이지가 있으면 계속 검색
                     if (pagination.hasNextPage) {
                         pagination.nextPage();
                     } else if (++idx < keywords.length) {
@@ -529,6 +601,27 @@
 
 <script>console.log("map element:", document.getElementById("map"));
 console.log("map height:", document.getElementById("map")?.offsetHeight);
+    /* =========================
+   리스트 접기 / 펼치기
+    const listPanel = document.getElementById("listPanel");
+    const listToggleBtn = document.getElementById("listToggleBtn");
+
+    listToggleBtn.addEventListener("click", () => {
+        const isClosed = listPanel.classList.toggle("closed");
+
+        // 버튼 방향 변경
+        listToggleBtn.textContent = isClosed ? "❯" : "❮";
+    });
+
+    /* =========================
+        지도 클릭 시 상세 카드 닫기
+    ========================= */
+    kakao.maps.event.addListener(map, 'click', function () {
+        if (window.markerModule) {
+            window.markerModule.closeDetailCard();
+        }
+    });
+
 </script>
 
 </body>
