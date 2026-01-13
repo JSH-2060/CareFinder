@@ -63,6 +63,8 @@
             flex-direction: column;
             min-width: 140px;
             overflow: hidden;
+            z-index: 2000;
+            border: 1px solid #e5e7eb;
         }
 
         .user-dropdown button {
@@ -71,6 +73,8 @@
             background: white;
             cursor: pointer;
             font-weight: 600;
+            color: #1e293b;   /* ★ 이 줄이 핵심 */
+            text-align: left;
         }
 
         .user-dropdown button:hover {
