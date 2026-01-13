@@ -43,6 +43,40 @@
         /* 건강관리 모달 버튼 스타일 */
         .health-btn { width: 100%; padding: 15px; margin-bottom: 10px; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: left; padding-left: 20px; transition: 0.2s; }
         .health-btn:hover { transform: scale(1.02); }
+
+        .user-menu { position: relative; }
+
+        .user-name {
+            cursor: pointer;
+            font-weight: 600;
+            color: #1E3A8A;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            right: 0;
+            top: 36px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            min-width: 140px;
+            overflow: hidden;
+        }
+
+        .user-dropdown button {
+            padding: 12px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .user-dropdown button:hover {
+            background: #f1f5f9;
+        }
+
     </style>
         <%-- 챗봇 css 공용    --%>
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
@@ -56,8 +90,15 @@
             <button type="button" onclick="location.href='/Nologin'">로그인</button>
         </c:when>
         <c:otherwise>
-            <span>${userName}님 (${loginType})</span>
-            <button type="button" onclick="location.href='/nlogout'">로그아웃</button>
+            <div class="user-menu">
+                <span class="user-name" onclick="toggleUserMenu()">
+                    ${userName}님 (${loginType}) ▾
+                </span>
+                <div id="userDropdown" class="user-dropdown">
+                    <button onclick="location.href='/mypage'">마이페이지</button>
+                    <button onclick="location.href='/nlogout'">로그아웃</button>
+                </div>
+            </div>
         </c:otherwise>
     </c:choose>
 </div>
@@ -199,6 +240,21 @@
 <script src="/js/chatbot.js"></script>
 <script src="/js/index-ai-search.js"></script>
 <script src="/js/map-chatbot-init.js"></script>
+
+<script>
+    function toggleUserMenu() {
+        const menu = document.getElementById('userDropdown');
+        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    // 바깥 클릭 시 닫기
+    window.addEventListener('click', function(e) {
+        const menu = document.getElementById('userDropdown');
+        if (!e.target.closest('.user-menu')) {
+            if(menu) menu.style.display = 'none';
+        }
+    });
+</script>
 
 </body>
 </html>
