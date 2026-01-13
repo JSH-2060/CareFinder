@@ -1,5 +1,6 @@
 package com.carefinder.dto.member;
 
+
 import lombok.Data;
 
 @Data
