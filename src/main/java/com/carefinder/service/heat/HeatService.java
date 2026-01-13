@@ -36,4 +36,12 @@ public class HeatService {
     public void deleteHeat(Long heatNo) {
         heatDAO.deleteHeat(heatNo);
     }
+
+    @Transactional
+    public void updateHeat(HeatDTO dto) {
+        if (dto.getChildId() != null && dto.getChildId() == 0) {
+            dto.setChildId(null);
+        }
+        heatDAO.updateHeat(dto);
+    }
 }

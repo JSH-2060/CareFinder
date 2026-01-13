@@ -69,6 +69,11 @@
     <button id="listToggleBtn" class="list-toggle-btn">❮</button>
 
     <div id="map">
+        <!-- ✅ 홈 버튼 -->
+        <button class="home-btn" onclick="location.href='/'" title="메인으로 돌아가기">
+            🏠
+        </button>
+
         <!-- ✅ 내 위치로 돌아가기 버튼 -->
         <button class="my-location-btn" id="myLocationBtn" title="내 위치로 이동">
             <img src="/img/UserLocation.png" alt="내 위치">
@@ -168,7 +173,7 @@
     const myMarker = new kakao.maps.Marker({
         map,
         image: new kakao.maps.MarkerImage("/img/UserLocation.png", new kakao.maps.Size(40, 44), { offset: new kakao.maps.Point(18, 40) }),
-        zIndex: 1
+        zIndex: 1000  // ✅ 내 위치 마커는 항상 최상단
     });
 
     let markerImg = "/img/AnimalHosLocation.png";
@@ -221,6 +226,22 @@
         placeResults.forEach(item => {
             placeListEl.appendChild(item.li);
         });
+
+        /* ==========================================================
+       🔥 [추가] 가장 가까운 병원 자동 클릭 (인덱스 검색 유입 시)
+        ========================================================== */
+        // 인덱스에서 증상을 검색해서 넘어온 경우에만 실행되도록 체크
+        const isFromAiSearch = sessionStorage.getItem("isAiSearch") === "true";
+
+        if (isFromAiSearch && placeResults.length > 0) {
+            // 가장 상단(가까운) 병원을 0.3초 뒤에 클릭
+            setTimeout(() => {
+                console.log("📍 AI 추천: 가장 가까운 병원 상세정보를 엽니다.");
+                placeResults[0].li.click();
+                // 한 번 실행 후 세션 값 삭제 (새로고침 시 중복 방지)
+                sessionStorage.removeItem("isAiSearch");
+            }, 300);
+        }
     }
 
     /* =========================
@@ -360,9 +381,11 @@
                         const placeItem = {
                             place,
                             li,
+                            marker,  // ✅ 마커 저장 (확대/축소용)
                             distance: dist,
                             isOpen: null
                         };
+
                         placeResults.push(placeItem);
 
                         // 영업 상태 뱃지 업데이트
@@ -377,7 +400,7 @@
 
                                     if (googleDetail?.opening_hours && typeof googleDetail.opening_hours.open_now === 'boolean') {
                                         const isOpen = googleDetail.opening_hours.open_now;
-                                        badgeEl.classList.remove("open", "closed");
+                                        badgeEl.classList.remove("open", "closed", "no-info");
 
                                         // ✅ 배열에 영업 상태 저장
                                         placeItem.isOpen = isOpen;
@@ -390,8 +413,9 @@
                                             badgeEl.classList.add("closed");
                                         }
                                     } else {
-                                        badgeEl.textContent = "정보없음";
-                                        badgeEl.style.display = "none";
+                                        badgeEl.classList.remove("open", "closed");
+                                        badgeEl.textContent = "영업 정보 없음";
+                                        badgeEl.classList.add("no-info");
                                         placeItem.isOpen = null;
                                     }
 
@@ -401,10 +425,22 @@
                             );
                         }
 
-                        // 이벤트 연결 (상세 카드 호출)
+                        // ✅ 이벤트 연결 (마커 확대/축소 포함)
                         const openDetail = () => {
                             if (window.markerModule) {
                                 window.markerModule.showDetailCard(place, map, myPos, distText);
+
+                                // ✅ 이전 선택된 마커가 있으면 복원
+                                if (window.markerModule.selectedMarker && window.markerModule.selectedMarker !== marker) {
+                                    window.markerModule.restoreMarker(window.markerModule.selectedMarker);
+                                }
+
+                                // ✅ 새로 선택된 마커 저장 (외부 속성)
+                                window.markerModule.selectedMarker = marker;
+
+                                // ✅ 마커 확대 및 나머지 숨김
+                                window.markerModule.enlargeMarker(marker, markerImg);
+                                window.markerModule.hideOtherMarkers(marker, resultMarkers);
                             }
                             map.panTo(pos);
                         };
@@ -601,26 +637,29 @@
 
 <script>console.log("map element:", document.getElementById("map"));
 console.log("map height:", document.getElementById("map")?.offsetHeight);
-    /* =========================
-   리스트 접기 / 펼치기
-    const listPanel = document.getElementById("listPanel");
-    const listToggleBtn = document.getElementById("listToggleBtn");
+/* =========================
+리스트 접기 / 펼치기
+========================= */
+const listPanel = document.getElementById("listPanel");
+const listToggleBtn = document.getElementById("listToggleBtn");
 
-    listToggleBtn.addEventListener("click", () => {
-        const isClosed = listPanel.classList.toggle("closed");
+listToggleBtn.addEventListener("click", () => {
+    const isClosed = listPanel.classList.toggle("closed");
 
-        // 버튼 방향 변경
-        listToggleBtn.textContent = isClosed ? "❯" : "❮";
-    });
+    // 버튼 방향 변경
+    listToggleBtn.textContent = isClosed ? "❯" : "❮";
+});
 
-    /* =========================
-        지도 클릭 시 상세 카드 닫기
-    ========================= */
-    kakao.maps.event.addListener(map, 'click', function () {
-        if (window.markerModule) {
-            window.markerModule.closeDetailCard();
-        }
-    });
+/* =========================
+    ✅ 지도 클릭 시 상세 카드 닫기 + 모든 마커 복원
+========================= */
+kakao.maps.event.addListener(map, 'click', function () {
+    if (window.markerModule) {
+        window.markerModule.closeDetailCard();
+        // ✅ 모든 마커 복원 (내 위치 마커는 Z-index 1000으로 항상 최상단)
+        window.markerModule.showAllMarkers(resultMarkers);
+    }
+});
 
 </script>
 
