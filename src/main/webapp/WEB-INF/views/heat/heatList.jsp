@@ -59,8 +59,23 @@
         <div class="d-flex justify-content-between align-items-end border-top pt-4">
             <ul class="nav nav-pills gap-2">
                 <li class="nav-item"><a class="nav-link active" href="#">체온</a></li>
-                <li class="nav-item"><a class="nav-link" href="/vaccine/list?childId=${childId}&childName=${childName}">백신</a></li>
-                <li class="nav-item"><a class="nav-link" href="/bmi/list?childId=${childId}&childName=${childName}">BMI</a></li>
+                <li class="nav-item">
+                    <c:url value="/vaccine/list" var="vUrl"><c:param name="childId" value="${childId}"/><c:param name="childName" value="${childName}"/></c:url>
+                    <a class="nav-link" href="${vUrl}">백신</a>
+                </li>
+                <li class="nav-item">
+                    <c:url value="/bmi/list" var="bUrl"><c:param name="childId" value="${childId}"/><c:param name="childName" value="${childName}"/></c:url>
+                    <a class="nav-link" href="${bUrl}">BMI</a>
+                </li>
+
+                <li class="nav-item">
+                    <c:url value="/height/list" var="heightUrl">
+                        <c:param name="childId" value="${childId}"/>
+                        <c:param name="childName" value="${childName}"/>
+                    </c:url>
+                    <a class="nav-link" href="${heightUrl}">키성장</a>
+                </li>
+
             </ul>
 
             <div class="d-flex gap-1 align-items-center">

@@ -5,16 +5,28 @@
 
 <mapper namespace="com.carefinder.dao.height.HeightDAO">
 
-    <!-- 키 기록 추가 -->
-    <insert id="insert">
-        INSERT INTO height_record
-            (childId, height, recordDate)
-        VALUES
-            (#{childId}, #{height}, #{recordDate})
-    </insert>
+    <!-- ==========================
+         키 목록 조회 (자녀 기준)
+         ========================== -->
+    <select id="findByChildId"
+            resultType="com.carefinder.dto.height.HeightDTO">
+        SELECT
+            heightId,
+            mno,
+            childId,
+            height,
+            recordDate,
+            created_at AS createdAt
+        FROM height_record
+        WHERE childId = #{childId}
+          AND mno = #{mno}
+        ORDER BY recordDate DESC
+    </select>
 
-    <!-- 아이별 키 목록 조회 -->
-    <select id="findByChildId" resultType="com.carefinder.dto.height.HeightDTO">
+    <!-- ==========================
+         키 단건 조회 (수정용)
+         ========================== -->
+    <select id="findById" resultType="com.carefinder.dto.height.HeightDTO">
         SELECT
             heightId,
             childId,
@@ -22,11 +34,90 @@
             recordDate,
             created_at AS createdAt
         FROM height_record
-        WHERE childId = #{childId}
+        WHERE heightId = #{heightId}
+    </select>
+
+    <!-- ==========================
+     키 목록 조회 (본인 기준)
+     childId IS NULL
+     ========================== -->
+    <select id="findByMno"
+            parameterType="long"
+            resultType="com.carefinder.dto.height.HeightDTO">
+        SELECT
+            heightId,
+            mno,
+            childId,
+            height,
+            recordDate,
+            created_at AS createdAt
+        FROM height_record
+        WHERE mno = #{mno}
+          AND childId IS NULL
         ORDER BY recordDate DESC
     </select>
 
-    <!-- 키 기록 수정 -->
+    <select id="findByChildIdWithDate"
+            resultType="com.carefinder.dto.height.HeightDTO">
+        SELECT
+        heightId, mno, childId, height,
+        recordDate, created_at AS createdAt
+        FROM height_record
+        WHERE mno = #{mno}
+        AND childId = #{childId}
+
+        <if test="startDate != null and startDate != ''">
+            AND recordDate &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND recordDate &lt;= #{endDate}
+        </if>
+
+        ORDER BY recordDate DESC
+    </select>
+
+    <select id="findByMnoWithDate"
+            resultType="com.carefinder.dto.height.HeightDTO">
+        SELECT
+        heightId, mno, childId, height,
+        recordDate, created_at AS createdAt
+        FROM height_record
+        WHERE mno = #{mno}
+        AND childId IS NULL
+
+        <if test="startDate != null and startDate != ''">
+            AND recordDate &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND recordDate &lt;= #{endDate}
+        </if>
+
+        ORDER BY recordDate DESC
+    </select>
+
+    <!-- ==========================
+         키 기록 추가
+         ========================== -->
+    <insert id="insert">
+        INSERT INTO height_record
+        (
+            mno,
+            childId,
+            height,
+            recordDate
+        )
+        VALUES
+            (
+                #{mno},
+                #{childId},
+                #{height},
+                #{recordDate}
+            )
+    </insert>
+
+    <!-- ==========================
+         키 기록 수정
+         ========================== -->
     <update id="update">
         UPDATE height_record
         SET
@@ -35,10 +126,27 @@
         WHERE heightId = #{heightId}
     </update>
 
-    <!-- 키 기록 삭제 -->
+    <!-- ==========================
+         키 기록 삭제
+         ========================== -->
     <delete id="delete">
         DELETE FROM height_record
         WHERE heightId = #{heightId}
     </delete>
+
+    <!-- ==========================
+         자녀 목록 (childSelect 용)
+         child 테이블 camelCase 기준
+         ========================== -->
+    <select id="getChildList" resultType="com.carefinder.dto.child.ChildDTO">
+        SELECT
+            childId,
+            childName,
+            gender,
+            birth
+        FROM child
+        WHERE mno = #{mno}
+        ORDER BY childId
+    </select>
 
 </mapper>

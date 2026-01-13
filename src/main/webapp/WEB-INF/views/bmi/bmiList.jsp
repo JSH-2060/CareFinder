@@ -17,13 +17,34 @@
         body { background:#f0f2f5; }
 
         /* ===== 아바타 ===== */
-        .avatar-circle{
-            width:44px;height:44px;border-radius:50%;
-            background:linear-gradient(135deg,#34d399,#059669);
-            color:#fff;font-weight:700;
-            display:flex;align-items:center;justify-content:center;
-            font-size:18px;
-            box-shadow:0 4px 10px rgba(5,150,105,.35);
+        .avatar-circle-bmi{
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* ===== BMI 탭 ===== */
+        .nav-pills .nav-link.bmi-active{
+            background: linear-gradient(135deg, #34d399, #059669);
+            color: white;
+        }
+
+        /* ===== BMI 계산 버튼 ===== */
+        .btn-bmi{
+            background: linear-gradient(135deg, #34d399, #059669);
+            border: none;
+            color: white;
+            font-weight: bold;
+        }
+        .btn-bmi:hover{
+            filter: brightness(0.95);
+            color: white;
         }
 
         /* ===== 카드 ===== */
@@ -117,56 +138,56 @@
             color: #555 !important;
             font-weight: 600;
         }
-        .nav-pills .nav-link.active {
-            background-color: #2563eb; /* BMI 메인 */
+        .nav-pills .nav-link.bmi-active{
+            background: linear-gradient(135deg, #34d399, #059669);
             color: #fff !important;
+            font-weight: 700;
+        }
+
+        /* ===== BMI 프로필 캡슐 보정 ===== */
+        .profile-wrap{
+            padding:6px;
+            background:#f1f5f9;
+            border-radius:999px;
+        }
+
+        /* ===== BMI 프로필 버튼 ===== */
+        .profile-sm-btn{
+            font-size:.85rem;
+            padding:6px 14px;
+            border-radius:999px;
+            border:1px solid #d1d5db;
+            background:#fff;
+            color:#374151;
+            text-decoration:none;
+            line-height:1;
+        }
+
+        .profile-sm-btn:hover{
+            background:#ecfdf5;
+            border-color:#34d399;
+            color:#059669;
+        }
+
+        .profile-sm-btn.active{
+            background:#d1fae5;
+            border-color:#34d399;
+            color:#047857;
+            font-weight:700;
         }
 
     </style>
 
     <script>
-        /* ===== BMI 계산 팝업 (가운데 고정) ===== */
-        function openPopup(url) {
-            const width = 900;
-            const height = 750;
-
-            const left = Math.round((window.screenX || window.screenLeft) + (window.outerWidth - width) / 2);
-            const top  = Math.round((window.screenY || window.screenTop) + (window.outerHeight - height) / 2);
-
-            const options =
-                "width=" + width +
-                ",height=" + height +
-                ",left=" + left +
-                ",top=" + top +
-                ",resizable=yes,scrollbars=yes";
-
-            window.open(url, "bmiPopup", options);
-        }
 
         function toggleDateSearch() {
             const box = document.getElementById('dateSearchBox');
             box.style.display = (box.style.display === 'none') ? 'block' : 'none';
         }
 
-        function openEdit(bmiNo) {
-            const width = 500;
-            const height = 600;
-
-            const left = Math.round((window.screenX || window.screenLeft) + (window.outerWidth - width) / 2);
-            const top  = Math.round((window.screenY || window.screenTop) + (window.outerHeight - height) / 2);
-
-            const options =
-                "width=" + width +
-                ",height=" + height +
-                ",left=" + left +
-                ",top=" + top +
-                ",resizable=yes,scrollbars=yes";
-
-            window.open('/bmi/edit?bmiNo=' + bmiNo, 'bmiEdit', options);
-        }
     </script>
 </head>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <body>
 <div class="container mt-4" style="max-width:900px;">
 
@@ -174,7 +195,7 @@
     <div class="card-box p-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex align-items-center gap-3">
-                <div class="avatar-circle">
+                <div class="avatar-circle-bmi">
                     <c:choose>
                         <c:when test="${not empty childName}">
                             ${fn:substring(childName,0,1)}
@@ -212,12 +233,21 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link active">BMI</a>
+                    <a class="nav-link bmi-active" href="#">BMI</a>
                 </li>
+
+                <li class="nav-item">
+                    <c:url value="/height/list" var="heightUrl">
+                        <c:param name="childId" value="${childId}"/>
+                        <c:param name="childName" value="${childName}"/>
+                    </c:url>
+                    <a class="nav-link" href="${heightUrl}">키성장</a>
+                </li>
+
             </ul>
 
             <!-- ✅ 프로필 : 나 → 자녀 → + -->
-            <div class="d-flex gap-1">
+            <div class="profile-wrap d-flex gap-1">
 
                 <!-- 나 -->
                 <c:url value="/bmi/list" var="meUrl">
@@ -250,8 +280,9 @@
     <!-- ===== 버튼 (기존 BMI 기능 그대로) ===== -->
     <div class="d-flex justify-content-end gap-2 my-3">
         <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">날짜 검색</button>
-        <button class="btn btn-primary btn-sm"
-                onclick="openPopup('/bmi/form?childId=${childId}&childName=${childName}')">
+        <button class="btn btn-bmi"
+                data-bs-toggle="modal"
+                data-bs-target="#bmiModal">
             BMI 계산
         </button>
     </div>
@@ -294,7 +325,7 @@
 
     <!-- ===== 그래프 ===== -->
     <div class="card-box p-3">
-        <h6 class="fw-bold mb-3">📈 BMI 변화</h6>
+        <h6 class="fw-bold mb-3"> BMI 변화</h6>
 
         <c:choose>
             <c:when test="${empty graphList}">
@@ -390,7 +421,12 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="bmi" items="${bmiList}">
-                        <tr onclick="openEdit('${bmi.bmiNo}')" style="cursor:pointer;">
+                        <tr style="cursor:pointer;"
+                            onclick="openBmiEditModal(
+                                    '${bmi.bmiNo}',
+                                    '${bmi.height}',
+                                    '${bmi.weight}'
+                                    )">
                             <td>${bmi.dateStr}</td>
                             <td><fmt:formatNumber value="${bmi.bmiValue}" pattern="0.00"/></td>
                             <td>
@@ -412,7 +448,7 @@
                                     <input type="hidden" name="bmiNo" value="${bmi.bmiNo}">
                                     <input type="hidden" name="childId" value="${childId}">
                                     <input type="hidden" name="childName" value="${childName}">
-                                    <button class="btn btn-danger btn-sm">삭제</button>
+                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
                                 </form>
                             </td>
                         </tr>
@@ -439,6 +475,10 @@
             </c:forEach>
         ];
 
+        // 🔥 핵심: 시간 순서 뒤집기
+        labels.reverse();
+        values.reverse();
+
         new Chart(document.getElementById('bmiChart'), {
             type: 'line',
             data: {
@@ -452,11 +492,141 @@
             },
             options: {
                 plugins: { legend: { display: false } },
-                scales: { y: { suggestedMin: 15, suggestedMax: 35 } }
+                scales: {
+                    y: { suggestedMin: 15, suggestedMax: 35 }
+                }
             }
         });
     </script>
 </c:if>
+
+<!-- ===== BMI 입력 모달 ===== -->
+<div class="modal fade" id="bmiModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="/bmi/insert" method="post" class="w-100">
+            <div class="modal-content">
+
+                <div class="modal-header fw-bold">
+                    ${childName} BMI 계산
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <!-- 이전 기록 안내 -->
+                    <c:if test="${not empty latestBmi}">
+                        <div class="text-muted text-center mb-3" style="font-size:12px;">
+                            이전 기록(${latestBmi.recordDate}) 기준으로 자동 입력되었습니다.
+                        </div>
+                    </c:if>
+
+                    <!-- hidden -->
+                    <input type="hidden" name="childId" value="${childId}">
+                    <input type="hidden" name="childName" value="${childName}">
+
+                    <!-- 키 -->
+                    <div class="mb-3">
+                        <label class="form-label">키 (cm)</label>
+                        <input type="number"
+                               name="height"
+                               class="form-control"
+                               step="0.1"
+                               min="80"
+                               max="250"
+                               value="${latestBmi != null ? latestBmi.height : ''}"
+                               required>
+                    </div>
+
+                    <!-- 몸무게 -->
+                    <div class="mb-3">
+                        <label class="form-label">몸무게 (kg)</label>
+                        <input type="number"
+                               name="weight"
+                               class="form-control"
+                               step="0.1"
+                               min="9"
+                               max="149.9"
+                               value="${latestBmi != null ? latestBmi.weight : ''}"
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-bmi w-100">
+                        계산 & 저장
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== BMI 수정 모달 ===== -->
+<div class="modal fade" id="bmiEditModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="/bmi/update" method="post" class="w-100">
+            <div class="modal-content">
+
+                <div class="modal-header fw-bold">
+                    BMI 수정
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" name="bmiNo" id="editBmiNo">
+                    <input type="hidden" name="childId" value="${childId}">
+                    <input type="hidden" name="childName" value="${childName}">
+
+                    <div class="mb-3">
+                        <label class="form-label">키 (cm)</label>
+                        <input type="number"
+                               step="0.1"
+                               name="height"
+                               id="editHeight"
+                               class="form-control"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">몸무게 (kg)</label>
+                        <input type="number"
+                               step="0.1"
+                               name="weight"
+                               id="editWeight"
+                               class="form-control"
+                               required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-bmi w-100">
+                        수정 저장
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openBmiEditModal(bmiNo, height, weight) {
+        document.getElementById('editBmiNo').value = bmiNo;
+        document.getElementById('editHeight').value = height;
+        document.getElementById('editWeight').value = weight;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('bmiEditModal')
+        );
+        modal.show();
+    }
+</script>
+
+
 
 </body>
 </html>
