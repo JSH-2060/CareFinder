@@ -4,6 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.carefinder.dao.heat.HeatDAO">
+    <update id="updateHeat">
+        UPDATE heat
+        SET
+            temperature = #{temperature},
+            memo = #{memo},
+            recordDate = #{recordDate},
+            childId = #{childId, jdbcType=INTEGER}
+        WHERE
+            heatNo = #{heatNo}
+    </update>
 
     <select id="selectByChild" resultType="com.carefinder.dto.heat.HeatDTO">
         SELECT * FROM heat
@@ -16,8 +26,10 @@
                 AND childId = #{childId}
             </otherwise>
         </choose>
-        ORDER BY recordDate DESC
+        ORDER BY recordDate DESC, heatNo DESC
+
     </select>
+
 
     <insert id="insertHeat">
         INSERT INTO heat (
