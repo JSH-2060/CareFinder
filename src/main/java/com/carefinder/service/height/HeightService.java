@@ -17,13 +17,16 @@ public class HeightService {
     /**
      * 키 목록 조회 (부모 + 자녀 공통)
      */
-    public List<HeightDTO> getList(Long mno, Integer childId) {
+    public List<HeightDTO> getList(
+            Long mno,
+            Integer childId,
+            String startDate,
+            String endDate
+    ) {
         if (childId != null && childId == 0) {
-            // 본인
-            return heightDAO.findByMno(mno);
+            return heightDAO.findByMnoWithDate(mno, startDate, endDate);
         } else {
-            // 자녀
-            return heightDAO.findByChildId(mno, childId);
+            return heightDAO.findByChildIdWithDate(mno, childId, startDate, endDate);
         }
     }
 

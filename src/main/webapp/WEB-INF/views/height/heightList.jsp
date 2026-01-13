@@ -65,24 +65,15 @@
         tr.data-row:hover{ background:#f0fdfa; }
     </style>
 
-    <script>
-        function openHeightForm(){
-            window.open(
-                '/height/form?childId=${childId}&childName=${childName}',
-                'heightForm',
-                'width=500,height=450'
-            );
-        }
-        function openHeightEdit(id){
-            window.open(
-                '/height/edit?heightId='+id,
-                'heightEdit',
-                'width=500,height=500'
-            );
-        }
-    </script>
-</head>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+<c:if test="${not empty msg}">
+    <div class="alert alert-warning text-center mb-3">
+            ${msg}
+    </div>
+</c:if>
 <body>
 <div class="container mt-4" style="max-width:900px;">
 
@@ -152,12 +143,53 @@
     </div>
 
     <!-- ===== 기록 버튼 (체온 페이지와 동일 위치) ===== -->
-    <div class="d-flex justify-content-end mb-3">
+    <div class="d-flex justify-content-end gap-2 my-3">
+        <button class="btn btn-outline-secondary btn-sm"
+                onclick="toggleDateSearch()">
+            날짜 검색
+        </button>
         <button class="btn fw-bold text-white"
                 style="background:var(--height-main);"
-                onclick="openHeightForm()">
+                data-bs-toggle="modal"
+                data-bs-target="#heightModal">
             키 기록 추가
         </button>
+    </div>
+
+    <div id="dateSearchBox" style="display:none;">
+        <div class="card-box p-3 mb-3">
+            <form action="/height/list" method="get"
+                  class="row g-2 align-items-end">
+
+                <!-- child 유지 -->
+                <input type="hidden" name="childId" value="${childId}">
+                <input type="hidden" name="childName" value="${childName}">
+
+                <div class="col">
+                    <label class="form-label mb-1">시작 날짜</label>
+                    <input type="date"
+                           name="startDate"
+                           class="form-control"
+                           value="${param.startDate}">
+                </div>
+
+                <div class="col">
+                    <label class="form-label mb-1">종료 날짜</label>
+                    <input type="date"
+                           name="endDate"
+                           class="form-control"
+                           value="${param.endDate}">
+                </div>
+
+                <div class="col-auto">
+                    <button class="btn btn-secondary">검색</button>
+                    <a href="/height/list?childId=${childId}&childName=${childName}"
+                       class="btn btn-outline-secondary">
+                        전체
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- ===== 그래프 ===== -->
@@ -180,7 +212,12 @@
             </thead>
             <tbody>
             <c:forEach var="h" items="${list}">
-                <tr class="data-row" onclick="openHeightEdit('${h.heightId}')">
+                <tr class="data-row"
+                    onclick="openHeightEditModal(
+                            '${h.heightId}',
+                            '${h.height}',
+                            '${h.recordDate}'
+                            )">
                     <td>${h.recordDate}</td>
                     <td class="fw-bold">${h.height}</td>
                     <td>
@@ -232,6 +269,146 @@
         });
     </script>
 </c:if>
+
+<input type="hidden"
+       id="latestHeightValue"
+       value="${latestHeight != null ? latestHeight.height : ''}">
+
+
+<!-- ===== 키 입력 모달 ===== -->
+<div class="modal fade" id="heightModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="/height/insert" method="post" class="w-100">
+            <div class="modal-content">
+                <div class="modal-header fw-bold">
+                    키 입력
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="childId" value="${childId}">
+                    <input type="hidden" name="childName" value="${childName}">
+
+                    <div class="mb-3">
+                        <label class="form-label">측정 날짜</label>
+                        <input type="date"
+                               name="recordDate"
+                               class="form-control"
+                               value="<%= java.time.LocalDate.now() %>"
+                               readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">키 (cm)</label>
+                        <input type="number"
+                               step="0.1"
+                               min="80"
+                               max="250"
+                               name="height"
+                               id="heightInput"
+                               class="form-control"
+                               placeholder="80 ~ 250 cm"
+                               required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn w-100 text-white fw-bold"
+                            style="background:var(--height-main);">
+                        저장
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ===== 키 수정 모달 ===== -->
+<div class="modal fade" id="heightEditModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="/height/update" method="post" class="w-100">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">키 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- PK -->
+                    <input type="hidden" name="heightId" id="editHeightId">
+
+                    <!-- 키 -->
+                    <div class="mb-3">
+                        <label class="form-label">키 (cm)</label>
+                        <input type="number"
+                               step="0.1"
+                               min="80"
+                               max="250"
+                               name="height"
+                               id="editHeight"
+                               class="form-control"
+                               placeholder="80 ~ 250 cm"
+                               required>
+                    </div>
+
+                    <!-- 날짜 (고정) -->
+                    <div class="mb-3">
+                        <label class="form-label">측정 날짜</label>
+                        <input type="date"
+                               name="recordDate"
+                               id="editRecordDate"
+                               class="form-control"
+                               readonly>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn w-100 text-white fw-bold"
+                            style="background:var(--height-main);">
+                        수정 저장
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openHeightEditModal(id, height, date) {
+        document.getElementById('editHeightId').value = id;
+        document.getElementById('editHeight').value = height;
+        document.getElementById('editRecordDate').value = date;
+
+        const modal = new bootstrap.Modal(
+            document.getElementById('heightEditModal')
+        );
+        modal.show();
+    }
+</script>
+
+<script>
+    const heightModal = document.getElementById('heightModal');
+
+    heightModal.addEventListener('show.bs.modal', function () {
+        const last = document.getElementById('latestHeightValue').value;
+        const input = document.getElementById('heightInput');
+
+        if (last && !input.value) {
+            input.value = last;
+        }
+    });
+</script>
+
+<script>
+    function toggleDateSearch() {
+        const box = document.getElementById('dateSearchBox');
+        box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+    }
+</script>
 
 </body>
 </html>

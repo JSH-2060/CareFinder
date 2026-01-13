@@ -41,4 +41,18 @@ public interface HeightDAO {
     // 자녀 목록 (childSelect 재사용)
     // ==========================
     List<ChildDTO> getChildList(@Param("mno") Long mno);
+
+    List<HeightDTO> findByMnoWithDate(
+            @Param("mno") Long mno,
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate
+    );
+
+    List<HeightDTO> findByChildIdWithDate(
+            @Param("mno") Long mno,
+            @Param("childId") Integer childId,
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate
+    );
+
 }

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class HeightController {
     public String heightList(
             @RequestParam(value = "childId", required = false) Integer childId,
             @RequestParam(value = "childName", required = false) String childName,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
             HttpSession session,
             Model model
     ) {
@@ -47,14 +50,28 @@ public class HeightController {
             childName = (String) session.getAttribute("userName");
         }
 
-        List<HeightDTO> list = heightService.getList(mno, childId);
+        List<HeightDTO> list =
+                heightService.getList(mno, childId, startDate, endDate);
+
         if (list == null) list = new ArrayList<>();
 
-        model.addAttribute("heightList", list);
+        HeightDTO latest = null;
+        if (!list.isEmpty()) {
+            latest = list.get(0); // 최신
+        }
+
+        model.addAttribute("latestHeight", latest);
+
+        model.addAttribute("list", list);
         model.addAttribute("graphList", list);
 
+        model.addAttribute("childList", heightService.getChildList(mno));
         model.addAttribute("childId", childId);
         model.addAttribute("childName", childName);
+
+        // 🔥 날짜 유지
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
 
         return "height/heightList";
     }
@@ -82,22 +99,30 @@ public class HeightController {
     // 3. 키 기록 저장
     // ==========================
     @PostMapping("/insert")
-    @ResponseBody
     public String insertHeight(
             HeightDTO dto,
             @RequestParam("childId") Integer childId,
             @RequestParam("childName") String childName,
-            HttpSession session
+            HttpSession session,
+            RedirectAttributes rttr
     ) {
-
         Long mno = getUserPk(session);
-        if (mno == null) {
-            return "<script>alert('로그인이 필요합니다.'); window.close();</script>";
+        if (mno == null) return "redirect:/Nologin";
+
+        // 🔥 키 범위 검증
+        if (dto.getHeight() == null
+                || dto.getHeight() < 80
+                || dto.getHeight() > 250) {
+
+            rttr.addAttribute("childId", childId);
+            rttr.addAttribute("childName", childName);
+            rttr.addFlashAttribute("msg", "키는 80~250cm 사이만 입력 가능합니다.");
+
+            return "redirect:/height/list";
         }
 
         dto.setMno(mno);
 
-        // ✅ BMI와 동일한 childId 처리
         if (childId != null && childId == 0) {
             dto.setChildId(null);
         } else {
@@ -106,13 +131,10 @@ public class HeightController {
 
         heightService.insert(dto);
 
-        return """
-            <script>
-                window.opener.location.href =
-                    '/height/list?childId=%d&childName=%s';
-                window.close();
-            </script>
-        """.formatted(childId, childName);
+        rttr.addAttribute("childId", childId);
+        rttr.addAttribute("childName", childName);
+
+        return "redirect:/height/list";
     }
 
     // ==========================
@@ -137,24 +159,27 @@ public class HeightController {
     // 5. 키 수정 처리
     // ==========================
     @PostMapping("/update")
-    @ResponseBody
     public String updateHeight(
             HeightDTO dto,
-            HttpSession session
+            HttpSession session,
+            RedirectAttributes rttr
     ) {
-
         if (getUserPk(session) == null) {
-            return "<script>alert('로그인 필요'); window.close();</script>";
+            return "redirect:/Nologin";
+        }
+
+        // 🔥 키 범위 검증
+        if (dto.getHeight() == null
+                || dto.getHeight() < 80
+                || dto.getHeight() > 250) {
+
+            rttr.addFlashAttribute("msg", "키는 80~250cm 사이만 입력 가능합니다.");
+            return "redirect:/height/list";
         }
 
         heightService.update(dto);
 
-        return """
-            <script>
-                window.opener.location.reload();
-                window.close();
-            </script>
-        """;
+        return "redirect:/height/list";
     }
 
     // ==========================

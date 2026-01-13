@@ -8,15 +8,18 @@
     <!-- ==========================
          키 목록 조회 (자녀 기준)
          ========================== -->
-    <select id="findByChildId" resultType="com.carefinder.dto.height.HeightDTO">
+    <select id="findByChildId"
+            resultType="com.carefinder.dto.height.HeightDTO">
         SELECT
             heightId,
+            mno,
             childId,
             height,
             recordDate,
             created_at AS createdAt
         FROM height_record
         WHERE childId = #{childId}
+          AND mno = #{mno}
         ORDER BY recordDate DESC
     </select>
 
@@ -35,17 +38,77 @@
     </select>
 
     <!-- ==========================
+     키 목록 조회 (본인 기준)
+     childId IS NULL
+     ========================== -->
+    <select id="findByMno"
+            parameterType="long"
+            resultType="com.carefinder.dto.height.HeightDTO">
+        SELECT
+            heightId,
+            mno,
+            childId,
+            height,
+            recordDate,
+            created_at AS createdAt
+        FROM height_record
+        WHERE mno = #{mno}
+          AND childId IS NULL
+        ORDER BY recordDate DESC
+    </select>
+
+    <select id="findByChildIdWithDate"
+            resultType="com.carefinder.dto.height.HeightDTO">
+        SELECT
+        heightId, mno, childId, height,
+        recordDate, created_at AS createdAt
+        FROM height_record
+        WHERE mno = #{mno}
+        AND childId = #{childId}
+
+        <if test="startDate != null and startDate != ''">
+            AND recordDate &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND recordDate &lt;= #{endDate}
+        </if>
+
+        ORDER BY recordDate DESC
+    </select>
+
+    <select id="findByMnoWithDate"
+            resultType="com.carefinder.dto.height.HeightDTO">
+        SELECT
+        heightId, mno, childId, height,
+        recordDate, created_at AS createdAt
+        FROM height_record
+        WHERE mno = #{mno}
+        AND childId IS NULL
+
+        <if test="startDate != null and startDate != ''">
+            AND recordDate &gt;= #{startDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            AND recordDate &lt;= #{endDate}
+        </if>
+
+        ORDER BY recordDate DESC
+    </select>
+
+    <!-- ==========================
          키 기록 추가
          ========================== -->
     <insert id="insert">
         INSERT INTO height_record
         (
+            mno,
             childId,
             height,
             recordDate
         )
         VALUES
             (
+                #{mno},
                 #{childId},
                 #{height},
                 #{recordDate}
