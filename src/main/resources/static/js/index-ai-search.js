@@ -40,11 +40,15 @@ document.addEventListener("DOMContentLoaded", () => {
             /* =========================
                사용자 입력 / 챗봇 메시지 저장
             ========================= */
+            // 1️⃣ 사용자가 입력한 증상 저장
             sessionStorage.setItem("symptom", message);
 
             if (data.summary) {
                 sessionStorage.setItem("chatbotIntroMessage", data.summary);
             }
+
+            // 자동 클릭 플래그 저장
+            sessionStorage.setItem("isAiSearch", "true");
 
             /* =========================
                이동 로직

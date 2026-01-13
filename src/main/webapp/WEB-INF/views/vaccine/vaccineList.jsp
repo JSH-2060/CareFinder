@@ -83,6 +83,15 @@
                     </c:url>
                     <a class="nav-link" href="${bmiUrl}">BMI</a>
                 </li>
+
+                <li class="nav-item">
+                    <c:url value="/height/list" var="heightUrl">
+                        <c:param name="childId" value="${childId}"/>
+                        <c:param name="childName" value="${childName}"/>
+                    </c:url>
+                    <a class="nav-link" href="${heightUrl}">키성장</a>
+                </li>
+
             </ul>
 
             <div class="d-flex gap-1">
@@ -208,7 +217,10 @@
     <div class="modal-dialog modal-dialog-centered">
         <form action="/vaccine/add" method="post" class="w-100">
             <div class="modal-content">
-                <div class="modal-header fw-bold">접종 일정 추가</div>
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">접종 일정 추가</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
                 <div class="modal-body">
                     <input type="hidden" name="childId" value="${childId}">
                     <input type="hidden" name="childName" value="${childName}">

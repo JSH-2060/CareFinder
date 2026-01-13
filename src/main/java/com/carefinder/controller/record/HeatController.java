@@ -86,4 +86,13 @@ public class HeatController {
 
         return "heat/childSelect";
     }
+    @PostMapping("/update")
+    public String updateHeat(HeatDTO dto) {
+        heatService.updateHeat(dto);
+
+        String redirectId = (dto.getChildId() == null) ? "0" : String.valueOf(dto.getChildId());
+        String encodedName = URLEncoder.encode(dto.getChildName(), StandardCharsets.UTF_8);
+
+        return "redirect:/heat/list?childId=" + redirectId + "&childName=" + encodedName;
+    }
 }
