@@ -586,6 +586,8 @@
                                step="0.1"
                                name="height"
                                id="editHeight"
+                               min="80"
+                               max="250"
                                class="form-control"
                                required>
                     </div>
@@ -596,6 +598,8 @@
                                step="0.1"
                                name="weight"
                                id="editWeight"
+                               min="9"
+                               max="149.9"
                                class="form-control"
                                required>
                     </div>

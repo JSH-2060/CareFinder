@@ -159,7 +159,7 @@
             <input type="hidden" name="childName" value="${childName}">
             <div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold">체온 기록하기</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body">
-                <div class="mb-3"><label class="form-label fw-bold">체온 (℃)</label><input type="number" step="0.1" name="temperature" class="form-control form-control-lg" placeholder="36.5" required></div>
+                <div class="mb-3"><label class="form-label fw-bold">체온 (℃)</label><input type="number" step="0.1" name="temperature" class="form-control form-control-lg" max="40" min="35"placeholder="36.5" required></div>
                 <div class="mb-3"><label class="form-label fw-bold">측정 일시</label><input type="text" name="measureDateTime" class="form-control datepicker" required style="background:white;"></div>
                 <div class="mb-3"><label class="form-label fw-bold">메모</label><textarea name="memo" class="form-control" rows="3"></textarea></div>
             </div>
