@@ -46,6 +46,8 @@
     </style>
         <%-- 챗봇 css 공용    --%>
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/toast.css'/>">
+
 
 </head>
 <body>
@@ -195,6 +197,7 @@
 <script src="/js/chatbot.js"></script>
 <script src="/js/index-ai-search.js"></script>
 <script src="/js/map-chatbot-init.js"></script>
+<div id="toast" class="toast"></div>
 
 </body>
 </html>

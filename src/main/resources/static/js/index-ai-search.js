@@ -1,14 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("aiSearchInput");
     const btn = document.getElementById("aiSearchBtn");
+    const toast = document.getElementById("toast");
 
     if (!input) return;
 
+    const showToast = (message) => {
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 3500);
+    };
+
     const handleSearch = async () => {
         const message = input.value.trim();
-        if (!message) return;
 
-        console.log("✅ 검색 시작:", message);
+        //  입력 안 했을 때
+        if (!message) {
+            showToast("증상을 통해 쉽고 빠르게 근처 병원을 안내해드리는 검색창입니다. 증상을 입력해주세요. ");
+            input.focus();
+            return;
+        }
+
+        console.log("🔍 검색 시작:", message);
 
         try {
             const res = await fetch("/api/chat", {
@@ -18,21 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             const data = await res.json();
-            console.log("🤖 AI 응답:", data);
+            console.log(" AI 응답:", data);
 
             /* =========================
-               🔥 핵심 추가 부분
+               사용자 입력 / 챗봇 메시지 저장
             ========================= */
-            // 1️⃣ 사용자가 입력한 증상 저장
             sessionStorage.setItem("symptom", message);
 
-            // 2️⃣ AI 설명 저장 (map 챗봇에서 표시용)
-            if (data.message) {
-                sessionStorage.setItem("chatbotIntroMessage", data.message);
+            if (data.summary) {
+                sessionStorage.setItem("chatbotIntroMessage", data.summary);
             }
 
             /* =========================
-               이동 로직 (기존 유지)
+               이동 로직
             ========================= */
             if (data.action === "MOVE_EMERGENCY") {
                 location.href = "/map?mode=emergency";
@@ -49,9 +64,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            /* =========================
+               ❗ 증상 아님 → toast 피드백
+            ========================= */
+            showToast(data.summary || "증상을 통해 쉽고 빠르게 근처 병원을 안내해드리는 검색창입니다. 증상을 입력해주세요. Q&A 궁금하신점은 우측 하단 챗봇을 이용해주세요!");
+
         } catch (e) {
             console.error(e);
-            alert("AI 분석 실패");
+            showToast("AI 분석에 실패했어요. 잠시 후 다시 시도해주세요.");
         }
     };
 
