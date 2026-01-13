@@ -20,9 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             console.log("🤖 AI 응답:", data);
 
-            /* =========================
-               🔥 핵심 추가 부분
-            ========================= */
             // 1️⃣ 사용자가 입력한 증상 저장
             sessionStorage.setItem("symptom", message);
 
@@ -31,8 +28,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 sessionStorage.setItem("chatbotIntroMessage", data.message);
             }
 
+            // 자동 클릭 플래그 저장
+            sessionStorage.setItem("isAiSearch", "true");
+
             /* =========================
-               이동 로직 (기존 유지)
+               이동 로직
             ========================= */
             if (data.action === "MOVE_EMERGENCY") {
                 location.href = "/map?mode=emergency";
