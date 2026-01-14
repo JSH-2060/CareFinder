@@ -27,10 +27,9 @@
         WHERE mno = #{mno}
     </update>
 
-    <update id="withdraw">
-        UPDATE member
-        SET deleted = 1
+    <delete id="withdraw">
+        DELETE FROM member
         WHERE mno = #{mno}
-    </update>
+    </delete>
 
 </mapper>

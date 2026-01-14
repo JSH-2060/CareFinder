@@ -50,27 +50,40 @@ public class MyPageController {
             @RequestParam String phonenumber,
             HttpSession session
     ) {
-
         Long mno = (Long) session.getAttribute("userPk");
         if (mno == null) {
             return "redirect:/Nologin";
         }
 
+        // 1️⃣ 숫자만 남기기
+        String onlyNumber = phonenumber.replaceAll("[^0-9]", "");
+
+        // 2️⃣ 11자리 검증
+        if (!onlyNumber.matches("^01[0-9]{9}$")) {
+            // 간단 처리 (실서비스면 에러 페이지/메시지)
+            return "redirect:/mypage?error=phone";
+        }
+
+        // 3️⃣ 하이픈 포맷 적용 (010-1234-5678)
+        String formattedPhone =
+                onlyNumber.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
+
         MemberAccountDTO dto = new MemberAccountDTO();
         dto.setMno(mno);
         dto.setName(name);
-        dto.setPhonenumber(phonenumber);
+        dto.setPhonenumber(formattedPhone);
 
         memberAccountService.updateAccountInfo(dto);
 
-        // 헤더에 표시되는 이름 즉시 반영
+        // 헤더 이름 즉시 반영
         session.setAttribute("userName", name);
 
-        return "redirect:/mypage";
+        // 저장 후 홈으로 이동
+        return "redirect:/";
     }
 
     /**
-     * 회원 탈퇴 (soft delete)
+     * 회원 탈퇴
      */
     @GetMapping("/withdraw")
     public String withdraw(HttpSession session) {

@@ -91,9 +91,29 @@
             color: #334155;
             font-weight: 600;
         }
+
+        .withdraw-area {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+        }
+
+        .withdraw-area a {
+            font-size: 12px;
+            color: #94a3b8;
+            text-decoration: none;
+        }
+
+        .withdraw-area a:hover {
+            color: #dc2626;
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
+
+
 
 <div class="container">
 
@@ -107,29 +127,47 @@
     <div class="card">
         <div class="section-title">내 정보</div>
 
-        <!-- 이름 수정 -->
         <form action="/mypage/update" method="post">
+
             <div class="info-row">
                 <span>이름</span>
-                <input type="text" name="userName" value="${userName}" required>
+                <input type="text" name="name" value="${name}" required>
             </div>
 
-            <!-- 이메일 (읽기 전용) -->
             <div class="info-row">
                 <span>이메일</span>
                 <span class="readonly">${email}</span>
             </div>
 
-            <!-- 휴대폰 번호 수정 -->
             <div class="info-row">
                 <span>휴대폰 번호</span>
-                <input type="text" name="phone" value="${phone}" placeholder="010-1234-5678">
+                <input type="text"
+                       name="phonenumber"
+                       value="${empty phonenumber ? '' : phonenumber}"
+                       placeholder="01012345678 또는 010-1234-5678">
             </div>
+
+            <c:if test="${param.error == 'phone'}">
+                <p style="color:red; font-size:13px;">
+                    휴대폰 번호는 숫자 11자리여야 합니다.
+                </p>
+            </c:if>
+
 
             <div style="margin-top:20px; text-align:right;">
                 <button class="btn btn-save" type="submit">정보 저장</button>
             </div>
         </form>
+
+        <!-- 회원탈퇴 -->
+        <div class="withdraw-area">
+            <a href="/mypage/withdraw"
+               onclick="return confirm('정말 회원탈퇴 하시겠습니까?\n모든 정보는 복구할 수 없습니다.');">
+                회원탈퇴
+            </a>
+        </div>
+
+
     </div>
 
 </div>
