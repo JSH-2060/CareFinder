@@ -17,8 +17,11 @@
                 #{email},
                 #{age},
                 #{gender},
-                REPLACE(#{phonenumber}, '-', ''),  REPLACE(#{birth}, '-', '')         )
+                #{phonenumber},
+                REPLACE(#{birth}, '-', '')
+            )
     </insert>
+
 
     <!-- 로그인 -->
     <select id="findNormalMemberById"
