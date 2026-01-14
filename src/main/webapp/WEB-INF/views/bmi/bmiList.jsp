@@ -169,13 +169,15 @@
         </c:choose>
     </div>
 
-    <!-- ===== BMI 기준바 + 경계 숫자 + 화살표 ===== -->
     <c:if test="${not empty bmiList}">
-        <div class="card-box p-3">
-            <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+        <!-- 사이드바 기준 BMI: 현재 화면(날짜검색 반영) 기준 최신 -->
+        <c:set var="sidebarBmi" value="${bmiList[0]}" />
 
-            <!-- 성인 -->
-            <c:if test="${latestBmi.adult}">
+        <!-- 성인 -->
+        <c:if test="${sidebarBmi.adult}">
+            <div class="card-box p-3">
+                <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+
                 <div class="bmi-wrapper">
                     <div class="bmi-track" data-type="adult">
                         <div class="bmi-seg seg-1">저체중</div>
@@ -185,25 +187,29 @@
                         <div class="bmi-seg seg-5">고도비만</div>
                     </div>
 
-                    <!-- 화살표: Service에서 계산한 bmiPercent 사용 -->
-                    <div class="bmi-pointer" style="left:${latestBmi.bmiPercent}%;">
-                        <span class="bmi-pointer-label">
-                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.00"/>
-                        </span>
+                    <!-- 화살표 -->
+                    <div class="bmi-pointer" style="left:${sidebarBmi.bmiPercent}%;">
+                    <span class="bmi-pointer-label">
+                        <fmt:formatNumber value="${sidebarBmi.bmiValue}" pattern="0.00"/>
+                    </span>
                     </div>
                 </div>
 
                 <div class="bmi-cuts">
-                    <span class="cut" style="left:20%">${latestBmi.cut1}</span>
-                    <span class="cut" style="left:40%">${latestBmi.cut2}</span>
-                    <span class="cut" style="left:60%">${latestBmi.cut3}</span>
-                    <span class="cut" style="left:80%">${latestBmi.cut4}</span>
+                    <span class="cut" style="left:20%">${sidebarBmi.cut1}</span>
+                    <span class="cut" style="left:40%">${sidebarBmi.cut2}</span>
+                    <span class="cut" style="left:60%">${sidebarBmi.cut3}</span>
+                    <span class="cut" style="left:80%">${sidebarBmi.cut4}</span>
                 </div>
                 <div class="bmi-desc">WHO BMI 기준</div>
-            </c:if>
+            </div>
+        </c:if>
 
-            <!-- 청소년 -->
-            <c:if test="${!latestBmi.adult}">
+        <!-- 청소년 -->
+        <c:if test="${!sidebarBmi.adult}">
+            <div class="card-box p-3">
+                <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+
                 <div class="bmi-wrapper">
                     <div class="bmi-track" data-type="child">
                         <div class="bmi-seg seg-1">저체중</div>
@@ -212,21 +218,22 @@
                         <div class="bmi-seg seg-4">비만</div>
                     </div>
 
-                    <div class="bmi-pointer" style="left:${latestBmi.bmiPercent}%;">
-                        <span class="bmi-pointer-label">
-                            <fmt:formatNumber value="${latestBmi.bmiValue}" pattern="0.00"/>
-                        </span>
+                    <!-- 화살표 -->
+                    <div class="bmi-pointer" style="left:${sidebarBmi.bmiPercent}%;">
+                    <span class="bmi-pointer-label">
+                        <fmt:formatNumber value="${sidebarBmi.bmiValue}" pattern="0.00"/>
+                    </span>
                     </div>
                 </div>
 
                 <div class="bmi-cuts">
-                    <span class="cut" style="left:25%">${latestBmi.cut1}</span>
-                    <span class="cut" style="left:50%">${latestBmi.cut2}</span>
-                    <span class="cut" style="left:75%">${latestBmi.cut3}</span>
+                    <span class="cut" style="left:25%">${sidebarBmi.cut1}</span>
+                    <span class="cut" style="left:50%">${sidebarBmi.cut2}</span>
+                    <span class="cut" style="left:75%">${sidebarBmi.cut3}</span>
                 </div>
                 <div class="bmi-desc">P5 / P85 / P95 기준</div>
-            </c:if>
-        </div>
+            </div>
+        </c:if>
     </c:if>
 
     <!-- ===== 테이블 ===== -->
