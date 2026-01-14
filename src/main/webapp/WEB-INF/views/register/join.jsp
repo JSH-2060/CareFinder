@@ -30,9 +30,15 @@
         .submit-btn:disabled { background: #94a3b8; cursor: not-allowed; } /* 비활성화 스타일 */
 
         /* 메시지 스타일 */
-        #msg { font-size: 13px; margin-top: 6px; min-height: 20px; }
+        #msg, #nameMsg { font-size: 13px; margin-top: 6px; min-height: 20px; }
         .txt-red { color: #ef4444; font-weight: bold; }
         .txt-green { color: #16a34a; font-weight: bold; }
+
+        /* 필수 입력 에러 스타일 */
+        .input-error {
+            border: 1.5px solid #fca5a5 !important; /* 옅은 빨강 */
+            animation: shake 0.25s ease-in-out;
+        }
     </style>
 
     <script type="text/javascript">
@@ -40,6 +46,11 @@
         let isIdSafe = false;
 
         $(document).ready(function(){
+            // 입력하면 에러 스타일 제거
+            $("input, select").on("input change", function () {
+                $(this).removeClass("input-error");
+            });
+
             // 1. 달력 적용 (생년월일)
             flatpickr(".datepicker", {
                 locale: "ko",
@@ -83,16 +94,113 @@
                     }
                 });
             });
+
+            let isComposing = false;
+            // 한글 입력 조합 시작
+            $("#name").on("compositionstart", function () {
+                isComposing = true;
+                $("#nameMsg").html(""); // ✅ 한글 입력 시작 시 경고 즉시 제거
+            });
+
+            // 한글 입력 조합 종료
+            $("#name").on("compositionend", function () {
+                isComposing = false;
+                validateName($(this));
+            });
+
+            // 일반 입력 처리
+            $("#name").on("input", function () {
+                if (isComposing) return; // 한글 조합 중이면 검사 안 함
+                validateName($(this));
+            });
+
+            // 이름 검증 함수
+            function validateName($input) {
+                let value = $input.val();
+
+                // 공백이면 경고 제거
+                if (value.trim() === "") {
+                    $("#nameMsg").html("");
+                    return;
+                }
+
+                let koreanOnly = value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣ]/g, "");
+
+                // 영어/숫자/특수문자 입력 시: 제거 + 경고
+                if (value !== koreanOnly) {
+                    $input.val(koreanOnly);
+                    $("#nameMsg").html("<span class='txt-red'>숫자나 영어는 입력할 수 없어요!</span>");
+                } else {
+                    $("#nameMsg").html("");
+                }
+            }
+
+            // ✅ 전화번호 한글 입력 방지 (숫자 유지)
+            let isPhoneComposing = false;
+
+            // 한글 조합 시작
+            $("input[name='phonenumber']").on("compositionstart", function () {
+                isPhoneComposing = true;
+            });
+
+            // 한글 조합 종료
+            $("input[name='phonenumber']").on("compositionend", function () {
+                isPhoneComposing = false;
+                filterPhoneNumber($(this));
+            });
+
+            // 일반 입력 처리
+            $("input[name='phonenumber']").on("input", function () {
+                if (isPhoneComposing) return; // 🔥 한글 조합 중이면 아무 것도 안 함
+                filterPhoneNumber($(this));
+            });
+
+            // 숫자만 남기는 함수
+            function filterPhoneNumber($input) {
+                let value = $input.val();
+
+                // 숫자만 허용
+                value = value.replace(/[^0-9]/g, "");
+
+                // 최대 11자리
+                if (value.length > 11) {
+                    value = value.slice(0, 11);
+                }
+
+                $input.val(value);
+            }
+
         });
 
         // 3. 전송 시 최종 확인
         function checkSubmit() {
-            if(!isIdSafe) {
+            let isValid = true;
+
+            // 모든 input, select 중 required만 검사
+            $("input[required], select[required]").each(function () {
+                let $field = $(this);
+
+                if ($field.val().trim() === "") {
+                    isValid = false;
+
+                    // 에러 스타일
+                    $field.removeClass("input-error");
+                    void $field[0].offsetWidth; // reflow
+                    $field.addClass("input-error");
+                }
+            });
+
+            if (!isValid) {
+                return false; // 하나라도 비어 있으면 제출 막기
+            }
+
+            // 아이디 중복 체크도 포함
+            if (!isIdSafe) {
                 alert("아이디 중복 확인을 해주세요.");
                 $("#id").focus();
-                return false; // 전송 막음
+                return false;
             }
-            return true; // 전송
+            return true;
         }
     </script>
 </head>
@@ -119,18 +227,19 @@
 
         <div class="form-group">
             <label>이름</label>
-            <input type="text" name="name" required>
+            <input type="text" name="name" id="name" required>
+            <div id="nameMsg"></div>
         </div>
 
         <div class="form-group">
             <label>생년월일</label>
-            <input type="text" name="birth" class="datepicker" placeholder="날짜를 선택하세요" required style="background-color: white;">
+            <input type="text" name="birth" class="datepicker" placeholder="날짜를 선택하세요" style="background-color: white;" required>
         </div>
 
         <div class="form-group">
             <label>이메일</label>
             <div class="inline-group">
-                <input type="text" name="emailId" placeholder="이메일 아이디">
+                <input type="text" name="emailId" placeholder="이메일 아이디" required>
                 <select name="emailDomain">
                     <option value="@naver.com">@naver.com</option>
                     <option value="@gmail.com">@gmail.com</option>
@@ -141,7 +250,7 @@
 
         <div class="form-group">
             <label>성별</label>
-            <select name="gender">
+            <select name="gender" required>
                 <option value="male">남</option>
                 <option value="female">여</option>
             </select>
@@ -149,7 +258,7 @@
 
         <div class="form-group">
             <label>전화번호</label>
-            <input type="text" name="phonenumber" placeholder="010-0000-0000">
+            <input type="text" name="phonenumber" placeholder="'-' 없이 입력해주세요." required>
         </div>
 
         <button type="submit" class="submit-btn" disabled>회원가입</button>
