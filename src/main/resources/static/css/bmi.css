@@ -1,0 +1,99 @@
+body { background:#f0f2f5; }
+
+/* ===== 아바타 ===== */
+.avatar-circle-bmi{
+    width:44px;height:44px;border-radius:50%;
+    background:linear-gradient(135deg,#34d399,#059669);
+    color:#fff;display:flex;align-items:center;justify-content:center;
+    font-weight:bold;
+}
+
+/* ===== 카드 ===== */
+.card-box{
+    background:#fff;
+    border-radius:16px;
+    box-shadow:0 4px 20px rgba(0,0,0,.05);
+    margin-bottom:20px;
+}
+
+/* ===== BMI 버튼 ===== */
+.btn-bmi{
+    background:linear-gradient(135deg,#34d399,#059669);
+    border:none;color:#fff;font-weight:bold;
+}
+.btn-bmi:hover{ filter:brightness(.95); color:#fff; }
+
+/* ===== BMI 탭 ===== */
+.nav-pills .nav-link{
+    color:#555 !important;
+    font-weight:600;
+}
+.nav-pills .nav-link.bmi-active{
+    background:linear-gradient(135deg,#34d399,#059669);
+    color:#fff !important;
+    font-weight:700;
+}
+
+/* ===== 상태 뱃지 ===== */
+.badge-status{padding:6px 12px;border-radius:999px;font-size:.85rem;font-weight:600;}
+.badge-under{background:#dbeafe;color:#2563eb;}
+.badge-normal{background:#dcfce7;color:#16a34a;}
+.badge-over{background:#ffedd5;color:#f97316;}
+.badge-obese{background:#fee2e2;color:#ef4444;}
+.badge-severe{background:#fecaca;color:#b91c1c;}
+.badge-none{background:#f1f5f9;color:#64748b;}
+
+/* ===== BMI 기준바 ===== */
+.bmi-wrapper{position:relative;margin-top:12px;}
+.bmi-track{display:flex;height:38px;border-radius:999px;overflow:hidden;}
+.bmi-track[data-type="adult"] .bmi-seg{width:20%;}
+.bmi-track[data-type="child"] .bmi-seg{width:25%;}
+
+.bmi-seg{
+    display:flex;align-items:center;justify-content:center;
+    font-size:.85rem;font-weight:600;color:#fff;
+}
+
+.seg-1{background:#93c5fd;}
+.seg-2{background:#60a5fa;}
+.seg-3{background:#fbbf24;}
+.seg-4{background:#f87171;}
+.seg-5{background:#fb7185;}
+
+/* ===== 화살표 ===== */
+.bmi-pointer{
+    position:absolute;top:-22px;transform:translateX(-50%);
+    pointer-events:none;z-index:10;
+}
+.bmi-pointer::after{
+    content:"▼";font-size:12px;color:#111827;
+}
+.bmi-pointer-label{
+    background:#111827;color:#fff;
+    padding:2px 6px;border-radius:8px;
+    font-size:11px;font-weight:600;
+}
+
+/* ===== 경계 숫자 ===== */
+.bmi-cuts{position:relative;height:20px;margin-top:6px;}
+.bmi-cuts .cut{
+    position:absolute;transform:translateX(-50%);
+    font-size:11px;color:#374151;
+}
+
+/* ===== 프로필 버튼 ===== */
+.profile-wrap{
+    padding:6px;background:#f1f5f9;border-radius:999px;
+}
+.profile-sm-btn{
+    font-size:.85rem;padding:6px 14px;
+    border-radius:999px;border:1px solid #d1d5db;
+    background:#fff;color:#374151;text-decoration:none;
+}
+.profile-sm-btn:hover{
+    background:#ecfdf5;border-color:#34d399;color:#059669;
+}
+.profile-sm-btn.active{
+    background:#d1fae5;border-color:#34d399;
+    color:#047857;font-weight:700;
+}
