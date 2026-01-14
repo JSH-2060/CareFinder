@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background: #F8FAFC;
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.login-box h2 {
+    margin: 0 0 8px 0;
+    font-size: 26px;
+    text-align: center;
+}
+
+.login-box .desc {
+    text-align: center;
+    color: #64748B;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.error-msg {
+    color: #DC2626;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 14px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    height: 46px;
+    border-radius: 10px;
+    border: 1px solid #CBD5E1;
+    padding: 0 14px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2563EB;
+}
+
+.login-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    border: none;
+    background: #1E3A8A;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.join-link {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.join-link a {
+    color: #2563EB;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 28px 0 20px;
+    color: #94A3B8;
+    font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #E2E8F0;
+}
+
+.divider span {
+    margin: 0 10px;
+}
+
+.social-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.kakao {
+    background: #FEE500;
+}
+
+.naver {
+    background: #03C75A;
+    color: white;
+}
+
+.google {
+    background: white;
+    border: 1px solid #CBD5E1;
+}
