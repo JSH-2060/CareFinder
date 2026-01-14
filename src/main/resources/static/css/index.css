@@ -1,256 +1,397 @@
-/* =========================
-   기본 레이아웃
-========================= */
+/* =========================================
+   1. 기본 설정
+   ========================================= */
 body {
     margin: 0;
     font-family: 'Pretendard', sans-serif;
-    background: #F0F4F8;
-    height: 100vh;
-}
-
-/* =========================
-   헤더
-========================= */
-.header {
-    height: 70px;
-    background: #E0F2FE;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 24px;
-}
-
-.header span {
-    margin-right: 12px;
-    font-weight: 600;
-    color: #1E3A8A;
-}
-
-.header button {
-    padding: 8px 18px;
-    border-radius: 10px;
-    border: none;
-    background: #1E3A8A;
-    color: #fff;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* =========================
-   메인 영역
-========================= */
-.main {
-    position: relative;
-    height: calc(100vh - 70px);
-}
-
-.center-box {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    width: 60%;
-}
-
-.center-box h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
+    /* 원래의 밝은 배경색 유지 */
+    background: #F8FAFC;
+    overflow-x: hidden;
     color: #1e293b;
 }
 
-/* =========================
-   검색 영역
-========================= */
+/* =========================================
+   2. 헤더 스타일 (투명 유리)
+   ========================================= */
+.header {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: transparent;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.logo-icon { color: #fff; font-size: 28px; opacity: 0.95; }
+
+.header-right { display: flex; align-items: center; }
+
+/* 유저 메뉴 이름 - 투명도 0.11 적용 */
+.user-name {
+    cursor: pointer;
+    font-weight: 700;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: 0.2s;
+    /* 요청하신 투명도 0.11 */
+    background: rgba(255, 255, 255, 0.11);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.user-name:hover { background: rgba(255,255,255,0.2); }
+
+/* 로그인 버튼 - 투명도 0.11 적용 */
+.login-btn {
+    padding: 10px 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.25);
+    /* 요청하신 투명도 0.11 */
+    background: rgba(255, 255, 255, 0.11);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+.login-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   3. Hero 섹션 (배경색 원상복구: 진한 그라데이션)
+   ========================================= */
+.hero-section {
+    position: relative;
+
+    /* [복구] 원래의 진하고 선명한 그라데이션 */
+    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
+
+    height: 70vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    border-bottom-left-radius: 60px;
+    border-bottom-right-radius: 60px;
+    z-index: 1;
+
+    /* 배경 패턴을 살짝 추가하여 심심하지 않게 (선택사항) */
+    background-image:
+            linear-gradient(135deg, #1E3A8A 0%, #10B981 100%),
+            radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%),
+            radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%),
+            radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* 색감을 흐리게 만들던 오브(Orb) 효과 제거 */
+.hero-section::before, .hero-section::after {
+    display: none;
+}
+
+.hero-content {
+    margin-top: -40px;
+    width: 100%;
+    z-index: 2;
+}
+
+.hero-section h2 {
+    font-size: 46px;
+    margin-bottom: 16px;
+    font-weight: 800;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.2); /* 텍스트 그림자 강화 */
+}
+
+.hero-section p {
+    font-size: 20px;
+    margin-bottom: 50px;
+    opacity: 0.95;
+    font-weight: 500;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* =========================================
+   4. 맑은 글래스 검색창
+   ========================================= */
 .search-box {
     display: flex;
     align-items: center;
-    gap: 12px;
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 90%;
 }
 
 .search-box input {
     flex: 1;
-    height: 78px;
+    height: 80px;
     border-radius: 999px;
-    border: none;
-    padding: 0 36px;
+    /* 테두리를 얇고 밝게 */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0 160px 0 40px;
     font-size: 18px;
-    background: linear-gradient(135deg, #2563EB, #1E40AF);
+
+    /* 핵심: 투명도 0.11 적용 */
+    background: rgba(255, 255, 255, 0.11);
+    backdrop-filter: blur(20px); /* 블러는 강하게 유지하여 유리 질감 표현 */
+    -webkit-backdrop-filter: blur(20px);
+
     color: white;
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+    /* 그림자를 아주 은은하게 */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    outline: none;
+    transition: 0.3s;
+}
+.search-box input::placeholder { color: rgba(255, 255, 255, 0.75); font-weight: 500; }
+.search-box input:focus {
+    /* 포커스시 약간 더 불투명해짐 */
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
 
 .search-box button {
-    height: 78px;
-    padding: 0 32px;
-    border-radius: 999px;
-    border: none;
-    background: #1E3A8A;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 8px 20px rgba(30, 58, 138, 0.35);
+    position: absolute; right: 10px; top: 10px; bottom: 10px;
+    width: 130px;
+    border-radius: 999px; border: none;
+    background: white;
+    color: #1E3A8A;
+    font-size: 18px; font-weight: 800; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     transition: 0.2s;
 }
-
 .search-box button:hover {
-    background: #1e40af;
-    transform: translateY(-2px);
+    background: #f8fafc;
+    color: #2563EB;
+    transform: scale(1.03);
 }
 
-/* =========================
-   좌측 하단 메뉴
-========================= */
-.left-bottom {
-    position: absolute;
-    left: 24px;
-    bottom: 24px;
-    width: 260px;
+/* =========================================
+   5. 아이콘 메뉴 (가시성 개선: Milky Glass 스타일)
+   ========================================= */
+.icon-menu-container {
+    position: relative;
+    margin-top: -80px;
+    padding-bottom: 20px;
+    z-index: 10;
+}
+
+.icon-menu {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.icon-item {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 140px;
 
-.main-btn {
-    width: 100%;
-    padding: 16px 0;
-    border-radius: 14px;
-    border: none;
-    background: #1E3A8A;
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
+    /* [변경] 가시성을 위해 투명도를 0.11 -> 0.7로 올림 (우유빛 유리) */
+    background: rgba(255, 255, 255, 0.7);
+
+    /* 블러 효과 유지 */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    /* 테두리를 조금 더 선명하게 */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 28px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    transition: 0.2s;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #334155;
+
+    /* 그림자를 조금 더 주어 배경과 분리 */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
-.main-btn:hover {
-    background: #1e40af;
-    transform: translateY(-2px);
+.icon-item:hover {
+    transform: translateY(-15px) scale(1.03);
+
+    /* 호버 시 거의 불투명하게 변해서 확실한 피드백 제공 */
+    background: rgba(255, 255, 255, 0.95);
+
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    border-color: #ffffff;
 }
 
-/* =========================
-   모달 공통
-========================= */
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
+.icon-img {
+    font-size: 36px;
+    margin-bottom: 14px;
+    transition: 0.3s;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05));
+}
+
+.icon-item:hover .icon-img {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.icon-item span {
+    font-weight: 800; /* 글자 굵기 강화 */
+    font-size: 15px;
+    color: #1e293b;
+}
+
+/* =========================================
+   6. 콘텐츠 섹션 (카드 스타일)
+   ========================================= */
+.info-section {
+    padding: 120px 24px;
+    display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
+.section-gray { background: #F8FAFC; }
+/* 흰색 배경 섹션은 투명한 카드와 대비를 위해 약간 어둡게 처리 */
+.section-white { background: linear-gradient(to bottom, #FFFFFF, #F0F4F8); }
+
+.info-container {
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+.row-reverse { flex-direction: row-reverse; }
+
+.info-text { flex: 1; }
+.info-tag {
+    display: inline-block;
+    background: #E0F2FE; color: #0284C7;
+    padding: 8px 16px; border-radius: 99px;
+    font-weight: 800; font-size: 13px; margin-bottom: 16px;
+}
+.tag-green { background: #DCFCE7; color: #166534; }
+
+.info-text h3 { font-size: 40px; font-weight: 800; margin: 0 0 24px 0; color: #0f172a; line-height: 1.25; }
+.info-text p { font-size: 18px; color: #64748b; line-height: 1.7; margin-bottom: 32px; word-break: keep-all; }
+
+.info-btn {
+    padding: 16px 36px;
+    background: linear-gradient(135deg, #2563EB, #1d4ed8);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
+}
+.info-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.4); }
+
+/* 카드 - 투명한 유리 느낌 */
+.feature-card {
+    /* 핵심: 투명도 0.11 적용 */
+    background: rgba(255, 255, 255, 0.11);
+    backdrop-filter: blur(15px);
+    padding: 50px 30px;
+    border-radius: 36px;
+    text-align: center;
+    width: 320px;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+}
+/* 호버시 선명한 흰색으로 변함 */
+.feature-card:hover {
+    transform: translateY(-10px);
+    background: #ffffff;
+    border-color: #fff;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card::before {
+    content: ''; position: absolute; top: -15px; right: -15px;
+    width: 80px; height: 80px; border-radius: 50%;
+    opacity: 0.1; z-index: -1; /* 오파시티 낮춤 */
+    filter: blur(10px);
+}
+.card-drug::before { background: #8B5CF6; }
+.card-health::before { background: #F59E0B; }
+.feature-icon { font-size: 70px; margin-bottom: 24px; display: inline-block; }
+.feature-card h4 { margin: 0 0 12px 0; font-size: 24px; font-weight: 800; color: #1e293b; }
+.feature-card p { margin: 0; color: #64748b; font-size: 16px; font-weight: 500; }
+
+/* =========================================
+   7. 챗봇 & 모달
+   ========================================= */
+#chatbot-launcher, .chatbot-launcher, .chatbot-btn, #chat-button-default, .chat-trigger-icon { display: none !important; }
+
+.chatbot-toggle-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1E3A8A, #10B981);
+    color: white;
+    border: 3px solid rgba(255,255,255,0.8); /* 테두리 강조 */
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 34px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    z-index: 9999;
+}
+.chatbot-toggle-btn:hover { transform: translateY(-5px) rotate(10deg); box-shadow: 0 15px 35px rgba(16, 185, 129, 0.5); }
+
+/* 모달도 투명하게 */
+.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 9000; }
 
 .modal-content {
-    background: white;
-    padding: 24px;
-    border-radius: 16px;
-    width: 400px;
+    /* 핵심: 투명도 0.11 적용 */
+    background: rgba(255, 255, 255, 0.11);
+    backdrop-filter: blur(25px);
+    padding: 30px;
+    border-radius: 24px;
+    width: 440px;
     text-align: center;
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
+.modal-close { background: rgba(255,255,255,0.5); color: #64748b; margin-top: 15px; width: 100%; padding: 14px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s;}
+.modal-close:hover { background: #ffffff; color: #334155; }
 
-.modal-close {
-    background: #f1f5f9;
-    color: #334155;
-    margin-top: 15px;
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: bold;
-}
+.dept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+.dept-btn { padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.4); color: #334155; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 15px; }
+.dept-btn:hover { background: white; border-color: #2563EB; color: #2563EB; font-weight: 700; transform: scale(1.02); }
 
-.modal-close:hover {
-    background: #e2e8f0;
-}
+.health-btn { width: 100%; padding: 18px; margin-bottom: 12px; border: none; border-radius: 16px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: left; padding-left: 24px; transition: 0.2s; display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.3); }
+.health-btn:hover { transform: scale(1.02); background: white; }
 
-/* =========================
-   진료과
-========================= */
-.dept-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 10px;
-}
+.user-dropdown { position: absolute; right: 0; top: 50px; background: rgba(255, 255, 255, 0.11); backdrop-filter: blur(20px); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); display: none; flex-direction: column; min-width: 160px; overflow: hidden; z-index: 2000; border: 1px solid rgba(255,255,255,0.5); }
+.user-dropdown button { padding: 14px; border: none; background: transparent; cursor: pointer; font-weight: 600; color: #475569; text-align: left; font-size: 14px; transition: 0.2s; }
+.user-dropdown button:hover { background: rgba(255,255,255,0.3); color: #2563EB; padding-left: 18px; }
 
-.dept-btn {
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.dept-btn:hover {
-    background: #eff6ff;
-    border-color: #2563EB;
-    color: #2563EB;
-}
-
-/* =========================
-   건강관리
-========================= */
-.health-btn {
-    width: 100%;
-    padding: 15px 20px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    text-align: left;
-    transition: 0.2s;
-}
-
-.health-btn:hover {
-    transform: scale(1.02);
-}
-
-/* =========================
-   유저 메뉴
-========================= */
-.user-menu {
-    position: relative;
-}
-
-.user-name {
-    cursor: pointer;
-    font-weight: 600;
-    color: #1E3A8A;
-}
-
-.user-dropdown {
-    position: absolute;
-    right: 0;
-    top: 36px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    display: none;
-    flex-direction: column;
-    min-width: 140px;
-    border: 1px solid #e5e7eb;
-    z-index: 2000;
-}
-
-.user-dropdown button {
-    padding: 12px;
-    border: none;
-    background: white;
-    cursor: pointer;
-    font-weight: 600;
-    color: #1e293b;
-    text-align: left;
-}
-
-.user-dropdown button:hover {
-    background: #f1f5f9;
-}
+.main-btn { width: 100%; padding: 18px 0; border-radius: 14px; border: none; background: linear-gradient(135deg, #1E3A8A, #2563EB); color: white; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; margin-bottom: 0; }
+.main-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(30, 58, 138, 0.3); }
