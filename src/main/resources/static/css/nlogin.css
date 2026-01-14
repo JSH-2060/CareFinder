@@ -1,0 +1,33 @@
+@charset "UTF-8";
+
+body {
+    background-color: #f8f9fa;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Pretendard', sans-serif; /* 폰트 통일 */
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    border-radius: 20px;
+    background: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.naver-btn {
+    display: block; /* a태그 블록 처리 */
+    transition: opacity 0.2s;
+}
+
+.naver-btn:hover {
+    opacity: 0.9;
+}
+
+.naver-btn img {
+    width: 100%;
+    border-radius: 6px;
+}
