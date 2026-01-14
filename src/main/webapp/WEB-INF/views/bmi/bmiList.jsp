@@ -9,185 +9,17 @@
     <meta charset="UTF-8">
     <title>BMI 기록</title>
 
-    <!-- Bootstrap & Chart.js -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- BMI CSS -->
+    <link rel="stylesheet" href="/css/bmi.css">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        body { background:#f0f2f5; }
-
-        /* ===== 아바타 ===== */
-        .avatar-circle-bmi{
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #34d399, #059669);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        /* ===== BMI 탭 ===== */
-        .nav-pills .nav-link.bmi-active{
-            background: linear-gradient(135deg, #34d399, #059669);
-            color: white;
-        }
-
-        /* ===== BMI 계산 버튼 ===== */
-        .btn-bmi{
-            background: linear-gradient(135deg, #34d399, #059669);
-            border: none;
-            color: white;
-            font-weight: bold;
-        }
-        .btn-bmi:hover{
-            filter: brightness(0.95);
-            color: white;
-        }
-
-        /* ===== 카드 ===== */
-        .card-box{
-            background:#fff;
-            border-radius:16px;
-            box-shadow:0 4px 20px rgba(0,0,0,.05);
-            margin-bottom:20px;
-        }
-
-        /* ===== 판정 뱃지 ===== */
-        .badge-status{ padding:6px 12px;border-radius:999px;font-size:.85rem;font-weight:600; }
-        .badge-under  { background:#dbeafe;color:#2563eb; }
-        .badge-normal { background:#dcfce7;color:#16a34a; }
-        .badge-over   { background:#ffedd5;color:#f97316; }
-        .badge-obese  { background:#fee2e2;color:#ef4444; }
-        .badge-severe { background:#fecaca;color:#b91c1c; }
-        .badge-none   { background:#f1f5f9;color:#64748b; }
-
-        /* ===== BMI 기준바 ===== */
-        .bmi-wrapper{ position:relative; margin-top:12px; }
-        .bmi-track{
-            display:flex;
-            height:38px;
-            border-radius:999px;
-            overflow:hidden;
-        }
-        .bmi-seg{
-            flex:0 0 auto;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:.85rem;
-            font-weight:600;
-            color:#fff;
-        }
-        /* 성인 5등분 / 청소년 4등분 */
-        .bmi-track[data-type="adult"] .bmi-seg{ width:20%; }
-        .bmi-track[data-type="child"] .bmi-seg{ width:25%; }
-
-        .seg-1{background:#93c5fd;}
-        .seg-2{background:#60a5fa;}
-        .seg-3{background:#fbbf24;}
-        .seg-4{background:#f87171;}
-        .seg-5{background:#fb7185;}
-
-        /* 화살표(overflow 잘림 방지: track 밖, wrapper 안) */
-        .bmi-pointer{
-            position:absolute;
-            top:-22px;
-            transform:translateX(-50%);
-            pointer-events:none;
-            z-index:10;
-        }
-        .bmi-pointer::after{
-            content:"▼";
-            display:block;
-            text-align:center;
-            font-size:12px;
-            color:#111827;
-            line-height:12px;
-        }
-        .bmi-pointer-label{
-            background:#111827;
-            color:#fff;
-            padding:2px 6px;
-            border-radius:8px;
-            font-size:11px;
-            font-weight:600;
-            display:inline-block;
-            margin-bottom:2px;
-        }
-
-        /* 경계 숫자 */
-        .bmi-cuts{
-            position:relative;
-            height:20px;
-            margin-top:6px;
-        }
-        .bmi-cuts .cut{
-            position:absolute;
-            transform:translateX(-50%);
-            font-size:11px;
-            color:#374151;
-            white-space:nowrap;
-        }
-        .bmi-desc{ font-size:12px;color:#6b7280;margin-top:4px; }
-
-        /* 비활성 탭 색상 통일 */
-        .nav-pills .nav-link {
-            color: #555 !important;
-            font-weight: 600;
-        }
-        .nav-pills .nav-link.bmi-active{
-            background: linear-gradient(135deg, #34d399, #059669);
-            color: #fff !important;
-            font-weight: 700;
-        }
-
-        /* ===== BMI 프로필 캡슐 보정 ===== */
-        .profile-wrap{
-            padding:6px;
-            background:#f1f5f9;
-            border-radius:999px;
-        }
-
-        /* ===== BMI 프로필 버튼 ===== */
-        .profile-sm-btn{
-            font-size:.85rem;
-            padding:6px 14px;
-            border-radius:999px;
-            border:1px solid #d1d5db;
-            background:#fff;
-            color:#374151;
-            text-decoration:none;
-            line-height:1;
-        }
-
-        .profile-sm-btn:hover{
-            background:#ecfdf5;
-            border-color:#34d399;
-            color:#059669;
-        }
-
-        .profile-sm-btn.active{
-            background:#d1fae5;
-            border-color:#34d399;
-            color:#047857;
-            font-weight:700;
-        }
-
-    </style>
-
-    <script>
-
-        function toggleDateSearch() {
-            const box = document.getElementById('dateSearchBox');
-            box.style.display = (box.style.display === 'none') ? 'block' : 'none';
-        }
-
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <body>
 <div class="container mt-4" style="max-width:900px;">
 
@@ -338,7 +170,7 @@
     </div>
 
     <!-- ===== BMI 기준바 + 경계 숫자 + 화살표 ===== -->
-    <c:if test="${latestBmi ne null}">
+    <c:if test="${not empty bmiList}">
         <div class="card-box p-3">
             <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
 
@@ -459,6 +291,9 @@
         </table>
     </div>
 </div>
+
+<!-- BMI JS -->
+<script src="/js/bmi.js"></script>
 
 <!-- ===== 차트 ===== -->
 <c:if test="${not empty graphList}">
@@ -616,20 +451,6 @@
         </form>
     </div>
 </div>
-
-<script>
-    function openBmiEditModal(bmiNo, height, weight) {
-        document.getElementById('editBmiNo').value = bmiNo;
-        document.getElementById('editHeight').value = height;
-        document.getElementById('editWeight').value = weight;
-
-        const modal = new bootstrap.Modal(
-            document.getElementById('bmiEditModal')
-        );
-        modal.show();
-    }
-</script>
-
 
 
 </body>
