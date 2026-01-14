@@ -39,7 +39,8 @@
 
         <div class="form-group">
             <label>이름</label>
-            <input type="text" name="name" required>
+            <input type="text" name="name" id="name" required>
+            <div id="nameMsg"></div>
         </div>
 
         <div class="form-group">
@@ -50,7 +51,7 @@
         <div class="form-group">
             <label>이메일</label>
             <div class="inline-group">
-                <input type="text" name="emailId" placeholder="이메일 아이디">
+                <input type="text" name="emailId" placeholder="이메일 아이디" required>
                 <select name="emailDomain">
                     <option value="@naver.com">@naver.com</option>
                     <option value="@gmail.com">@gmail.com</option>
@@ -61,7 +62,7 @@
 
         <div class="form-group">
             <label>성별</label>
-            <select name="gender">
+            <select name="gender" required>
                 <option value="male">남</option>
                 <option value="female">여</option>
             </select>
@@ -69,7 +70,7 @@
 
         <div class="form-group">
             <label>전화번호</label>
-            <input type="text" name="phonenumber" placeholder="010-0000-0000">
+            <input type="text" name="phonenumber" placeholder="'-' 없이 입력해주세요." required>
         </div>
 
         <button type="submit" class="submit-btn" disabled>회원가입</button>

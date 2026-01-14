@@ -26,15 +26,15 @@ public class VaccineServiceImple implements VaccineService {
 
     @Override
     public Integer completeVaccination(Long vaccineNo) {
-        // 완료 상태('Y')로 변경
+        // 완료 상태('Y')로 변경 (Service에서는 리턴값 없어도 됨)
         vaccineDAO.updateStatus(vaccineNo, "Y");
-        return null;
+        return 1;
     }
 
     @Override
     public Integer deleteVaccine(Long vaccineNo) {
         vaccineDAO.delete(vaccineNo);
-        return null;
+        return 1;
     }
 
     @Override
@@ -46,11 +46,16 @@ public class VaccineServiceImple implements VaccineService {
     public Integer cancelVaccination(Long vaccineNo) {
         // 취소(미접종) 상태('N')로 변경
         vaccineDAO.updateStatus(vaccineNo, "N");
-        return null;
+        return 1;
     }
 
     @Override
     public List<ChildDTO> getChildList(Long mno) {
         return vaccineDAO.selectChildList(mno);
+    }
+
+    @Override
+    public VaccineDTO getVaccine(Long vaccineNo) {
+        return vaccineDAO.selectOne(vaccineNo);
     }
 }

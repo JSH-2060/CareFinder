@@ -84,7 +84,7 @@ public class DrugController {
         List<Map<String, Object>> result = new ArrayList<>();
 
         try {
-            // 5페이지 2500건) 가져오기
+            // 50페이지 25000건) 가져오기
             for (int pageNo = 1; pageNo <= 50 ; pageNo++) {
                 String urlStr = "https://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService03/getMdcinGrnIdntfcInfoList03"
                         + "?serviceKey=" + SERVICE_KEY

@@ -8,10 +8,20 @@
     <!-- 회원가입 -->
     <insert id="insertNormalMember">
         INSERT INTO member
-            (id, pw, name, email, age, gender, phonenumber)
+            (id, pw, name, email, age, gender, phonenumber, birth)
         VALUES
-            (#{id}, #{pw}, #{name}, #{email}, #{age}, #{gender}, #{phonenumber})
+            (
+                #{id},
+                #{pw},
+                #{name},
+                #{email},
+                #{age},
+                #{gender},
+                #{phonenumber},
+                REPLACE(#{birth}, '-', '')
+            )
     </insert>
+
 
     <!-- 로그인 -->
     <select id="findNormalMemberById"

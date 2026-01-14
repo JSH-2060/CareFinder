@@ -47,7 +47,7 @@ async function showWalkingRoute(place, map, myPos) {
             // 올리브 그라디언트 3중 레이어 경로선 (실선)
             const layer1 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 14,
+                strokeWeight: 12,
                 strokeColor: '#808000',  // 다크 올리브
                 strokeOpacity: 0.3,
                 map: map
@@ -55,7 +55,7 @@ async function showWalkingRoute(place, map, myPos) {
 
             const layer2 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 10,
+                strokeWeight: 8,
                 strokeColor: '#9a9850',  // 미디엄 올리브
                 strokeOpacity: 0.6,
                 map: map
@@ -63,7 +63,7 @@ async function showWalkingRoute(place, map, myPos) {
 
             const layer3 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 6,
+                strokeWeight: 5,
                 strokeColor: '#bab86c',  // 라이트 올리브
                 strokeOpacity: 1.0,
                 map: map

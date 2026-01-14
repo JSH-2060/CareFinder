@@ -19,6 +19,11 @@
         ORDER BY inoculationDate ASC
     </select>
 
+    <select id="selectOne" resultType="com.carefinder.dto.vaccine.VaccineDTO">
+        SELECT * FROM vaccine
+        WHERE vaccineNo = #{vaccineNo}
+    </select>
+
     <insert id="insert">
         INSERT INTO vaccine (
             mno,

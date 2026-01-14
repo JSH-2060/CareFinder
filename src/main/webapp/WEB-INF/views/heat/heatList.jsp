@@ -26,7 +26,9 @@
         .table td { vertical-align: middle; }
         tr.record-row { transition: 0.2s; }
         tr.record-row:hover { background-color: #f8fafc !important; cursor: pointer; transform: scale(1.005); }
-        /* 배지 스타일 */
+
+        .flatpickr-calendar { z-index: 9999 !important; }
+
         .badge-custom { padding: 6px 10px; border-radius: 8px; font-weight: 500; font-size: 0.8rem; }
         .bg-danger-super { background-color: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe; }
         .bg-danger-high  { background-color: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
@@ -67,7 +69,6 @@
                     <c:url value="/bmi/list" var="bUrl"><c:param name="childId" value="${childId}"/><c:param name="childName" value="${childName}"/></c:url>
                     <a class="nav-link" href="${bUrl}">BMI</a>
                 </li>
-
                 <li class="nav-item">
                     <c:url value="/height/list" var="heightUrl">
                         <c:param name="childId" value="${childId}"/>
@@ -75,7 +76,6 @@
                     </c:url>
                     <a class="nav-link" href="${heightUrl}">키성장</a>
                 </li>
-
             </ul>
 
             <div class="d-flex gap-1 align-items-center">
@@ -120,7 +120,12 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="h" items="${list}">
-                        <tr class="record-row" onclick="openEditModal('${h.heatNo}', '${h.temperature}', '${h.measureDate} ${h.measureTime}', '${h.memo}')">
+                        <tr class="record-row"
+                            onclick="openEditModal(this)"
+                            data-no="${h.heatNo}"
+                            data-temp="${h.temperature}"
+                            data-date="${h.measureDate} ${h.measureTime}"
+                            data-memo="${fn:escapeXml(h.memo)}">
 
                             <td class="text-secondary">
                                     ${h.measureDate} <span class="fw-bold text-dark">${h.measureTime}</span>
@@ -154,12 +159,17 @@
 
 <div class="modal fade" id="addModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <form action="/heat/add" method="post" class="modal-content border-0 shadow">
+        <form action="/heat/add" method="post" class="modal-content border-0 shadow" onsubmit="return validateForm(this)">
             <input type="hidden" name="childId" value="${childId}">
             <input type="hidden" name="childName" value="${childName}">
             <div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold">체온 기록하기</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body">
-                <div class="mb-3"><label class="form-label fw-bold">체온 (℃)</label><input type="number" step="0.1" name="temperature" class="form-control form-control-lg" max="40" min="35"placeholder="36.5" required></div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">체온 (℃)</label>
+                    <input type="number" step="0.1" name="temperature" class="form-control form-control-lg"
+                           placeholder="36.5" min="34.0" max="43.0" required>
+                    <div class="form-text text-danger">※ 34.0℃ ~ 43.0℃ 사이만 입력 가능합니다.</div>
+                </div>
                 <div class="mb-3"><label class="form-label fw-bold">측정 일시</label><input type="text" name="measureDateTime" class="form-control datepicker" required style="background:white;"></div>
                 <div class="mb-3"><label class="form-label fw-bold">메모</label><textarea name="memo" class="form-control" rows="3"></textarea></div>
             </div>
@@ -170,13 +180,18 @@
 
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <form action="/heat/update" method="post" class="modal-content border-0 shadow">
+        <form action="/heat/update" method="post" class="modal-content border-0 shadow" onsubmit="return validateForm(this)">
             <input type="hidden" name="heatNo" id="edit_heatNo">
             <input type="hidden" name="childId" value="${childId}">
             <input type="hidden" name="childName" value="${childName}">
             <div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold">기록 수정하기</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body">
-                <div class="mb-3"><label class="form-label fw-bold">체온 (℃)</label><input type="number" step="0.1" name="temperature" id="edit_temperature" class="form-control form-control-lg" required></div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">체온 (℃)</label>
+                    <input type="number" step="0.1" name="temperature" id="edit_temperature" class="form-control form-control-lg"
+                           min="34.0" max="43.0" required>
+                    <div class="form-text text-danger">※ 34.0℃ ~ 43.0℃ 사이만 입력 가능합니다.</div>
+                </div>
                 <div class="mb-3"><label class="form-label fw-bold">측정 일시</label><input type="text" name="measureDateTime" id="edit_measureDate" class="form-control datepicker" required style="background:white;"></div>
                 <div class="mb-3"><label class="form-label fw-bold">메모</label><textarea name="memo" id="edit_memo" class="form-control" rows="3"></textarea></div>
             </div>
@@ -189,8 +204,50 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 <script>
-    const ctx = document.getElementById('tempChart').getContext('2d');
+    // 1. Flatpickr 초기화
+    const fpConfig = {
+        locale: "ko",
+        dateFormat: "Y-m-d H:i",
+        enableTime: true,
+        time_24hr: true,
+        defaultDate: new Date(),
+        allowInput: true
+    };
+    const addPicker = flatpickr("#addModal .datepicker", fpConfig);
+    const editPicker = flatpickr("#editModal .datepicker", fpConfig);
 
+    // ★ [핵심] 체온 유효성 검사 함수 (제출 시 실행)
+    function validateForm(form) {
+        const tempInput = form.querySelector('input[name="temperature"]');
+        const val = parseFloat(tempInput.value);
+
+        if (val < 34.0 || val > 43.0) {
+            alert("체온은 34.0도 ~ 43.0도 사이만 입력 가능합니다.\n정상적인 수치를 입력해주세요!");
+            tempInput.value = ""; // 잘못된 값 초기화
+            tempInput.focus();
+            return false; // 전송 막음
+        }
+        return true; // 전송 허용
+    }
+
+    // 2. 수정 모달 열기 함수
+    function openEditModal(row) {
+        const no = row.getAttribute('data-no');
+        const temp = row.getAttribute('data-temp');
+        const date = row.getAttribute('data-date');
+        const memo = row.getAttribute('data-memo');
+
+        document.getElementById('edit_heatNo').value = no;
+        document.getElementById('edit_temperature').value = temp;
+        document.getElementById('edit_memo').value = memo;
+
+        if (date) editPicker.setDate(date);
+        new bootstrap.Modal(document.getElementById('editModal')).show();
+    }
+
+
+    // 3. 차트 설정
+    const ctx = document.getElementById('tempChart').getContext('2d');
     const labels = [];
     const dataPoints = [];
 
@@ -202,172 +259,105 @@
     labels.reverse();
     dataPoints.reverse();
 
-    const lastValue = dataPoints.length ? dataPoints[dataPoints.length - 1] : null;
+    // 동적 Y축 최대값 (40도 넘으면 그래프 확장)
+    let maxTemp = 40;
+    if (dataPoints.length > 0) {
+        const dataMax = Math.max(...dataPoints);
+        if (dataMax >= 40) {
+            maxTemp = dataMax + 1.0;
+        }
+    }
 
-    /* ===============================
-       WHO 스타일 체온 구간 배경
-    =============================== */
     const temperatureBands = {
         id: 'temperatureBands',
         beforeDraw(chart) {
             const { ctx, chartArea, scales } = chart;
             if (!chartArea) return;
-
             const y = scales.y;
             const left = chartArea.left;
             const right = chartArea.right;
 
             const bands = [
-                { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.12)' }, // 저체온
-                { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.14)' }, // 미열
-                { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.14)' }, // 고열
-                { min: 39.0, max: 40.5, color: 'rgba(216,180,254,0.14)' }  // 초고열
+                { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.12)' },
+                { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.14)' },
+                { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.14)' },
+                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.14)' }
             ];
 
             ctx.save();
             bands.forEach(b => {
-                ctx.fillStyle = b.color;
-                ctx.fillRect(
-                    left,
-                    y.getPixelForValue(b.max),
-                    right - left,
-                    y.getPixelForValue(b.min) - y.getPixelForValue(b.max)
-                );
+                const yMaxPixel = y.getPixelForValue(Math.min(b.max, y.max));
+                const yMinPixel = y.getPixelForValue(Math.max(b.min, y.min));
+                if (yMaxPixel < yMinPixel) {
+                    ctx.fillStyle = b.color;
+                    ctx.fillRect(left, y.getPixelForValue(b.max), right - left, y.getPixelForValue(b.min) - y.getPixelForValue(b.max));
+                }
             });
             ctx.restore();
         }
     };
 
-    /* ===============================
-       🔥 오른쪽 기준 라벨 + 현재값 표시
-    =============================== */
     const temperatureRightLabels = {
         id: 'temperatureRightLabels',
         afterDraw(chart) {
             const { ctx, chartArea, scales } = chart;
             if (!chartArea) return;
-
             const y = scales.y;
             const right = chartArea.right;
 
             ctx.save();
             ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
+            ctx.font = '12px Pretendard, sans-serif';
 
-            // 기준선 라벨
             const lines = [
                 { v: 37.3, text: '37.3℃ · 미열',  color: '#f97316' },
                 { v: 38.0, text: '38.0℃ · 고열',  color: '#ef4444' },
                 { v: 39.0, text: '39.0℃ · 초고열', color: '#7e22ce' }
             ];
 
-            ctx.font = '12px Pretendard, sans-serif';
             lines.forEach(l => {
-                const py = y.getPixelForValue(l.v);
-
-                // 얇은 흰 배경 (배경색 위에서도 읽히게)
-                ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                ctx.fillRect(right + 6 - 2, py - 8, 95, 16);
-
-                ctx.fillStyle = l.color;
-                ctx.fillText(l.text, right + 6, py);
+                if (l.v <= scales.y.max && l.v >= scales.y.min) {
+                    const py = y.getPixelForValue(l.v);
+                    ctx.fillStyle = 'rgba(255,255,255,0.85)';
+                    ctx.fillRect(right + 4, py - 8, 95, 16);
+                    ctx.fillStyle = l.color;
+                    ctx.fillText(l.text, right + 6, py);
+                }
             });
-
-            // 현재값 크게 표시 (옵션)
-            if (lastValue != null) {
-                const py = y.getPixelForValue(lastValue);
-                const text = lastValue.toFixed(1) + '℃';
-                const w = ctx.measureText(text).width;
-
-                ctx.font = 'bold 14px Pretendard, sans-serif';
-                ctx.fillStyle = 'rgba(255,255,255,0.9)';
-                ctx.fillRect(right + 6 - 2, py - 10, w + 10, 20);
-
-                ctx.fillStyle = '#7f1d1d';
-                ctx.fillText(text, right + 6, py);
-            }
-
-            ctx.restore();
-        }
-    };
-
-    /* ===============================
-       🔥 각 측정 지점 옆에 온도 표시 (선과 겹침 방지)
-    =============================== */
-    const pointValueLabels = {
-        id: 'pointValueLabels',
-        afterDatasetsDraw(chart) {
-            const { ctx } = chart;
-            const meta = chart.getDatasetMeta(0);
-            const dataset = chart.data.datasets[0];
-
-            ctx.save();
-            ctx.font = '11px Pretendard, sans-serif';
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-
-            meta.data.forEach((point, i) => {
-                const value = dataset.data[i];
-                if (value == null) return;
-
-                // 이전 값과 비교해서 위/아래 배치
-                const prev = dataset.data[i - 1];
-                const offsetY = (prev != null && value < prev) ? 12 : -12;
-
-                const text = value.toFixed(1) + '℃';
-                const textWidth = ctx.measureText(text).width;
-
-                const x = point.x + 6;
-                const y = point.y + offsetY;
-
-                // 흰 배경 박스 (가독성)
-                ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                ctx.fillRect(x - 2, y - 7, textWidth + 4, 14);
-
-                ctx.fillStyle = '#374151';
-                ctx.fillText(text, x, y);
-            });
-
             ctx.restore();
         }
     };
 
     new Chart(ctx, {
         type: 'line',
-        plugins: [temperatureBands, temperatureRightLabels, pointValueLabels],
+        plugins: [temperatureBands, temperatureRightLabels],
         data: {
             labels,
             datasets: [
-                // 실제 체온 데이터
                 {
                     data: dataPoints,
                     borderColor: '#7f1d1d',
                     borderWidth: 2,
                     tension: 0,
                     fill: false,
-
-                    pointRadius: 3,
+                    pointRadius: 4,
                     pointBackgroundColor: '#7f1d1d',
                     pointBorderWidth: 0
                 },
-
-                // 기준선들
-                { data: labels.map(() => 37.3), borderColor: '#f97316', borderWidth: 1, pointRadius: 0 },
-                { data: labels.map(() => 38.0), borderColor: '#ef4444', borderWidth: 1, pointRadius: 0 },
-                { data: labels.map(() => 39.0), borderColor: '#7e22ce', borderWidth: 1, pointRadius: 0 }
+                { data: labels.map(() => 37.3), borderColor: '#f97316', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
+                { data: labels.map(() => 38.0), borderColor: '#ef4444', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
+                { data: labels.map(() => 39.0), borderColor: '#7e22ce', borderWidth: 1, pointRadius: 0, borderDash: [5,5] }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-
-            // ✅ 오른쪽 라벨 공간 확보
             layout: { padding: { right: 110 } },
-
             scales: {
                 y: {
                     min: 35,
-                    max: 40,
+                    max: maxTemp,
                     ticks: { stepSize: 0.5 }
                 },
                 x: {
@@ -375,12 +365,7 @@
                 }
             },
             plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: c => c.parsed.y + ' ℃'
-                    }
-                }
+                legend: { display: false }
             }
         }
     });
