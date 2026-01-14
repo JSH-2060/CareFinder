@@ -27,10 +27,8 @@
         tr.record-row { transition: 0.2s; }
         tr.record-row:hover { background-color: #f8fafc !important; cursor: pointer; transform: scale(1.005); }
 
-        /* [해결 1] Flatpickr 달력이 모달 뒤로 숨는 문제 해결 */
         .flatpickr-calendar { z-index: 9999 !important; }
 
-        /* 배지 스타일 */
         .badge-custom { padding: 6px 10px; border-radius: 8px; font-weight: 500; font-size: 0.8rem; }
         .bg-danger-super { background-color: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe; }
         .bg-danger-high  { background-color: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
@@ -161,12 +159,17 @@
 
 <div class="modal fade" id="addModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <form action="/heat/add" method="post" class="modal-content border-0 shadow">
+        <form action="/heat/add" method="post" class="modal-content border-0 shadow" onsubmit="return validateForm(this)">
             <input type="hidden" name="childId" value="${childId}">
             <input type="hidden" name="childName" value="${childName}">
             <div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold">체온 기록하기</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body">
-                <div class="mb-3"><label class="form-label fw-bold">체온 (℃)</label><input type="number" step="0.1" name="temperature" class="form-control form-control-lg" placeholder="36.5" required></div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">체온 (℃)</label>
+                    <input type="number" step="0.1" name="temperature" class="form-control form-control-lg"
+                           placeholder="36.5" min="34.0" max="43.0" required>
+                    <div class="form-text text-danger">※ 34.0℃ ~ 43.0℃ 사이만 입력 가능합니다.</div>
+                </div>
                 <div class="mb-3"><label class="form-label fw-bold">측정 일시</label><input type="text" name="measureDateTime" class="form-control datepicker" required style="background:white;"></div>
                 <div class="mb-3"><label class="form-label fw-bold">메모</label><textarea name="memo" class="form-control" rows="3"></textarea></div>
             </div>
@@ -177,13 +180,18 @@
 
 <div class="modal fade" id="editModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <form action="/heat/update" method="post" class="modal-content border-0 shadow">
+        <form action="/heat/update" method="post" class="modal-content border-0 shadow" onsubmit="return validateForm(this)">
             <input type="hidden" name="heatNo" id="edit_heatNo">
             <input type="hidden" name="childId" value="${childId}">
             <input type="hidden" name="childName" value="${childName}">
             <div class="modal-header border-0 pb-0"><h5 class="modal-title fw-bold">기록 수정하기</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <div class="modal-body">
-                <div class="mb-3"><label class="form-label fw-bold">체온 (℃)</label><input type="number" step="0.1" name="temperature" id="edit_temperature" class="form-control form-control-lg" required></div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">체온 (℃)</label>
+                    <input type="number" step="0.1" name="temperature" id="edit_temperature" class="form-control form-control-lg"
+                           min="34.0" max="43.0" required>
+                    <div class="form-text text-danger">※ 34.0℃ ~ 43.0℃ 사이만 입력 가능합니다.</div>
+                </div>
                 <div class="mb-3"><label class="form-label fw-bold">측정 일시</label><input type="text" name="measureDateTime" id="edit_measureDate" class="form-control datepicker" required style="background:white;"></div>
                 <div class="mb-3"><label class="form-label fw-bold">메모</label><textarea name="memo" id="edit_memo" class="form-control" rows="3"></textarea></div>
             </div>
@@ -196,24 +204,34 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 <script>
-    // 1. Flatpickr 초기화 (모달 z-index는 CSS로 해결됨)
+    // 1. Flatpickr 초기화
     const fpConfig = {
         locale: "ko",
         dateFormat: "Y-m-d H:i",
         enableTime: true,
         time_24hr: true,
         defaultDate: new Date(),
-        allowInput: true // 직접 입력 허용
+        allowInput: true
     };
-
-    // 추가/수정 모달 각각 인스턴스 저장
     const addPicker = flatpickr("#addModal .datepicker", fpConfig);
     const editPicker = flatpickr("#editModal .datepicker", fpConfig);
 
+    // ★ [핵심] 체온 유효성 검사 함수 (제출 시 실행)
+    function validateForm(form) {
+        const tempInput = form.querySelector('input[name="temperature"]');
+        const val = parseFloat(tempInput.value);
 
-    // 2. 수정 모달 열기 함수 (data 속성 읽기 방식)
+        if (val < 34.0 || val > 43.0) {
+            alert("체온은 34.0도 ~ 43.0도 사이만 입력 가능합니다.\n정상적인 수치를 입력해주세요!");
+            tempInput.value = ""; // 잘못된 값 초기화
+            tempInput.focus();
+            return false; // 전송 막음
+        }
+        return true; // 전송 허용
+    }
+
+    // 2. 수정 모달 열기 함수
     function openEditModal(row) {
-        // data-* 속성에서 값 가져오기
         const no = row.getAttribute('data-no');
         const temp = row.getAttribute('data-temp');
         const date = row.getAttribute('data-date');
@@ -223,13 +241,8 @@
         document.getElementById('edit_temperature').value = temp;
         document.getElementById('edit_memo').value = memo;
 
-        // Flatpickr에 날짜 설정 (중요: 단순히 value만 넣으면 달력 UI랑 싱크가 안 맞을 수 있음)
-        if (date) {
-            editPicker.setDate(date);
-        }
-
-        const modal = new bootstrap.Modal(document.getElementById('editModal'));
-        modal.show();
+        if (date) editPicker.setDate(date);
+        new bootstrap.Modal(document.getElementById('editModal')).show();
     }
 
 
@@ -238,7 +251,6 @@
     const labels = [];
     const dataPoints = [];
 
-    // 데이터 파싱 (최신순 -> 과거순 데이터를 역순으로 삽입)
     <c:forEach var="h" items="${list}" end="14">
     labels.push('${h.measureDate} ${h.measureTime}');
     dataPoints.push(${h.temperature});
@@ -247,18 +259,15 @@
     labels.reverse();
     dataPoints.reverse();
 
-    // [해결 2] 동적 Y축 최대값 계산 (40도 넘으면 그래프 뚫고 나가는 문제 해결)
-    let maxTemp = 40; // 기본 최대값
+    // 동적 Y축 최대값 (40도 넘으면 그래프 확장)
+    let maxTemp = 40;
     if (dataPoints.length > 0) {
         const dataMax = Math.max(...dataPoints);
         if (dataMax >= 40) {
-            maxTemp = dataMax + 1.0; // 데이터가 40 넘으면 여유있게 +1도
+            maxTemp = dataMax + 1.0;
         }
     }
 
-    const lastValue = dataPoints.length ? dataPoints[dataPoints.length - 1] : null;
-
-    /* 배경 색상 밴드 플러그인 */
     const temperatureBands = {
         id: 'temperatureBands',
         beforeDraw(chart) {
@@ -268,21 +277,18 @@
             const left = chartArea.left;
             const right = chartArea.right;
 
-            // 차트 최대값에 따라 밴드 그리기 (40.5 고정이 아니라 maxTemp 사용 가능하지만, 일단 구간은 고정)
             const bands = [
                 { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.12)' },
                 { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.14)' },
                 { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.14)' },
-                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.14)' } // 초고열 구간은 끝까지
+                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.14)' }
             ];
 
             ctx.save();
             bands.forEach(b => {
-                // 현재 차트 범위 내에 있는 경우만 그리기
                 const yMaxPixel = y.getPixelForValue(Math.min(b.max, y.max));
                 const yMinPixel = y.getPixelForValue(Math.max(b.min, y.min));
-
-                if (yMaxPixel < yMinPixel) { // 캔버스 좌표계는 위가 작고 아래가 큼 (반대 아님 주의, 픽셀값임)
+                if (yMaxPixel < yMinPixel) {
                     ctx.fillStyle = b.color;
                     ctx.fillRect(left, y.getPixelForValue(b.max), right - left, y.getPixelForValue(b.min) - y.getPixelForValue(b.max));
                 }
@@ -291,7 +297,6 @@
         }
     };
 
-    /* 오른쪽 텍스트 플러그인 */
     const temperatureRightLabels = {
         id: 'temperatureRightLabels',
         afterDraw(chart) {
@@ -312,7 +317,6 @@
             ];
 
             lines.forEach(l => {
-                // 차트 보이는 범위 안에 있을 때만 그리기
                 if (l.v <= scales.y.max && l.v >= scales.y.min) {
                     const py = y.getPixelForValue(l.v);
                     ctx.fillStyle = 'rgba(255,255,255,0.85)';
@@ -327,7 +331,7 @@
 
     new Chart(ctx, {
         type: 'line',
-        plugins: [temperatureBands, temperatureRightLabels], // pointValueLabels는 복잡해서 제외 (원하면 추가 가능)
+        plugins: [temperatureBands, temperatureRightLabels],
         data: {
             labels,
             datasets: [
@@ -341,7 +345,6 @@
                     pointBackgroundColor: '#7f1d1d',
                     pointBorderWidth: 0
                 },
-                // 기준선 (차트 범위 넘어가도 상관없음)
                 { data: labels.map(() => 37.3), borderColor: '#f97316', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
                 { data: labels.map(() => 38.0), borderColor: '#ef4444', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
                 { data: labels.map(() => 39.0), borderColor: '#7e22ce', borderWidth: 1, pointRadius: 0, borderDash: [5,5] }
@@ -354,7 +357,7 @@
             scales: {
                 y: {
                     min: 35,
-                    max: maxTemp, // [중요] 계산된 최대값 적용
+                    max: maxTemp,
                     ticks: { stepSize: 0.5 }
                 },
                 x: {
