@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+body {
+    background: #f0f2f5;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.avatar-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+}
+
+.card-box {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.nav-pills .nav-link {
+    color: #555;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 10px 20px;
+}
+
+.nav-pills .nav-link.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-done { background: #dcfce7; color: #16a34a; }
+.badge-yet  { background: #fee2e2; color: #ef4444; }
+.badge-dday { background: #eff6ff; color: #2563eb; }
+
+.profile-sm-btn {
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    background: white;
+    text-decoration: none;
+    color: #555;
+    transition: 0.2s;
+}
+
+.profile-sm-btn:hover {
+    background: #f8f9fa;
+}
+
+.profile-sm-btn.active {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+    font-weight: bold;
+}
+
+tr.record-row {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+tr.record-row:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.005);
+}
+
+.flatpickr-calendar {
+    z-index: 1060 !important;
+}
