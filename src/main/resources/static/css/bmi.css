@@ -66,7 +66,12 @@ body { background:#f0f2f5; }
     pointer-events:none;z-index:10;
 }
 .bmi-pointer::after{
-    content:"▼";font-size:12px;color:#111827;
+    content:"▼";
+    display:block;          /* ✅ 핵심 */
+    text-align:center;      /* ✅ 핵심 */
+    font-size:12px;
+    color:#111827;
+    margin-top:-2px;        /* 라벨에 딱 붙게 */
 }
 .bmi-pointer-label{
     background:#111827;color:#fff;
