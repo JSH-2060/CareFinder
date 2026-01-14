@@ -11,6 +11,7 @@ public interface VaccineService {
 
     // 2. 추가
     void addVaccine(VaccineDTO dto);
+    VaccineDTO getVaccine(Long vaccineNo);
 
     // 3. 접종 완료 처리: vacId(int) -> vaccineNo(Long)
     Integer completeVaccination(Long vaccineNo);
