@@ -289,7 +289,7 @@
 
                     // 모양 필터
                     if (shape) {
-                        matchShape = drug.drugShape && drug.drugShape.includes(shape);
+                        matchShape = drug.drugShape && drug.drugShape === shape;
                     }
 
                     // 색상 필터
