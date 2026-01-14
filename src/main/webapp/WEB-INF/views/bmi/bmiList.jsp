@@ -170,7 +170,7 @@
     </div>
 
     <!-- ===== BMI 기준바 + 경계 숫자 + 화살표 ===== -->
-    <c:if test="${latestBmi ne null}">
+    <c:if test="${not empty bmiList}">
         <div class="card-box p-3">
             <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
 

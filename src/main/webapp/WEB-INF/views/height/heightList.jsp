@@ -8,66 +8,16 @@
     <meta charset="UTF-8">
     <title>키 성장 기록</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Height CSS -->
+    <link rel="stylesheet" href="/css/height.css">
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        body { background:#f0f2f5; font-family:'Pretendard',sans-serif; }
-
-        .card-box{
-            background:#fff;
-            border-radius:16px;
-            box-shadow:0 4px 20px rgba(0,0,0,.05);
-            margin-bottom:20px;
-        }
-
-        /* ===== 키성장 메인 컬러 ===== */
-        :root{
-            --height-main:#14b8a6;
-            --height-light:#e6fffa;
-            --height-dark:#0d9488;
-        }
-
-        /* 아바타 */
-        .avatar-circle{
-            width:44px;height:44px;border-radius:50%;
-            background:var(--height-main);
-            color:#fff;font-weight:700;
-            display:flex;align-items:center;justify-content:center;
-            font-size:18px;
-        }
-
-        /* 탭 */
-        .nav-pills .nav-link{ color:#555;font-weight:600; }
-        .nav-pills .nav-link.active{
-            background:var(--height-main);
-            color:#fff;
-        }
-
-        /* 프로필 버튼 */
-        .profile-sm-btn{
-            font-size:.85rem;
-            padding:5px 12px;
-            border-radius:20px;
-            border:1px solid #ddd;
-            background:#fff;
-            color:#555;
-            text-decoration:none;
-        }
-        .profile-sm-btn.active{
-            background:var(--height-light);
-            border-color:var(--height-main);
-            color:var(--height-dark);
-            font-weight:700;
-        }
-
-        tr.data-row{ cursor:pointer; }
-        tr.data-row:hover{ background:#f0fdfa; }
-    </style>
-
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
 <c:if test="${not empty msg}">
     <div class="alert alert-warning text-center mb-3">
@@ -240,7 +190,8 @@
         </table>
     </div>
 </div>
-
+<!-- Height JS -->
+    <script src="/js/height.js"></script>
 <!-- ===== 그래프 스크립트 ===== -->
 <c:if test="${not empty list}">
     <script>
@@ -377,38 +328,6 @@
     </div>
 </div>
 
-<script>
-    function openHeightEditModal(id, height, date) {
-        document.getElementById('editHeightId').value = id;
-        document.getElementById('editHeight').value = height;
-        document.getElementById('editRecordDate').value = date;
-
-        const modal = new bootstrap.Modal(
-            document.getElementById('heightEditModal')
-        );
-        modal.show();
-    }
-</script>
-
-<script>
-    const heightModal = document.getElementById('heightModal');
-
-    heightModal.addEventListener('show.bs.modal', function () {
-        const last = document.getElementById('latestHeightValue').value;
-        const input = document.getElementById('heightInput');
-
-        if (last && !input.value) {
-            input.value = last;
-        }
-    });
-</script>
-
-<script>
-    function toggleDateSearch() {
-        const box = document.getElementById('dateSearchBox');
-        box.style.display = (box.style.display === 'none') ? 'block' : 'none';
-    }
-</script>
 
 </body>
 </html>
