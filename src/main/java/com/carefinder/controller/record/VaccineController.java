@@ -31,7 +31,6 @@ public class VaccineController {
         Long mno = getUserPk(session);
         if (mno == null) return "redirect:/Nologin";
 
-        // ★ 자녀 목록 (Service에 메서드 추가 필수)
         List<ChildDTO> childList = vaccineService.getChildList(mno);
         model.addAttribute("childList", childList);
 
@@ -47,21 +46,28 @@ public class VaccineController {
     public String add(VaccineDTO dto, HttpSession session, RedirectAttributes rttr) {
         Long mno = getUserPk(session);
         dto.setMno(mno);
-
-        // ★ 본인(0)이면 DB에 NULL로 저장
         if (dto.getChildId() != null && dto.getChildId() == 0) {
             dto.setChildId(null);
         }
-
         vaccineService.addVaccine(dto);
-
-        Integer redirectId = (dto.getChildId() == null) ? 0 : dto.getChildId();
-        rttr.addAttribute("childId", redirectId);
+        rttr.addAttribute("childId", (dto.getChildId() == null) ? 0 : dto.getChildId());
         rttr.addAttribute("childName", dto.getChildName());
         return "redirect:/vaccine/list";
     }
 
-    // update, delete, complete, cancel 메서드는 기존 유지 (childId 파라미터 챙기기)
+    @PostMapping("/update")
+    public String update(VaccineDTO dto, HttpSession session, RedirectAttributes rttr) {
+        Long mno = getUserPk(session);
+        dto.setMno(mno);
+        if (dto.getChildId() != null && dto.getChildId() == 0) {
+            dto.setChildId(null);
+        }
+        vaccineService.updateVaccine(dto);
+        rttr.addAttribute("childId", (dto.getChildId() == null) ? 0 : dto.getChildId());
+        rttr.addAttribute("childName", dto.getChildName());
+        return "redirect:/vaccine/list";
+    }
+
     @GetMapping("/delete")
     public String delete(@RequestParam("vaccineNo") Long vaccineNo,
                          @RequestParam("childId") Integer childId,
@@ -71,30 +77,26 @@ public class VaccineController {
         rttr.addAttribute("childName", childName);
         return "redirect:/vaccine/list";
     }
-    @GetMapping("/select")
-    public String select(HttpSession session, Model model) {
-        Long mno = getUserPk(session);
-        if (mno == null) return "redirect:/Nologin";
 
-        // 자녀 목록 가져오기
-        model.addAttribute("childList", vaccineService.getChildList(mno));
-
-        // ★ 중요: JSP에게 "나는 백신(vaccine)이다"라고 알려줌
-        model.addAttribute("mode", "vaccine");
-
-        // 화면은 기존에 만든 childSelect.jsp 재사용
-        return "heat/childSelect";
-    }
+    // ★ [핵심 수정] 토글 기능이 작동 안 했던 이유를 해결했습니다.
     @GetMapping("/complete")
     public String complete(@RequestParam("vaccineNo") Long vaccineNo,
                            @RequestParam("childId") Integer childId,
                            @RequestParam("childName") String childName,
                            RedirectAttributes rttr) {
 
-        // 서비스 호출해서 상태를 'Y'로 변경
-        vaccineService.completeVaccination(vaccineNo);
+        // 1. 현재 상태 확인
+        VaccineDTO vaccine = vaccineService.getVaccine(vaccineNo);
 
-        // 다시 목록으로 돌아갈 때 정보 유지
+        // 2. 상태에 따라 확실한 메서드 호출 (XML updateStatus 사용)
+        if ("Y".equals(vaccine.getStatus())) {
+            // 이미 접종완료 상태면 -> 취소(미접종) 처리
+            vaccineService.cancelVaccination(vaccineNo);
+        } else {
+            // 미접종 상태면 -> 접종완료 처리
+            vaccineService.completeVaccination(vaccineNo);
+        }
+
         rttr.addAttribute("childId", childId);
         rttr.addAttribute("childName", childName);
 

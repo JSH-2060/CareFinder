@@ -1,7 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
-<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %> <!DOCTYPE html>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -10,43 +12,30 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         body { background: #f0f2f5; font-family: 'Pretendard', sans-serif; }
-
-        .avatar-circle {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white; display: flex; align-items: center; justify-content: center;
-            font-size: 16px; font-weight: 700;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
-        }
-
+        .avatar-circle { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35); }
         .card-box { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-
         .nav-pills .nav-link { color: #555; font-weight: 600; border-radius: 12px; padding: 10px 20px; }
         .nav-pills .nav-link.active { background-color: #3b82f6; color: white; }
-
         .badge-status { padding: 6px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
         .badge-done   { background: #dcfce7; color: #16a34a; }
         .badge-yet    { background: #fee2e2; color: #ef4444; }
         .badge-dday   { background: #eff6ff; color: #2563eb; }
-
-        .profile-sm-btn {
-            font-size: 0.8rem; padding: 4px 12px; border-radius: 20px;
-            border: 1px solid #ddd; background: white; text-decoration: none; color: #555; transition: 0.2s;
-        }
+        .profile-sm-btn { font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; border: 1px solid #ddd; background: white; text-decoration: none; color: #555; transition: 0.2s; }
         .profile-sm-btn:hover { background: #f8f9fa; }
         .profile-sm-btn.active { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; font-weight: bold; }
+        tr.record-row { cursor: pointer; transition: 0.2s; }
+        tr.record-row:hover { background-color: #f8f9fa; transform: scale(1.005); }
+        .flatpickr-calendar { z-index: 1060 !important; }
     </style>
 </head>
 
 <body>
 
 <div class="container mt-4" style="max-width: 900px;">
-
     <div class="card-box p-3">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex align-items-center gap-3">
@@ -73,9 +62,7 @@
                     </c:url>
                     <a class="nav-link" href="${heatUrl}">체온</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">백신</a>
-                </li>
+                <li class="nav-item"><a class="nav-link active" href="#">백신</a></li>
                 <li class="nav-item">
                     <c:url value="/bmi/list" var="bmiUrl">
                         <c:param name="childId" value="${childId}"/>
@@ -83,7 +70,6 @@
                     </c:url>
                     <a class="nav-link" href="${bmiUrl}">BMI</a>
                 </li>
-
                 <li class="nav-item">
                     <c:url value="/height/list" var="heightUrl">
                         <c:param name="childId" value="${childId}"/>
@@ -91,7 +77,6 @@
                     </c:url>
                     <a class="nav-link" href="${heightUrl}">키성장</a>
                 </li>
-
             </ul>
 
             <div class="d-flex gap-1">
@@ -142,28 +127,25 @@
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="card-box p-3 h-100 d-flex flex-column justify-content-center">
                     <h6 class="fw-bold mb-3">접종 현황 요약</h6>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            전체 일정
-                            <span class="badge bg-secondary rounded-pill">${totalCount}건</span>
+                            전체 일정 <span class="badge bg-secondary rounded-pill">${totalCount}건</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            접종 완료
-                            <span class="badge bg-success rounded-pill">${doneCount}건</span>
+                            접종 완료 <span class="badge bg-success rounded-pill">${doneCount}건</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            미접종 / 예정
-                            <span class="badge bg-danger rounded-pill">${totalCount - doneCount}건</span>
+                            미접종 / 예정 <span class="badge bg-danger rounded-pill">${totalCount - doneCount}건</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
     </c:if>
+
     <div class="card-box p-3">
         <h6 class="fw-bold mb-3">접종 상세 내역</h6>
         <table class="table table-hover text-center align-middle">
@@ -183,26 +165,44 @@
                 </c:when>
                 <c:otherwise>
                     <c:forEach var="v" items="${list}">
-                        <tr>
+                        <tr class="record-row"
+                            onclick="openEditModal(this)"
+                            data-no="${v.vaccineNo}"
+                            data-name="${v.vaccineName}"
+                            data-chasu="${v.chasu}"
+                            data-date="${v.inoculationDate}"
+                            data-status="${v.status}">
+
                             <td class="fw-bold text-start ps-5">${v.vaccineName}</td>
                             <td>${v.chasu}차</td>
                             <td>
                                     ${v.inoculationDate}
-                                <c:if test="${v.status ne 'Y'}">
+                                <c:if test="${v.status ne 'Y' and not empty v.dayDiff}">
                                     <span class="badge-status badge-dday ms-1">D-${v.dayDiff}</span>
                                 </c:if>
                             </td>
                             <td>
                                 <c:choose>
-                                    <c:when test="${v.status eq 'Y'}"><span class="badge-status badge-done">완료</span></c:when>
+                                    <c:when test="${v.status eq 'Y'}"><span class="badge-status badge-done">접종완료</span></c:when>
                                     <c:otherwise><span class="badge-status badge-yet">미접종</span></c:otherwise>
                                 </c:choose>
                             </td>
-                            <td>
-                                <c:if test="${v.status ne 'Y'}">
-                                    <a href="/vaccine/complete?vaccineNo=${v.vaccineNo}&childId=${childId}&childName=${childName}" class="btn btn-sm btn-outline-success me-1">접종</a>
-                                </c:if>
-                                <a href="/vaccine/delete?vaccineNo=${v.vaccineNo}&childId=${childId}&childName=${childName}" class="btn btn-sm btn-outline-danger" onclick="return confirm('삭제하시겠습니까?')">삭제</a>
+
+                            <td onclick="event.stopPropagation();">
+                                <c:choose>
+                                    <c:when test="${v.status ne 'Y'}">
+                                        <a href="/vaccine/complete?vaccineNo=${v.vaccineNo}&childId=${childId}&childName=${childName}"
+                                           class="btn btn-sm btn-outline-success me-1 fw-bold">접종</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="/vaccine/complete?vaccineNo=${v.vaccineNo}&childId=${childId}&childName=${childName}"
+                                           class="btn btn-sm btn-outline-warning me-1 fw-bold">미접종</a>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <a href="/vaccine/delete?vaccineNo=${v.vaccineNo}&childId=${childId}&childName=${childName}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -234,13 +234,51 @@
     </div>
 </div>
 
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <form action="/vaccine/update" method="post" class="w-100">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">접종 정보 수정</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="vaccineNo" id="edit_vaccineNo">
+                    <input type="hidden" name="childId" value="${childId}">
+                    <input type="hidden" name="childName" value="${childName}">
+
+                    <div class="mb-3"><label class="form-label">백신명</label><input type="text" name="vaccineName" id="edit_vaccineName" class="form-control" required></div>
+                    <div class="mb-3"><label class="form-label">차수</label><input type="number" name="chasu" id="edit_chasu" class="form-control"></div>
+                    <div class="mb-3"><label class="form-label">예정일</label><input type="text" name="inoculationDate" id="edit_date" class="form-control datepicker" required style="background:white;"></div>
+                </div>
+                <div class="modal-footer"><button type="submit" class="btn btn-primary w-100 fw-bold">수정 완료</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 <script>
-    flatpickr(".datepicker", { locale: "ko", dateFormat: "Y-m-d", defaultDate: new Date() });
+    const fpConfig = { locale: "ko", dateFormat: "Y-m-d", defaultDate: new Date() };
+    const addPicker = flatpickr("#addModal .datepicker", fpConfig);
+    const editPicker = flatpickr("#editModal .datepicker", fpConfig);
 
-    // ★ 차트 그리기 로직 추가
+    function openEditModal(row) {
+        const no = row.getAttribute('data-no');
+        const name = row.getAttribute('data-name');
+        const chasu = row.getAttribute('data-chasu');
+        const date = row.getAttribute('data-date');
+
+        document.getElementById('edit_vaccineNo').value = no;
+        document.getElementById('edit_vaccineName').value = name;
+        document.getElementById('edit_chasu').value = chasu;
+
+        if(date) editPicker.setDate(date);
+        new bootstrap.Modal(document.getElementById('editModal')).show();
+    }
+
     <c:if test="${totalCount > 0}">
     const vCtx = document.getElementById('vaccineChart').getContext('2d');
     const doneCnt = ${doneCount};
@@ -252,7 +290,7 @@
             labels: ['접종 완료', '미접종'],
             datasets: [{
                 data: [doneCnt, yetCnt],
-                backgroundColor: ['#3b82f6', '#fee2e2'], // 파랑, 연한 빨강
+                backgroundColor: ['#3b82f6', '#fee2e2'],
                 borderWidth: 0,
                 hoverOffset: 4
             }]
