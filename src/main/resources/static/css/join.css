@@ -1,0 +1,107 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Pretendard', sans-serif;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: #F8FAFC;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-box {
+    width: 520px;
+    background: white;
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.register-box h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 26px;
+}
+
+.register-box .desc {
+    text-align: center;
+    color: #64748B;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    height: 46px;
+    border-radius: 10px;
+    border: 1px solid #CBD5E1;
+    padding: 0 14px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2563EB;
+}
+
+.inline-group {
+    display: flex;
+    gap: 10px;
+}
+
+/* 버튼 */
+.submit-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    border: none;
+    background: #1E3A8A;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.submit-btn:hover {
+    background: #1D4ED8;
+}
+
+.submit-btn:disabled {
+    background: #94A3B8;
+    cursor: not-allowed;
+}
+
+/* 메시지 */
+#msg {
+    font-size: 13px;
+    margin-top: 6px;
+    min-height: 20px;
+}
+
+.txt-red {
+    color: #EF4444;
+    font-weight: bold;
+}
+
+.txt-green {
+    color: #16A34A;
+    font-weight: bold;
+}
