@@ -14,23 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        body { background: #f0f2f5; font-family: 'Pretendard', sans-serif; }
-        .avatar-circle { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35); }
-        .card-box { background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .nav-pills .nav-link { color: #555; font-weight: 600; border-radius: 12px; padding: 10px 20px; }
-        .nav-pills .nav-link.active { background-color: #3b82f6; color: white; }
-        .badge-status { padding: 6px 12px; border-radius: 999px; font-size: 0.85rem; font-weight: 600; }
-        .badge-done   { background: #dcfce7; color: #16a34a; }
-        .badge-yet    { background: #fee2e2; color: #ef4444; }
-        .badge-dday   { background: #eff6ff; color: #2563eb; }
-        .profile-sm-btn { font-size: 0.8rem; padding: 4px 12px; border-radius: 20px; border: 1px solid #ddd; background: white; text-decoration: none; color: #555; transition: 0.2s; }
-        .profile-sm-btn:hover { background: #f8f9fa; }
-        .profile-sm-btn.active { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; font-weight: bold; }
-        tr.record-row { cursor: pointer; transition: 0.2s; }
-        tr.record-row:hover { background-color: #f8f9fa; transform: scale(1.005); }
-        .flatpickr-calendar { z-index: 1060 !important; }
-    </style>
+    <link href="/css/vaccineList.css" rel="stylesheet">
 </head>
 
 <body>
@@ -260,52 +244,16 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+
+<script src="/js/vaccineList.js"></script>
+
 <script>
-    const fpConfig = { locale: "ko", dateFormat: "Y-m-d", defaultDate: new Date() };
-    const addPicker = flatpickr("#addModal .datepicker", fpConfig);
-    const editPicker = flatpickr("#editModal .datepicker", fpConfig);
-
-    function openEditModal(row) {
-        const no = row.getAttribute('data-no');
-        const name = row.getAttribute('data-name');
-        const chasu = row.getAttribute('data-chasu');
-        const date = row.getAttribute('data-date');
-
-        document.getElementById('edit_vaccineNo').value = no;
-        document.getElementById('edit_vaccineName').value = name;
-        document.getElementById('edit_chasu').value = chasu;
-
-        if(date) editPicker.setDate(date);
-        new bootstrap.Modal(document.getElementById('editModal')).show();
-    }
-
+    // 데이터가 있을 때만 차트 그리기 함수 호출
     <c:if test="${totalCount > 0}">
-    const vCtx = document.getElementById('vaccineChart').getContext('2d');
-    const doneCnt = ${doneCount};
-    const yetCnt = ${totalCount - doneCount};
-
-    new Chart(vCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['접종 완료', '미접종'],
-            datasets: [{
-                data: [doneCnt, yetCnt],
-                backgroundColor: ['#3b82f6', '#fee2e2'],
-                borderWidth: 0,
-                hoverOffset: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '70%',
-            plugins: {
-                legend: { display: false },
-                tooltip: { enabled: true }
-            }
-        }
-    });
+    // JS 파일에 정의된 함수 호출 (접종완료 수, 미접종 수 전달)
+    renderVaccineChart(${doneCount}, ${totalCount - doneCount});
     </c:if>
 </script>
+
 </body>
 </html>

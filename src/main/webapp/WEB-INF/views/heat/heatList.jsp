@@ -12,30 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style>
-        body { background: #f0f2f5; font-family: 'Pretendard', sans-serif; }
-        .card-box { background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; border: none; }
-        .avatar-circle { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
-        .nav-pills .nav-link { color: #64748b; font-weight: 600; padding: 10px 20px; border-radius: 12px; transition: 0.2s; }
-        .nav-pills .nav-link:hover { background: #f1f5f9; color: #334155; }
-        .nav-pills .nav-link.active { background-color: #3b82f6; color: white; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25); }
-        .profile-sm-btn { font-size: 0.85rem; padding: 6px 14px; border-radius: 99px; border: 1px solid #e2e8f0; background: white; text-decoration: none; color: #475569; transition: all 0.2s; font-weight: 500; }
-        .profile-sm-btn:hover { background: #f8fafc; transform: translateY(-1px); }
-        .profile-sm-btn.active { background: #eff6ff; border-color: #3b82f6; color: #2563eb; font-weight: 700; box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1); }
-        .table th { font-weight: 600; color: #64748b; background: #f8fafc; border-bottom: 2px solid #e2e8f0; }
-        .table td { vertical-align: middle; }
-        tr.record-row { transition: 0.2s; }
-        tr.record-row:hover { background-color: #f8fafc !important; cursor: pointer; transform: scale(1.005); }
-
-        .flatpickr-calendar { z-index: 9999 !important; }
-
-        .badge-custom { padding: 6px 10px; border-radius: 8px; font-weight: 500; font-size: 0.8rem; }
-        .bg-danger-super { background-color: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe; }
-        .bg-danger-high  { background-color: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
-        .bg-warning-mild { background-color: #fff7ed; color: #f97316; border: 1px solid #fdba74; }
-        .bg-success-ok   { background-color: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
-        .bg-info-low     { background-color: #eff6ff; color: #3b82f6; border: 1px solid #93c5fd; }
-    </style>
+    <link href="/css/heatList.css" rel="stylesheet">
 </head>
 <body>
 
@@ -203,172 +180,26 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+
+<script src="/js/heatList.js"></script>
+
 <script>
-    // 1. Flatpickr 초기화
-    const fpConfig = {
-        locale: "ko",
-        dateFormat: "Y-m-d H:i",
-        enableTime: true,
-        time_24hr: true,
-        defaultDate: new Date(),
-        allowInput: true
-    };
-    const addPicker = flatpickr("#addModal .datepicker", fpConfig);
-    const editPicker = flatpickr("#editModal .datepicker", fpConfig);
-
-    // ★ [핵심] 체온 유효성 검사 함수 (제출 시 실행)
-    function validateForm(form) {
-        const tempInput = form.querySelector('input[name="temperature"]');
-        const val = parseFloat(tempInput.value);
-
-        if (val < 34.0 || val > 43.0) {
-            alert("체온은 34.0도 ~ 43.0도 사이만 입력 가능합니다.\n정상적인 수치를 입력해주세요!");
-            tempInput.value = ""; // 잘못된 값 초기화
-            tempInput.focus();
-            return false; // 전송 막음
-        }
-        return true; // 전송 허용
-    }
-
-    // 2. 수정 모달 열기 함수
-    function openEditModal(row) {
-        const no = row.getAttribute('data-no');
-        const temp = row.getAttribute('data-temp');
-        const date = row.getAttribute('data-date');
-        const memo = row.getAttribute('data-memo');
-
-        document.getElementById('edit_heatNo').value = no;
-        document.getElementById('edit_temperature').value = temp;
-        document.getElementById('edit_memo').value = memo;
-
-        if (date) editPicker.setDate(date);
-        new bootstrap.Modal(document.getElementById('editModal')).show();
-    }
-
-
-    // 3. 차트 설정
-    const ctx = document.getElementById('tempChart').getContext('2d');
     const labels = [];
     const dataPoints = [];
 
+    /* 1. JSP(서버) 데이터를 JS 배열로 변환 */
     <c:forEach var="h" items="${list}" end="14">
     labels.push('${h.measureDate} ${h.measureTime}');
     dataPoints.push(${h.temperature});
     </c:forEach>
 
+    /* 2. 최신순 데이터를 과거->현재 순으로 뒤집기 */
     labels.reverse();
     dataPoints.reverse();
 
-    // 동적 Y축 최대값 (40도 넘으면 그래프 확장)
-    let maxTemp = 40;
-    if (dataPoints.length > 0) {
-        const dataMax = Math.max(...dataPoints);
-        if (dataMax >= 40) {
-            maxTemp = dataMax + 1.0;
-        }
-    }
-
-    const temperatureBands = {
-        id: 'temperatureBands',
-        beforeDraw(chart) {
-            const { ctx, chartArea, scales } = chart;
-            if (!chartArea) return;
-            const y = scales.y;
-            const left = chartArea.left;
-            const right = chartArea.right;
-
-            const bands = [
-                { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.12)' },
-                { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.14)' },
-                { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.14)' },
-                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.14)' }
-            ];
-
-            ctx.save();
-            bands.forEach(b => {
-                const yMaxPixel = y.getPixelForValue(Math.min(b.max, y.max));
-                const yMinPixel = y.getPixelForValue(Math.max(b.min, y.min));
-                if (yMaxPixel < yMinPixel) {
-                    ctx.fillStyle = b.color;
-                    ctx.fillRect(left, y.getPixelForValue(b.max), right - left, y.getPixelForValue(b.min) - y.getPixelForValue(b.max));
-                }
-            });
-            ctx.restore();
-        }
-    };
-
-    const temperatureRightLabels = {
-        id: 'temperatureRightLabels',
-        afterDraw(chart) {
-            const { ctx, chartArea, scales } = chart;
-            if (!chartArea) return;
-            const y = scales.y;
-            const right = chartArea.right;
-
-            ctx.save();
-            ctx.textAlign = 'left';
-            ctx.textBaseline = 'middle';
-            ctx.font = '12px Pretendard, sans-serif';
-
-            const lines = [
-                { v: 37.3, text: '37.3℃ · 미열',  color: '#f97316' },
-                { v: 38.0, text: '38.0℃ · 고열',  color: '#ef4444' },
-                { v: 39.0, text: '39.0℃ · 초고열', color: '#7e22ce' }
-            ];
-
-            lines.forEach(l => {
-                if (l.v <= scales.y.max && l.v >= scales.y.min) {
-                    const py = y.getPixelForValue(l.v);
-                    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                    ctx.fillRect(right + 4, py - 8, 95, 16);
-                    ctx.fillStyle = l.color;
-                    ctx.fillText(l.text, right + 6, py);
-                }
-            });
-            ctx.restore();
-        }
-    };
-
-    new Chart(ctx, {
-        type: 'line',
-        plugins: [temperatureBands, temperatureRightLabels],
-        data: {
-            labels,
-            datasets: [
-                {
-                    data: dataPoints,
-                    borderColor: '#7f1d1d',
-                    borderWidth: 2,
-                    tension: 0,
-                    fill: false,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#7f1d1d',
-                    pointBorderWidth: 0
-                },
-                { data: labels.map(() => 37.3), borderColor: '#f97316', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
-                { data: labels.map(() => 38.0), borderColor: '#ef4444', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
-                { data: labels.map(() => 39.0), borderColor: '#7e22ce', borderWidth: 1, pointRadius: 0, borderDash: [5,5] }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            layout: { padding: { right: 110 } },
-            scales: {
-                y: {
-                    min: 35,
-                    max: maxTemp,
-                    ticks: { stepSize: 0.5 }
-                },
-                x: {
-                    ticks: { autoSkip: true, maxTicksLimit: 6 }
-                }
-            },
-            plugins: {
-                legend: { display: false }
-            }
-        }
-    });
+    /* 3. 분리된 JS 파일에 있는 차트 그리기 함수 호출 */
+    renderHeatChart(labels, dataPoints);
 </script>
+
 </body>
 </html>
