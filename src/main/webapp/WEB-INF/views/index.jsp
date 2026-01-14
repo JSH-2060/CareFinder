@@ -5,91 +5,19 @@
 <head>
     <meta charset="UTF-8">
     <title>AI 병원 추천 & 건강 관리</title>
-    <style>
-        body { margin: 0; font-family: 'Pretendard', sans-serif; background: #F0F4F8; height: 100vh; }
 
-        /* 헤더 스타일 */
-        .header { height: 70px; background: #E0F2FE; display: flex; justify-content: flex-end; align-items: center; padding: 0 24px; }
-        .header span { margin-right: 12px; font-weight: 600; color: #1E3A8A; }
-        .header button { padding: 8px 18px; border-radius: 10px; border: none; background: #1E3A8A; color: #fff; cursor: pointer; font-weight: bold; }
+    <!-- 페이지 전용 CSS -->
+    <link rel="stylesheet" href="<c:url value='/css/index.css'/>">
 
-        .main { position: relative; height: calc(100vh - 70px); }
-        .center-box { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 60%; }
-        .center-box h2 { font-size: 32px; margin-bottom: 10px; color: #1e293b; }
-        .search-box { display: flex; align-items: center; gap: 12px;}
-        .search-box input { flex: 1; height: 78px; border-radius: 999px; border: none; padding: 0 36px; font-size: 18px; background: linear-gradient(135deg, #2563EB, #1E40AF); color: white;box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);}
-        .search-box button { height: 78px; padding: 0 32px; border-radius: 999px; border: none; background: #1E3A8A; color: #fff; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 8px 20px rgba(30, 58, 138, 0.35); transition: 0.2s;}
-        .search-box button:hover { background: #1e40af; transform: translateY(-2px); }
-
-
-
-
-        /* 좌측 하단 메뉴바 */
-        .left-bottom { position: absolute; left: 24px; bottom: 24px; width: 260px; display: flex; flex-direction: column; gap: 10px; }
-        .main-btn { width: 100%; padding: 16px 0; border-radius: 14px; border: none; background: #1E3A8A; color: white; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; }
-        .main-btn:hover { background: #1e40af; transform: translateY(-2px); }
-
-        /* 모달 공통 스타일 */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; padding: 24px; border-radius: 16px; width: 400px; text-align: center; }
-        .modal-close { background: #f1f5f9; color: #334155; margin-top: 15px; width: 100%; padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .modal-close:hover { background: #e2e8f0; }
-
-        /* 진료과 그리드 레이아웃 */
-        .dept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .dept-btn { padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; background: white; color: #1e293b; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .dept-btn:hover { background: #eff6ff; border-color: #2563EB; color: #2563EB; }
-
-        /* 건강관리 모달 버튼 스타일 */
-        .health-btn { width: 100%; padding: 15px; margin-bottom: 10px; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; text-align: left; padding-left: 20px; transition: 0.2s; }
-        .health-btn:hover { transform: scale(1.02); }
-
-        .user-menu { position: relative; }
-
-        .user-name {
-            cursor: pointer;
-            font-weight: 600;
-            color: #1E3A8A;
-        }
-
-        .user-dropdown {
-            position: absolute;
-            right: 0;
-            top: 36px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            display: none;
-            flex-direction: column;
-            min-width: 140px;
-            overflow: hidden;
-            z-index: 2000;
-            border: 1px solid #e5e7eb;
-        }
-
-        .user-dropdown button {
-            padding: 12px;
-            border: none;
-            background: white;
-            cursor: pointer;
-            font-weight: 600;
-            color: #1e293b;   /* ★ 이 줄이 핵심 */
-            text-align: left;
-        }
-
-        .user-dropdown button:hover {
-            background: #f1f5f9;
-        }
-
-    </style>
-        <%-- 챗봇 css 공용    --%>
+    <!-- 공용 CSS -->
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/toast.css'/>">
-
-
 </head>
 <body>
 
+<!-- =========================
+     헤더
+========================= -->
 <div class="header">
     <c:choose>
         <c:when test="${empty userPk}">
@@ -101,15 +29,20 @@
                     ${userName}님 (${loginType}) ▾
                 </span>
                 <div id="userDropdown" class="user-dropdown">
-                    <button onclick="location.href='/mypage'">마이페이지</button>
-                    <button onclick="location.href='/nlogout'">로그아웃</button>
+                    <button type="button" onclick="location.href='/mypage'">마이페이지</button>
+                    <button type="button" onclick="location.href='/nlogout'">로그아웃</button>
                 </div>
             </div>
         </c:otherwise>
     </c:choose>
 </div>
 
+<!-- =========================
+     메인
+========================= -->
 <div class="main">
+
+    <!-- 중앙 검색 -->
     <div class="center-box">
         <h2>AI 기반 실시간 병원 추천</h2>
         <p style="color:#64748b;">
@@ -123,145 +56,145 @@
                     placeholder="예: 스키 타다 넘어져서 갈비뼈가 아파요"
                     autocomplete="off"
             >
-            <button id="aiSearchBtn">검색</button>
+            <button type="button" id="aiSearchBtn">검색</button>
         </div>
-
-
     </div>
 
-
-
-
-
+    <!-- 좌측 하단 메뉴 -->
     <div class="left-bottom">
-        <button type="button" class="main-btn" onclick="openModal('hospitalModal')">🏥 병원 찾기</button>
-        <button type="button" class="main-btn" onclick="location.href='/map?mode=emergency'">🚨 응급실 찾기</button>
-        <button type="button" class="main-btn" onclick="location.href='/map?mode=pharmacy'">💊 약국 찾기</button>
-        <button type="button" class="main-btn" onclick="location.href='/drug'">📖 의약품 사전</button>
-        <button type="button" class="main-btn" style="background: #2563EB;" onclick="checkLoginAndOpenHealth()">📋 가족 건강 관리</button>
+        <button type="button" class="main-btn" onclick="openModal('hospitalModal')">
+            🏥 병원 찾기
+        </button>
+        <button type="button" class="main-btn" onclick="location.href='/map?mode=emergency'">
+            🚨 응급실 찾기
+        </button>
+        <button type="button" class="main-btn" onclick="location.href='/map?mode=pharmacy'">
+            💊 약국 찾기
+        </button>
+        <button type="button" class="main-btn" onclick="location.href='/drug'">
+            📖 의약품 사전
+        </button>
+        <button type="button"
+                class="main-btn"
+                style="background:#2563EB"
+                onclick="checkLoginAndOpenHealth()">
+            📋 가족 건강 관리
+        </button>
     </div>
 </div>
 
+<!-- =========================
+     병원 선택 모달
+========================= -->
 <div id="hospitalModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e293b; margin-bottom: 20px;">어떤 병원을 찾으세요?</h3>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button type="button" class="main-btn" onclick="openDeptModal()"> 일반 병원 (진료과 선택)</button>
-            <button type="button" class="main-btn" style="background: #059669;" onclick="location.href='/map?mode=vet'"> 동물 병원</button>
+        <h3>어떤 병원을 찾으세요?</h3>
+
+        <div style="display:flex; flex-direction:column; gap:10px;">
+            <button type="button" class="main-btn" onclick="openDeptModal()">
+                일반 병원 (진료과 선택)
+            </button>
+            <button type="button"
+                    class="main-btn"
+                    style="background:#059669"
+                    onclick="location.href='/map?mode=vet'">
+                동물 병원
+            </button>
         </div>
-        <button type="button" class="modal-close" onclick="closeModal('hospitalModal')">닫기</button>
+
+        <button type="button" class="modal-close" onclick="closeModal('hospitalModal')">
+            닫기
+        </button>
     </div>
 </div>
 
+<!-- =========================
+     진료과 모달
+========================= -->
 <div id="departmentModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e293b; margin-bottom: 20px;">진료과를 선택해주세요</h3>
+        <h3>진료과를 선택해주세요</h3>
+
         <div class="dept-grid">
-            <button type="button" class="dept-btn" onclick="goMap('내과')">내과</button>
-            <button type="button" class="dept-btn" onclick="goMap('이비인후과')">이비인후과</button>
-            <button type="button" class="dept-btn" onclick="goMap('정형외과')">정형외과</button>
-            <button type="button" class="dept-btn" onclick="goMap('소아청소년과')">소아과</button>
-            <button type="button" class="dept-btn" onclick="goMap('피부과')">피부과</button>
-            <button type="button" class="dept-btn" onclick="goMap('안과')">안과</button>
-            <button type="button" class="dept-btn" onclick="goMap('치과')">치과</button>
-            <button type="button" class="dept-btn" onclick="goMap('산부인과')">산부인과</button>
-            <button type="button" class="dept-btn" onclick="goMap('비뇨의학과')">비뇨기과</button>
-            <button type="button" class="dept-btn" onclick="goMap('정신건강의학과')">정신과</button>
+            <button class="dept-btn" onclick="goMap('내과')">내과</button>
+            <button class="dept-btn" onclick="goMap('이비인후과')">이비인후과</button>
+            <button class="dept-btn" onclick="goMap('정형외과')">정형외과</button>
+            <button class="dept-btn" onclick="goMap('소아청소년과')">소아과</button>
+            <button class="dept-btn" onclick="goMap('피부과')">피부과</button>
+            <button class="dept-btn" onclick="goMap('안과')">안과</button>
+            <button class="dept-btn" onclick="goMap('치과')">치과</button>
+            <button class="dept-btn" onclick="goMap('산부인과')">산부인과</button>
+            <button class="dept-btn" onclick="goMap('비뇨의학과')">비뇨기과</button>
+            <button class="dept-btn" onclick="goMap('정신건강의학과')">정신과</button>
         </div>
-        <button type="button" class="main-btn" style="padding: 10px; font-size: 14px;" onclick="goMap('')">전체 병원 보기</button>
-        <button type="button" class="modal-close" onclick="closeModal('departmentModal')">취소</button>
+
+        <button type="button"
+                class="main-btn"
+                style="padding:10px; font-size:14px"
+                onclick="goMap('')">
+            전체 병원 보기
+        </button>
+
+        <button type="button" class="modal-close" onclick="closeModal('departmentModal')">
+            취소
+        </button>
     </div>
 </div>
 
+<!-- =========================
+     건강 관리 모달
+========================= -->
 <div id="healthModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e293b; margin-bottom: 20px;">어떤 기록을 관리할까요?</h3>
+        <h3>어떤 기록을 관리할까요?</h3>
 
-        <button type="button" class="health-btn" style="background: #e0f2fe; color: #0284c7;" onclick="location.href='/heat/select'">
+        <button class="health-btn"
+                style="background:#e0f2fe; color:#0284c7"
+                onclick="location.href='/heat/select'">
             체온 관리
         </button>
 
-        <button type="button" class="health-btn" style="background: #f0fdf4; color: #16a34a;" onclick="location.href='/vaccine/select'">
+        <button class="health-btn"
+                style="background:#f0fdf4; color:#16a34a"
+                onclick="location.href='/vaccine/select'">
             백신 접종
         </button>
 
-        <button type="button" class="health-btn" style="background: #fff7ed; color: #ea580c;" onclick="location.href='/bmi/select'">
-             BMI (비만도)
+        <button class="health-btn"
+                style="background:#fff7ed; color:#ea580c"
+                onclick="location.href='/bmi/select'">
+            BMI (비만도)
         </button>
 
-        <button type="button" class="health-btn" style="background: #e6fffa; color: #0f766e;" onclick="location.href='/height/select'">
-             키 성장 기록
+        <button class="health-btn"
+                style="background:#e6fffa; color:#0f766e"
+                onclick="location.href='/height/select'">
+            키 성장 기록
         </button>
 
-        <button type="button" class="modal-close" onclick="closeModal('healthModal')">닫기</button>
+        <button type="button" class="modal-close" onclick="closeModal('healthModal')">
+            닫기
+        </button>
     </div>
 </div>
 
+<!-- =========================
+     JS 영역
+========================= -->
 <script>
-    // 로그인 여부를 JS 변수로 저장
+    // 로그인 여부 (JSP → JS 전달)
     const isLoggedIn = ${not empty userPk ? 'true' : 'false'};
-
-    // 1. 모달 닫기 기능 (배경 클릭 시)
-    window.onclick = function(e) {
-        if(e.target.classList.contains('modal')) {
-            e.target.style.display = "none";
-        }
-    }
-
-    // 2. 모달 열기/닫기 함수
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    // 3. 진료과 모달 열기 (병원 모달 닫고 열기)
-    function openDeptModal() {
-        closeModal('hospitalModal');
-        openModal('departmentModal');
-    }
-
-    // 4. 지도 페이지 이동
-    function goMap(typeVal) {
-        let url = '/map?mode=hospital';
-        if(typeVal) {
-            url += '&type=' + encodeURIComponent(typeVal);
-        }
-        location.href = url;
-    }
-
-    // 5. ★ [신규] 건강관리 버튼 클릭 시 실행
-    function checkLoginAndOpenHealth() {
-        if(isLoggedIn) {
-            openModal('healthModal'); // 로그인 했으면 모달 열기
-        } else {
-            alert("로그인이 필요한 서비스입니다.");
-            location.href = '/Nologin';
-        }
-    }
 </script>
 
+<script src="<c:url value='/js/index.js'/>"></script>
+<script src="<c:url value='/js/chatbot.js'/>"></script>
+<script src="<c:url value='/js/index-ai-search.js'/>"></script>
+<script src="<c:url value='/js/map-chatbot-init.js'/>"></script>
 
-
-
-
+<!-- 챗봇 -->
 <jsp:include page="common/chatbot.jsp"/>
-<script src="/js/chatbot.js"></script>
-<script src="/js/index-ai-search.js"></script>
-<script src="/js/map-chatbot-init.js"></script>
+
 <div id="toast" class="toast"></div>
-
-<script>
-    function toggleUserMenu() {
-        const menu = document.getElementById('userDropdown');
-        menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    // 바깥 클릭 시 닫기
-    window.addEventListener('click', function(e) {
-        const menu = document.getElementById('userDropdown');
-        if (!e.target.closest('.user-menu')) {
-            if(menu) menu.style.display = 'none';
-        }
-    });
-</script>
 
 </body>
 </html>
