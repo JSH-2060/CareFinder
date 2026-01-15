@@ -4,7 +4,7 @@ import com.carefinder.dto.member.MemberRegisterDTO;
 
 public interface RegisterService {
 
-    boolean registerNormalMember(MemberRegisterDTO member);
+    String registerNormalMember(MemberRegisterDTO member);
 
     MemberRegisterDTO loginNormalMember(String id, String pw);
 
