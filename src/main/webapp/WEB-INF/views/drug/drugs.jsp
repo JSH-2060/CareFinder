@@ -29,7 +29,7 @@
 
         <!-- 모양 검색 토글 버튼 -->
         <button class="shape-toggle-btn" onclick="toggleShapeSearch()">
-            <span id="toggleIcon">▼</span> 💊 약 모양으로 찾기
+            <span id="toggleIcon">▼</span> 약 모양으로 찾기
         </button>
 
         <!-- 모양 검색 폼 (접혀있음) -->
@@ -87,7 +87,7 @@
                 </div>
             </div>
 
-            <button class="shape-search-btn" onclick="searchByShape()">🔍 모양으로 검색</button>
+            <button class="shape-search-btn" onclick="searchByShape()"> 모양으로 검색</button>
         </div>
     </div>
 
@@ -95,7 +95,7 @@
 
     <!-- 📰 뉴스 섹션 -->
     <div class="news-section">
-        <h2>📰 최근 의약품 관련 기사</h2>
+        <h2> 최근 의약품 관련 기사</h2>
         <div id="newsList">
             <p>기사를 불러오는 중...</p>
         </div>
@@ -432,7 +432,7 @@
                         newsHtml += '<p class="news-description">' + removeHtmlTags(item.description) + '</p>';
                         newsHtml += '<div class="news-meta">';
                         newsHtml += '<span class="news-date">' + formatDate(item.pubDate) + '</span>';
-                        newsHtml += '<span class="news-link-text">기사 원문 보기 →</span>';
+                        newsHtml += '<span class="news-link-text">기사 보러 가기 →</span>';
                         newsHtml += '</div>';
                         newsHtml += '</a>';
                     }

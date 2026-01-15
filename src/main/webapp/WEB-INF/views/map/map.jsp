@@ -412,6 +412,9 @@
                         const openDetail = () => {
                             if (!window.markerModule) return;
 
+                            // 0️⃣ 기존 길찾기 경로 제거
+                            if (window.clearRoute) window.clearRoute();
+
                             // 1️⃣ 이전 선택으로 숨겨진 마커들 복원
                             window.markerModule.showAllMarkers(resultMarkers);
 

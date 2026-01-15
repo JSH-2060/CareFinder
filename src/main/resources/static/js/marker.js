@@ -210,7 +210,7 @@ function restoreMarker(marker) {
 }
 
 // ========================================
-// ✅ 새로운 기능: 선택된 마커 제외 나머지 숨기기
+// 선택된 마커 제외 나머지 숨기기
 // ========================================
 function hideOtherMarkers(selectedMkr, allMarkers) {
     allMarkers.forEach(marker => {
@@ -221,14 +221,14 @@ function hideOtherMarkers(selectedMkr, allMarkers) {
 }
 
 // ========================================
-// ✅ 새로운 기능: 모든 마커 다시 표시
+// 모든 마커 다시 표시
 // ========================================
 function showAllMarkers(allMarkers) {
     allMarkers.forEach(marker => {
         marker.setVisible(true);
     });
 
-    // ✅ 선택된 마커가 있으면 원래 크기로 복원
+    // 선택된 마커가 있으면 원래 크기로 복원
     if (selectedMarker) {
         restoreMarker(selectedMarker);
         selectedMarker = null;
@@ -413,7 +413,12 @@ function closeDetailCard() {
 
     if (window.routeModule) window.routeModule.clearAllLayers();
 
-    // ✅ 마커 상태도 함께 정리
+    // 모든 마커 다시 표시 + 선택된 마커 복원
+    resultMarkers.forEach(marker => {
+        marker.setVisible(true);
+    });
+
+    // 마커 상태도 함께 정리
     if (selectedMarker) {
         restoreMarker(selectedMarker);
         selectedMarker = null;
