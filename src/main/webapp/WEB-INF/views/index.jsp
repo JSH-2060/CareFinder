@@ -9,7 +9,8 @@
 
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/toast.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/index.css'/>"> </head>
+    <link rel="stylesheet" href="<c:url value='/css/index.css'/>">
+</head>
 <body>
 
 <div class="header">
