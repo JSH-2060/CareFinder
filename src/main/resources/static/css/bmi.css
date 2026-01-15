@@ -1,8 +1,6 @@
 @charset "UTF-8";
 
-/* ==================================================
-   1. GLOBAL & RESET
-   ================================================== */
+
 :root {
     /* 홈 화면의 Hero 섹션과 동일한 그라데이션 */
     --primary-gradient: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
@@ -18,12 +16,21 @@
 body {
     margin: 0;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-    background: var(--bg-color);
+
+    /* [수정] 마이페이지와 동일한 은은한 오로라 조명 배경 */
+    background-color: #F8FAFC;
+    background-image:
+            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 60%),
+            radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    background-attachment: fixed; /* 스크롤해도 빛 위치 고정 */
+
+    /* 자간(letter-spacing) 설정 제거 -> 홈페이지와 동일한 폰트 간격 유지 */
+
     color: var(--text-main);
     -webkit-font-smoothing: antialiased; /* 폰트 부드럽게 */
 }
 
-a { text-decoration: none; color: inherit; }
+/*a { text-decoration: none; color: inherit; }*/
 
 /* [1] 헤더 스타일 추가 (mypage.css와 동일) */
 .header {
@@ -38,6 +45,7 @@ a { text-decoration: none; color: inherit; }
     /* CareFinder 그라데이션 */
     background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    font-family: 'Pretendard', sans-serif;
 }
 
 .logo {
