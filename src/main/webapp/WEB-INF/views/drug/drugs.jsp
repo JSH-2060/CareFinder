@@ -256,13 +256,12 @@
             });
     }
 
-    // 모양으로 검색 기능 (프론트엔드 필터링)
+    // 모양으로 검색 기능 (서버 필터링 버전)
     function searchByShape() {
         var shape = document.getElementById('shapeSelect').value;
         var color = document.getElementById('colorSelect').value;
-        var print = document.getElementById('printInput').value.trim().toUpperCase();
+        var print = document.getElementById('printInput').value.trim();
 
-        // 최소 하나는 입력해야 함
         if (!shape && !color && !print) {
             alert('최소 하나의 조건을 선택하거나 입력해주세요.');
             return;
@@ -270,69 +269,31 @@
 
         var resultDiv = document.getElementById('result');
         resultDiv.innerHTML = getLoadingHtml();
-
-        // ✅ 타이머 시작
         var timerInterval = startLoadingTimer();
 
-        fetch('/drug/searchByShape')
+        // 필터 조건을 서버로 전달
+        var params = new URLSearchParams();
+        if (shape) params.append('shape', shape);
+        if (color) params.append('color', color);
+        if (print) params.append('print', print);
+
+        fetch('/drug/searchByShape?' + params.toString())
             .then(function(response) {
-                clearInterval(timerInterval); // ✅ 타이머 종료
+                clearInterval(timerInterval);
                 return response.json();
             })
             .then(function(data) {
                 console.log('받은 데이터 개수:', data.length);
 
                 if (!data || data.length === 0) {
-                    resultDiv.innerHTML = '<div class="empty-message">데이터를 불러올 수 없습니다.</div>';
-                    return;
-                }
-
-                // 프론트엔드에서 필터링
-                var filtered = data.filter(function(drug) {
-                    var matchShape = true;
-                    var matchColor = true;
-                    var matchPrint = true;
-
-                    // 모양 필터
-                    if (shape) {
-                        matchShape = drug.drugShape && drug.drugShape === shape;
-                    }
-
-                    // 색상 필터
-                    if (color) {
-                        matchColor = (drug.colorClass1 && drug.colorClass1.includes(color)) ||
-                            (drug.colorClass2 && drug.colorClass2.includes(color));
-                    }
-
-                    // 각인 필터
-                    if (print) {
-                        var frontMatch = drug.printFront && drug.printFront.toUpperCase().includes(print);
-                        var backMatch = drug.printBack && drug.printBack.toUpperCase().includes(print);
-                        matchPrint = frontMatch || backMatch;
-                    }
-
-                    return matchShape && matchColor && matchPrint;
-                });
-
-                console.log('필터링 후 개수:', filtered.length);
-
-                if (filtered.length === 0) {
                     resultDiv.innerHTML = '<div class="empty-message">검색 결과가 없습니다.<br><small>다른 조건으로 다시 검색해보세요.</small></div>';
                     return;
                 }
 
-                // 최대 50개만 표시
-                var displayData = filtered.slice(0, 50);
-                var html = '';
+                var html = '<div class="result-info">검색 결과: ' + data.length + '건</div>';
 
-                if (filtered.length > 50) {
-                    html += '<div class="result-info">총 ' + filtered.length + '건 중 50건 표시</div>';
-                } else {
-                    html += '<div class="result-info">총 ' + filtered.length + '건</div>';
-                }
-
-                for (var i = 0; i < displayData.length; i++) {
-                    var drug = displayData[i];
+                for (var i = 0; i < data.length; i++) {
+                    var drug = data[i];
 
                     html += '<div class="drug-card">';
                     html += '<div class="drug-name">' + (drug.itemName || '정보 없음') + '</div>';
@@ -344,9 +305,7 @@
                         html += '</div>';
                     }
 
-                    // 모양 정보 표시
                     html += '<div class="shape-info">';
-
                     if (drug.drugShape) {
                         html += '<span class="shape-tag">모양: ' + drug.drugShape + '</span>';
                     }
@@ -366,10 +325,8 @@
                     if (drug.formCodeName) {
                         html += '<span class="shape-tag">제형: ' + drug.formCodeName + '</span>';
                     }
-
                     html += '</div>';
 
-                    // 크기 정보
                     if (drug.lengLong || drug.lengShort || drug.thick) {
                         html += '<div class="info-section">';
                         html += '<span class="info-label">📏 크기</span>';
@@ -381,7 +338,6 @@
                         html += '</div>';
                     }
 
-                    // 분류 정보
                     if (drug.className) {
                         html += '<div class="info-section">';
                         html += '<span class="info-label">📋 분류</span>';
@@ -389,7 +345,6 @@
                         html += '</div>';
                     }
 
-                    // 전문/일반 구분
                     if (drug.etcOtcName) {
                         html += '<div class="info-section">';
                         html += '<span class="info-label">💊 구분</span>';
@@ -403,7 +358,7 @@
                 resultDiv.innerHTML = html;
             })
             .catch(function(error) {
-                clearInterval(timerInterval); // ✅ 에러 시에도 타이머 종료
+                clearInterval(timerInterval);
                 console.error('에러:', error);
                 resultDiv.innerHTML = '<div class="empty-message">오류가 발생했습니다. 다시 시도해주세요.</div>';
             });

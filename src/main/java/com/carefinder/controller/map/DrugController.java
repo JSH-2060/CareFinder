@@ -77,15 +77,20 @@ public class DrugController {
         return result;
     }
 
-    // 모양으로 검색 API (낱알식별 API - 3페이지 1500건)
+    // 모양으로 검색 API (30개 찾으면 조기 종료)
     @GetMapping({"/drug/searchByShape"})
     @ResponseBody
-    public List<Map<String, Object>> searchByShape() {
+    public List<Map<String, Object>> searchByShape(
+            @RequestParam(value = "shape", required = false) String shape,
+            @RequestParam(value = "color", required = false) String color,
+            @RequestParam(value = "print", required = false) String print) {
+
         List<Map<String, Object>> result = new ArrayList<>();
+        final int MAX_RESULTS = 30;
 
         try {
-            // 50페이지 25000건) 가져오기
-            for (int pageNo = 1; pageNo <= 50 ; pageNo++) {
+            outerLoop:
+            for (int pageNo = 1; pageNo <= 50; pageNo++) {
                 String urlStr = "https://apis.data.go.kr/1471000/MdcinGrnIdntfcInfoService03/getMdcinGrnIdntfcInfoList03"
                         + "?serviceKey=" + SERVICE_KEY
                         + "&numOfRows=500&pageNo=" + pageNo + "&type=json";
@@ -111,15 +116,18 @@ public class DrugController {
                 }
                 br.close();
 
-                // JSON 파싱
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(response.toString());
                 JsonNode body = root.path("body");
                 JsonNode items = body.path("items");
 
-                // items가 배열인지 확인 후 순회
                 if (items != null && items.isArray()) {
                     for (JsonNode item : items) {
+                        // 필터 조건 체크
+                        if (!matchesFilter(item, shape, color, print)) {
+                            continue;
+                        }
+
                         Map<String, Object> drug = new HashMap<>();
                         drug.put("itemName", getJsonValue(item, "ITEM_NAME"));
                         drug.put("entpName", getJsonValue(item, "ENTP_NAME"));
@@ -138,6 +146,11 @@ public class DrugController {
                         drug.put("etcOtcName", getJsonValue(item, "ETC_OTC_NAME"));
                         drug.put("formCodeName", getJsonValue(item, "FORM_CODE_NAME"));
                         result.add(drug);
+
+                        // 30개 찾으면 즉시 종료
+                        if (result.size() >= MAX_RESULTS) {
+                            break outerLoop;
+                        }
                     }
                 }
             }
@@ -147,6 +160,42 @@ public class DrugController {
         }
 
         return result;
+    }
+
+    // 필터 매칭 메서드
+    private boolean matchesFilter(JsonNode item, String shape, String color, String print) {
+        // 모양 필터
+        if (shape != null && !shape.isEmpty()) {
+            String drugShape = getJsonValue(item, "DRUG_SHAPE");
+            if (drugShape == null || !drugShape.equals(shape)) {
+                return false;
+            }
+        }
+
+        // 색상 필터
+        if (color != null && !color.isEmpty()) {
+            String color1 = getJsonValue(item, "COLOR_CLASS1");
+            String color2 = getJsonValue(item, "COLOR_CLASS2");
+            boolean colorMatch = (color1 != null && color1.contains(color))
+                    || (color2 != null && color2.contains(color));
+            if (!colorMatch) {
+                return false;
+            }
+        }
+
+        // 각인 필터
+        if (print != null && !print.isEmpty()) {
+            String printUpper = print.toUpperCase();
+            String front = getJsonValue(item, "PRINT_FRONT");
+            String back = getJsonValue(item, "PRINT_BACK");
+            boolean printMatch = (front != null && front.toUpperCase().contains(printUpper))
+                    || (back != null && back.toUpperCase().contains(printUpper));
+            if (!printMatch) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private String getValue(Element element, String tagName) {

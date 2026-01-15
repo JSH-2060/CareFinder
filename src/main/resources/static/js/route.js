@@ -2,13 +2,22 @@
 // 길찾기 관련 변수
 // ========================================
 let routeLayers = [];
+let activeRouteType = null;  // 👈 추가: 'walking' | 'driving' | null
 
 // ========================================
 // 🚶 TMAP 보행자 경로 (도보)
 // ========================================
 async function showWalkingRoute(place, map, myPos) {
+    // 토글 체크
+    if (activeRouteType === 'walking') {
+        clearRoute();
+        activeRouteType = null;
+        return;  // 경로 지우고 종료
+    }
+
     if (!myPos) return;
     clearRoute();
+    activeRouteType = 'walking';  // 상태 설정
 
     const url = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json";
     const body = {
@@ -107,8 +116,16 @@ async function showWalkingRoute(place, map, myPos) {
 // 🚗 카카오 자동차 경로
 // ========================================
 async function showDrivingRoute(place, map, myPos) {
+    // 토글 체크
+    if (activeRouteType === 'driving') {
+        clearRoute();
+        activeRouteType = null;
+        return;  // 경로 지우고 종료
+    }
+
     if (!myPos) return;
     clearRoute();
+    activeRouteType = 'driving';  // 상태 설정
 
     const url = 'https://apis-navi.kakaomobility.com/v1/waypoints/directions';
     const body = {
@@ -236,6 +253,7 @@ async function showDrivingRoute(place, map, myPos) {
 function clearRoute() {
     routeLayers.forEach(l => l.setMap(null));
     routeLayers = [];
+    activeRouteType = null;
 
     if (window.markerModule?.updateRouteInfo) {
         window.markerModule.updateRouteInfo('', '');
