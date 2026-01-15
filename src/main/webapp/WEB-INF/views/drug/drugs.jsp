@@ -11,17 +11,16 @@
 
 </head>
 <body>
+<!-- ✅ 상단 헤더 -->
+<a href="/" class="top-header">
+    <img src="/img/carefinder_logo.png" alt="CareFinder 로고" class="top-logo">
+</a>
+
 <div class="container">
-    <h1>💊 의약품 정보 검색</h1>
+    <h1> 의약품 정보 검색</h1>
 
     <div class="search-container">
-
-        <!-- ✅ 홈 버튼 -->
-        <button class="home-btn" onclick="location.href='/'" title="메인으로 돌아가기">
-            🏠
-        </button>
-
-        <!-- 기존 이름 검색 -->
+        <!-- 이름 검색 -->
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="의약품 이름을 입력하세요 (예: 타이레놀)" onkeypress="if(event.key==='Enter') searchDrug()">
             <button onclick="searchDrug()">검색</button>
