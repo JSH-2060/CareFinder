@@ -43,7 +43,19 @@ $(document).ready(function () {
         });
     });
 
-    /* 3. 최종 제출 검사 */
+    /* [추가된 부분] 3. 휴대폰 번호 수정 시 에러 메시지 삭제 */
+    $('input[name="phonenumber"]').on('input', function() {
+        var val = $(this).val();
+        // 숫자만 추출
+        var onlyNum = val.replace(/[^0-9]/g, '');
+
+        // 010으로 시작하고 11자리가 되면 에러 메시지(.error-msg) 내용을 지움
+        if (onlyNum.length === 11 && onlyNum.startsWith('010')) {
+            $('.error-msg').text('');
+        }
+    });
+
+    /* 4. 최종 제출 검사 */
     $("#joinForm").on("submit", function () {
         if (!isIdSafe) {
             alert("아이디 중복 확인을 해주세요.");
@@ -53,3 +65,4 @@ $(document).ready(function () {
         return true;
     });
 });
+

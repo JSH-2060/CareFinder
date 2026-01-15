@@ -16,7 +16,7 @@
 <div class="login-box">
 
     <h2>로그인</h2>
-    <p class="desc">증상을 입력하고 가까운 병원을 추천받으세요</p>
+    <p class="desc">로그인을 하시면 여러 추가 기능을 이용하실 수 있습니다.</p>
 
     <!-- 로그인 실패 메시지 -->
     <c:if test="${param.error != null}">
