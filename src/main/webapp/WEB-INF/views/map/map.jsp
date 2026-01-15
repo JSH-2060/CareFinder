@@ -86,8 +86,8 @@
         </div>
 
         <div class="detail-actions">
-            <button id="cardWalkBtn" class="route-btn walk-btn" title="도보 길찾기">🚶 도보</button>
-            <button id="cardDriveBtn" class="route-btn drive-btn" title="자동차 길찾기">🚗 차량</button>
+            <button id="cardWalkBtn" class="route-btn walk-btn" title="도보 길찾기">도보</button>
+            <button id="cardDriveBtn" class="route-btn drive-btn" title="자동차 길찾기">차량</button>
             <button class="detail-close" onclick="window.markerModule.closeDetailCard()">✕</button>
         </div>
     </div>

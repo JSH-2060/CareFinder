@@ -80,7 +80,7 @@ async function showWalkingRoute(place, map, myPos) {
             const infoHTML = `
                 <div style="padding: 15px; background: linear-gradient(135deg, #bab86c 0%, #808000 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
                     <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
-                        🚶 도보 약 ${walkingTime}분
+                        도보 약 ${walkingTime}분
                     </div>
                     <div style="font-size: 0.95rem; opacity: 0.9;">
                         거리 ${totalDist}m · 칼로리 ${kcal}kcal
@@ -206,7 +206,7 @@ async function showDrivingRoute(place, map, myPos) {
             const infoHTML = `
                 <div style="padding: 15px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
                     <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
-                        🚗 차량 약 ${timeText}
+                        차량 약 ${timeText}
                     </div>
                     <div style="font-size: 0.95rem; opacity: 0.9;">
                         거리 ${distText}

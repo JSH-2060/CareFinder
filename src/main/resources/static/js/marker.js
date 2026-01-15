@@ -293,7 +293,7 @@ function showDetailCard(place, map, myPos, distanceText) {
         <div class="detail-google">
             <details class="hours-accordion">
                 <summary class="detail-hours-head">
-                    <b>🕒 상세 영업시간 보기</b>
+                    <b>상세 영업시간 보기</b>
                     <span class="chevron">▼</span>
                 </summary>
                 <div id="googleOpeningHours" class="opening-hours">
@@ -304,8 +304,8 @@ function showDetailCard(place, map, myPos, distanceText) {
       </div>
 
       <div class="detail-actions">
-        <button id="cardWalkBtn" class="route-btn walk-btn" title="도보 길찾기">🚶 도보</button>
-        <button id="cardDriveBtn" class="route-btn drive-btn" title="자동차 길찾기">🚗 차량</button>
+        <button id="cardWalkBtn" class="route-btn walk-btn" title="도보 길찾기">도보</button>
+        <button id="cardDriveBtn" class="route-btn drive-btn" title="자동차 길찾기">차량</button>
         <button class="detail-close" onclick="window.markerModule.closeDetailCard()">✕</button>
       </div>
     </div>
