@@ -102,4 +102,19 @@ public class VaccineController {
 
         return "redirect:/vaccine/list";
     }
+
+    @GetMapping("/select")
+    public String select(HttpSession session, Model model) {
+
+        Long mno = getUserPk(session);
+        if (mno == null) return "redirect:/Nologin";
+
+        model.addAttribute("childList", vaccineService.getChildList(mno));
+
+        // ★ JSP에 bmi 모드 전달
+        model.addAttribute("mode", "bmi");
+
+        return "heat/childSelect";
+    }
+
 }
