@@ -95,7 +95,7 @@
 
     <!-- 📰 뉴스 섹션 -->
     <div class="news-section">
-        <h2> 최근 의약품 관련 기사</h2>
+        <h2> 111 의약품 관련 기사</h2>
         <div id="newsList">
             <p>기사를 불러오는 중...</p>
         </div>
