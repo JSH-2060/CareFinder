@@ -166,7 +166,9 @@
     ========================= */
     let myPos = null;
     let rangeCircle = null;
-    let currentRadius = 1000;
+    // 모드별 기본 반경 설정
+    let currentRadius = (mode === "emergency") ? 3000 :
+        (mode === "pharmacy") ? 500 : 1000;
 
     let ignoreNextMapClick = false;
     const places = new kakao.maps.services.Places();
@@ -246,6 +248,8 @@
             if (myPos) searchWithinRadiusByMode(false, true);
         });
     });
+    // 페이지 로드 시 초기값 반영
+    updateRadiusUI(currentRadius);
 
     // 외부 클릭 시 드롭다운 닫기
     document.addEventListener('click', (e) => {

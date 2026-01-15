@@ -12,7 +12,7 @@ let detailCard = null;
 let selectedMarker = null;
 const originalMarkerImages = new Map();
 
-// ✅ 팀원 기능 추가: 구글 영업상태/상세 캐시 & 동시요청 제한
+// ✅ 구글 영업상태/상세 캐시 & 동시요청 제한
 const openStatusCache = new Map();     // key -> { text, state }  (영업중/종료)
 const googleDetailCache = new Map();   // key -> googleDetail (opening_hours 등)
 
@@ -72,14 +72,14 @@ function formatDistance(distance) {
 }
 
 // ========================================
-// ✅ 팀원 기능: place 고유키 생성 (캐시용)
+// ✅ place 고유키 생성 (캐시용)
 // ========================================
 function getPlaceKey(place) {
     return place.id || `${place.place_name}|${place.y},${place.x}`;
 }
 
 // ========================================
-// ✅ 팀원 기능: 리스트/상세 공용: 영업 뱃지 적용
+// ✅ 리스트/상세 공용: 영업 뱃지 적용
 // ========================================
 function applyOpenBadge(badgeEl, info) {
     if (!badgeEl) return;
@@ -98,7 +98,7 @@ function applyOpenBadge(badgeEl, info) {
 }
 
 // ========================================
-// ✅ 팀원 기능: 구글 상세정보 기반으로 영업상태 캐시 생성
+// ✅ 구글 상세정보 기반으로 영업상태 캐시 생성
 // ========================================
 function toOpenInfo(googleDetail) {
     const oh = googleDetail?.opening_hours;
@@ -111,7 +111,7 @@ function toOpenInfo(googleDetail) {
 }
 
 // ========================================
-// ✅ 팀원 기능: place당 영업상태 요청 (큐 + 캐시)
+// ✅ place당 영업상태 요청 (큐 + 캐시)
 // ========================================
 function requestOpenStatus(place, badgeEl, tokenAtRequest) {
     const key = getPlaceKey(place);
@@ -245,7 +245,7 @@ function addMarker(marker) {
     resultMarkers.push(marker);
 }
 
-// ✅ 팀원 기능 통합: 모든 마커 제거 + 구글 큐/토큰 초기화
+// ✅ 모든 마커 제거 + 구글 큐/토큰 초기화
 function clearAllMarkers() {
     // 검색 토큰 증가 → 이전 요청 응답 무시
     searchToken++;
@@ -333,7 +333,7 @@ function showDetailCard(place, map, myPos, distanceText) {
         };
     }
 
-    // ✅ 팀원 기능: Google 운영시간 로드
+    // Google 운영시간 로드
     const badgeEl = document.getElementById("googleOpenNowBadge");
     const hoursEl = document.getElementById("googleOpeningHours");
 
