@@ -33,11 +33,11 @@
 <div class="container">
 
     <div class="page-header">
-        <h2>마이페이지</h2>
+        <h2>내 정보 관리</h2>
     </div>
 
     <div class="card">
-        <div class="section-title">내 정보 수정</div>
+        <div class="section-title">기본 정보</div>
 
         <form action="/mypage/update" method="post">
             <div class="info-row">
@@ -68,9 +68,7 @@
             </c:if>
 
             <div class="btn-area">
-                <button class="btn btn-save" type="submit">
-                    정보 저장
-                </button>
+                <button class="btn btn-save" type="submit">수정 완료</button>
             </div>
         </form>
 
