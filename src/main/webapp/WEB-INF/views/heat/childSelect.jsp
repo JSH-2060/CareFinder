@@ -22,6 +22,14 @@
     </div>
 
     <div class="header-right">
+        <div class="user-menu">
+            <span class="user-name">
+                <i class="fa-regular fa-user"></i> ${userName}님 (${loginType})
+            </span>
+            <button class="logout-btn-header" onclick="location.href='/nlogout'">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+            </button>
+        </div>
     </div>
 </div>
 

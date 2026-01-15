@@ -33,6 +33,46 @@
     opacity: 0.95;
 }
 
+/* 헤더 우측 유저 메뉴 */
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    /* 반투명 유리 효과 */
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.logout-btn-header {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px; /* 둥글게 */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.logout-btn-header:hover {
+    background: white;
+    color: #1E3A8A;
+}
+
 /* =========================================
    1. 배경 및 레이아웃 (마이페이지와 통일)
    ========================================= */

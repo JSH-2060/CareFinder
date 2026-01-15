@@ -27,11 +27,21 @@
 
 </head>
 <body>
-<!-- ================= 고정 브랜드 헤더 ================= -->
-<div class="brand-header">
-    <div class="brand-logo" onclick="location.href='/'">
-        <i class="fa-solid fa-laptop-medical"></i>
-        <span>CareFinder</span>
+<div class="header">
+    <div class="logo" onclick="location.href='/'">
+        <i class="fa-solid fa-laptop-medical logo-icon"></i>
+        <span class="logo-text">CareFinder</span>
+    </div>
+
+    <div class="header-right">
+        <div class="user-menu">
+            <span class="user-name">
+                <i class="fa-regular fa-user"></i> ${userName}님 (${loginType})
+            </span>
+            <button class="logout-btn-header" onclick="location.href='/nlogout'">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+            </button>
+        </div>
     </div>
 </div>
 
