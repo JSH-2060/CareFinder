@@ -7,10 +7,11 @@
     <meta charset="utf-8"/>
     <title>내 주변 병원</title>
 
+    <link rel="stylesheet" href="<c:url value='/css/map.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
 
-    <%-- 1. 카카오 맵 API --%>
+<%-- 1. 카카오 맵 API --%>
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapsKey}&libraries=services"></script>
 
     <%-- 2. 구글 맵 API --%>
@@ -29,29 +30,6 @@
     <%-- 3. 커스텀 JS 파일들 --%>
     <script src="<c:url value='/js/route.js'/>"></script>
     <script src="<c:url value='/js/marker.js'/>"></script>
-
-    <style>
-        /* map.jsp 전용 보정 */
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-
-        body {
-            display: block !important;
-        }
-
-        #mapWrap {
-            height: 100vh;
-        }
-        #map {
-            position: relative;
-            width: 100%;
-            height: 100vh !important;
-            min-height: 100vh;
-        }
-    </style>
-
 
 </head>
 
@@ -428,21 +406,27 @@
 
                         // ✅ 이벤트 연결 (마커 확대/축소 포함)
                         const openDetail = () => {
-                            if (window.markerModule) {
-                                window.markerModule.showDetailCard(place, map, myPos, distText);
+                            if (!window.markerModule) return;
 
-                                // ✅ 이전 선택된 마커가 있으면 복원
-                                if (window.markerModule.selectedMarker && window.markerModule.selectedMarker !== marker) {
-                                    window.markerModule.restoreMarker(window.markerModule.selectedMarker);
-                                }
+                            // 1️⃣ 이전 선택으로 숨겨진 마커들 복원
+                            window.markerModule.showAllMarkers(resultMarkers);
 
-                                // ✅ 새로 선택된 마커 저장 (외부 속성)
-                                window.markerModule.selectedMarker = marker;
+                            // 2️⃣ 상세 카드 갱신
+                            window.markerModule.showDetailCard(
+                                place,
+                                map,
+                                myPos,
+                                distText
+                            );
 
-                                // ✅ 마커 확대 및 나머지 숨김
-                                window.markerModule.enlargeMarker(marker, markerImg);
-                                window.markerModule.hideOtherMarkers(marker, resultMarkers);
-                            }
+                            // 3️⃣ 선택 마커는 반드시 다시 보이게
+                            marker.setVisible(true);
+
+                            // 4️⃣ 마커 확대 + 나머지 숨김
+                            window.markerModule.enlargeMarker(marker, markerImg);
+                            window.markerModule.hideOtherMarkers(marker, resultMarkers);
+
+                            // 5️⃣ 지도 이동
                             map.panTo(pos);
                         };
                         kakao.maps.event.addListener(marker, "click", openDetail);

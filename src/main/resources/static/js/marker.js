@@ -196,6 +196,7 @@ function enlargeMarker(marker, markerImgSrc) {
 
     // ✅ 내부 변수도 업데이트
     selectedMarker = marker;
+    window.markerModule.selectedMarker = marker; // 🔥 동기화
 }
 
 // ========================================
@@ -231,11 +232,7 @@ function showAllMarkers(allMarkers) {
     if (selectedMarker) {
         restoreMarker(selectedMarker);
         selectedMarker = null;
-
-        // ✅ 외부에서 접근 가능한 속성도 초기화
-        if (window.markerModule) {
-            window.markerModule.selectedMarker = null;
-        }
+        window.markerModule.selectedMarker = null;
     }
 }
 
@@ -415,6 +412,13 @@ function closeDetailCard() {
     }
 
     if (window.routeModule) window.routeModule.clearAllLayers();
+
+    // ✅ 마커 상태도 함께 정리
+    if (selectedMarker) {
+        restoreMarker(selectedMarker);
+        selectedMarker = null;
+        window.markerModule.selectedMarker = null;
+    }
 }
 
 // ========================================
