@@ -395,3 +395,41 @@ body {
 
 .main-btn { width: 100%; padding: 18px 0; border-radius: 14px; border: none; background: linear-gradient(135deg, #1E3A8A, #2563EB); color: white; font-size: 16px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s; margin-bottom: 0; }
 .main-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(30, 58, 138, 0.3); }
+
+/* =========================================
+   8. 모달 스타일
+   ========================================= */
+/* 일반 병원 버튼 - 매우 연한 파스텔 블루 */
+#hospitalModal .main-btn {
+    background: linear-gradient(135deg, #DBEAFE, #BFDBFE) !important;
+    color: #1E40AF !important; /* 진한 블루 */
+}
+
+#hospitalModal .main-btn:hover {
+    background: linear-gradient(135deg, #BFDBFE, #93C5FD) !important;
+    box-shadow: 0 8px 15px rgba(191, 219, 254, 0.4) !important;
+    color: #1E3A8A !important; /* 더 진한 블루 */
+}
+
+/* 동물 병원 버튼 - 매우 연한 파스텔 그린 */
+#hospitalModal .main-btn[onclick*="vet"] {
+    background: linear-gradient(135deg, #D1FAE5, #A7F3D0) !important;
+    color: #047857 !important; /* 진한 그린 */
+}
+
+#hospitalModal .main-btn[onclick*="vet"]:hover {
+    background: linear-gradient(135deg, #A7F3D0, #6EE7B7) !important;
+    box-shadow: 0 8px 15px rgba(167, 243, 208, 0.4) !important;
+    color: #065F46 !important; /* 더 진한 그린 */
+}
+
+/* 닫기 버튼 - 매우 연한 그레이 */
+#hospitalModal .modal-close {
+    background: rgba(241, 245, 249, 0.8) !important;
+    color: #64748b !important;
+}
+
+#hospitalModal .modal-close:hover {
+    background: rgba(248, 250, 252, 0.95) !important;
+    color: #475569 !important;
+}
