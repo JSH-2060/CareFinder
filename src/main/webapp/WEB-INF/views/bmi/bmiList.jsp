@@ -27,18 +27,16 @@
 
 </head>
 <body>
-<div class="container mt-4" style="max-width:900px;">
-
-    <!-- ================= 공통 HEADER (홈페이지 로고) ================= -->
-    <div class="header">
-        <div class="logo" onclick="location.href='/'">
-            <i class="fa-solid fa-laptop-medical"></i>
-            <span>CareFinder</span>
-        </div>
+<!-- ================= 고정 브랜드 헤더 ================= -->
+<div class="brand-header">
+    <div class="brand-logo" onclick="location.href='/'">
+        <i class="fa-solid fa-laptop-medical"></i>
+        <span>CareFinder</span>
     </div>
+</div>
 
-    <!-- ================= CONTENT ================= -->
-    <div class="container mt-4 bmi-page" style="max-width:900px;">
+<!-- ================= 컨텐츠 ================= -->
+<div class="container bmi-page" style="max-width:900px;">
 
         <!-- ===== 기존 상단 카드 ===== -->
         <div class="card-box p-3">
