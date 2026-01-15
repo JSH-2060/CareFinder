@@ -129,10 +129,10 @@
 
 <div id="hospitalModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e293b; margin-bottom: 20px;">어떤 병원을 찾으세요?</h3>
+        <h3 style="margin-top:0; color:white; margin-bottom: 20px;">어떤 병원을 찾으세요?</h3>
         <div style="display: flex; flex-direction: column; gap: 10px;">
-            <button type="button" class="main-btn" onclick="openDeptModal()"> 🏥 일반 병원 (진료과 선택)</button>
-            <button type="button" class="main-btn" style="background: #059669;" onclick="location.href='/map?mode=vet'"> 🐶 동물 병원</button>
+            <button type="button" class="main-btn" onclick="openDeptModal()"> 일반 병원 (진료과 선택)</button>
+            <button type="button" class="main-btn" style="background: #059669;" onclick="location.href='/map?mode=vet'"> 동물 병원</button>
         </div>
         <button type="button" class="modal-close" onclick="closeModal('hospitalModal')">닫기</button>
     </div>
@@ -140,7 +140,7 @@
 
 <div id="departmentModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e293b; margin-bottom: 20px;">진료과를 선택해주세요</h3>
+        <h3 style="margin-top:0; color:whitesmoke; margin-bottom: 20px;">진료과를 선택해주세요</h3>
         <div class="dept-grid">
             <button type="button" class="dept-btn" onclick="goMap('내과')">내과</button>
             <button type="button" class="dept-btn" onclick="goMap('이비인후과')">이비인후과</button>
