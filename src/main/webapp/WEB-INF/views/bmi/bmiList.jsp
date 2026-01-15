@@ -19,29 +19,45 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
 </head>
 <body>
 <div class="container mt-4" style="max-width:900px;">
 
-    <!-- ===== 헤더 ===== -->
-    <div class="card-box p-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex align-items-center gap-3">
-                <div class="avatar-circle-bmi">
-                    <c:choose>
-                        <c:when test="${not empty childName}">
-                            ${fn:substring(childName,0,1)}
-                        </c:when>
-                        <c:otherwise>Me</c:otherwise>
-                    </c:choose>
-                </div>
-                <div>
-                    <h5 class="mb-0 fw-bold">${childName}</h5>
-                    <small class="text-muted">BMI 기록장</small>
+    <!-- ================= 공통 HEADER (홈페이지 로고) ================= -->
+    <div class="header">
+        <div class="logo" onclick="location.href='/'">
+            <i class="fa-solid fa-laptop-medical"></i>
+            <span>CareFinder</span>
+        </div>
+    </div>
+
+    <!-- ================= CONTENT ================= -->
+    <div class="container mt-4 bmi-page" style="max-width:900px;">
+
+        <!-- ===== 기존 상단 카드 ===== -->
+        <div class="card-box p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar-circle-bmi">
+                        <c:choose>
+                            <c:when test="${not empty childName}">
+                                ${fn:substring(childName,0,1)}
+                            </c:when>
+                            <c:otherwise>Me</c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">${childName}</h5>
+                        <small class="text-muted">BMI 기록장</small>
+                    </div>
                 </div>
             </div>
-            <a href="/" class="btn btn-sm btn-outline-secondary">홈으로</a>
-        </div>
 
         <!-- ===== 탭 + 프로필 ===== -->
         <div class="d-flex justify-content-between align-items-end border-top pt-3">

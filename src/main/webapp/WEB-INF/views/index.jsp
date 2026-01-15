@@ -160,7 +160,7 @@
 
 <div id="healthModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e293b; margin-bottom: 20px;">어떤 기록을 관리할까요?</h3>
+        <h3 style="margin-top:0; color:#fff; margin-bottom: 20px;">어떤 기록을 관리할까요?</h3>
         <button type="button" class="health-btn" style="background: #e0f2fe; color: #0284c7;" onclick="location.href='/heat/select'">
             <i class="fa-solid fa-temperature-half"></i> 체온 관리
         </button>
