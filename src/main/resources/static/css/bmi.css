@@ -497,3 +497,22 @@ a { text-decoration: none; color: inherit; }
     background: #f1f5f9;
     color: #0f172a;
 }
+/* 1. 체중계용: 주황색 그라데이션 (측정, 주의 느낌) */
+.icon-orange {
+    background: linear-gradient(135deg, #FDBA74 0%, #EA580C 100%); /* 연한 주황 -> 진한 주황 */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.3rem;
+    filter: drop-shadow(0 2px 4px rgba(234, 88, 12, 0.2)); /* 주황 그림자 */
+}
+
+/* 2. 기록용: 초록색 그라데이션 (차트, 문서 느낌) */
+.icon-green {
+    background: linear-gradient(135deg, #34D399 0%, #059669 100%); /* 민트 -> 진한 초록 */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1.3rem;
+    filter: drop-shadow(0 2px 4px rgba(5, 150, 105, 0.2)); /* 초록 그림자 */
+}

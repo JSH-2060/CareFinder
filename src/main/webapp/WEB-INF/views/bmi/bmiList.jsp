@@ -171,7 +171,10 @@
 
     <!-- ===== 그래프 ===== -->
     <div class="card-box p-3">
-        <h6 class="fw-bold mb-3"> BMI 변화</h6>
+        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-weight-scale icon-orange"></i>
+            BMI 변화
+        </h6>
 
         <c:choose>
             <c:when test="${empty graphList}">
@@ -252,7 +255,10 @@
 
     <!-- ===== 테이블 ===== -->
     <div class="card-box p-3">
-        <h6 class="fw-bold mb-3">📋 상세 기록</h6>
+        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-clipboard-list icon-green"></i>
+            상세 기록
+        </h6>
 
         <table class="table table-hover text-center align-middle">
             <thead class="table-light">
