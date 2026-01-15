@@ -6,15 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>의약품 검색</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="<c:url value='/css/drugs.css'/>">
 
 </head>
 <body>
-<!-- ✅ 상단 헤더 -->
-<a href="/" class="top-header">
-    <img src="/img/carefinder_logo.png" alt="CareFinder 로고" class="top-logo">
-</a>
+<div class="logo" onclick="location.href='/'">
+    <i class="fa-solid fa-laptop-medical logo-icon"></i>
+    <span class="logo-text">CareFinder</span>
+</div>
 
 <div class="container">
     <h1> 의약품 정보 검색</h1>
