@@ -4,6 +4,86 @@ html, body {
     margin: 0;
 }
 
+/* =========================================
+   2. 헤더 스타일 (홈페이지 index.css 스타일 이식)
+   ========================================= */
+/* 헤더 높이를 변수로 관리 */
+:root {
+    --header-height: 70px;
+}
+.header {
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    position: fixed; /* 상단 고정 */
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+
+    /* [핵심] 홈페이지의 브랜드 컬러 그라데이션 */
+    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+
+.logo-icon {
+    font-size: 28px;     /* 아이콘 크기 28px (중요) */
+    color: #fff;
+    opacity: 0.95;
+}
+
+/* 헤더 우측 유저 메뉴 */
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    /* 반투명 유리 효과 */
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.logout-btn-header {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px; /* 둥글게 */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.logout-btn-header:hover {
+    background: white;
+    color: #1E3A8A;
+}
+
 body {
     display: block !important;
 }
@@ -83,8 +163,8 @@ body {
     transition: transform 0.3s ease;
     position: absolute;
     left: 0;
-    top: 0;
-    bottom: 0;
+    top: var(--header-height);     /* 헤더 높이만큼 내림 */
+    bottom: 0;              /* top: 0 대신 bottom: 0 유지 */
     width: 320px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
@@ -110,7 +190,7 @@ body {
 .list-toggle-btn {
     position: absolute;
     left: 320px;
-    top: 50%;
+    top: calc(50% + 35px);  /* ✅ 헤더 절반(35px) 만큼 보정 */
     transform: translateY(-50%);
     z-index: 3;
 
