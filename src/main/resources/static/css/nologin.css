@@ -1,41 +1,81 @@
+/* =========================================
+   Login Page - Main Theme Unified
+   ========================================= */
+
+/* 배경 */
 body {
     margin: 0;
     height: 100vh;
-    background: #F8FAFC;
     font-family: 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    /* index Hero와 같은 계열, 더 부드럽게 */
+    background:
+            linear-gradient(135deg, #1E3A8A 0%, #10B981 100%),
+            radial-gradient(at 0% 0%, hsla(253,16%,7%,0.35) 0, transparent 50%),
+            radial-gradient(at 100% 0%, hsla(160,84%,39%,0.25) 0, transparent 55%);
+
+    color: #1e293b;
+    overflow: hidden;
 }
 
+
+/* 로그인 카드 (Glass Card) */
 .login-box {
     width: 420px;
-    background: white;
-    border-radius: 20px;
-    padding: 40px 36px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+
+    border-radius: 28px;
+    padding: 42px 36px;
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    box-shadow:
+            0 40px 80px -20px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255,255,255,0.3);
 }
 
+
+/* 제목 */
 .login-box h2 {
-    margin: 0 0 8px 0;
-    font-size: 26px;
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    font-weight: 800;
     text-align: center;
+    color: #ffffff;
 }
 
+/* 설명 */
 .login-box .desc {
     text-align: center;
-    color: #64748B;
-    margin-bottom: 30px;
+
+
+    color: rgba(248, 250, 252, 0.88);
+
     font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 32px;
+
+    /* 배경 위에서 가독성 확보 */
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
+
+/* 에러 메시지 */
 .error-msg {
     color: #DC2626;
-    font-weight: 600;
+    font-weight: 700;
     text-align: center;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
 
+/* 입력 그룹 */
 .form-group {
     margin-bottom: 18px;
 }
@@ -44,53 +84,121 @@ body {
     display: block;
     margin-bottom: 6px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
+    color: #334155;
 }
 
+/* 입력창 (Glass Input) */
 .form-group input {
     width: 100%;
-    height: 46px;
-    border-radius: 10px;
-    border: 1px solid #CBD5E1;
+    height: 48px;
+    border-radius: 12px;
     padding: 0 14px;
     font-size: 14px;
     box-sizing: border-box;
+
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+
+    color: #1e293b;
+    transition: 0.2s;
+}
+
+.form-group input::placeholder {
+    color: #94a3b8;
 }
 
 .form-group input:focus {
     outline: none;
     border-color: #2563EB;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
 .login-btn {
     width: 100%;
-    height: 48px;
-    border-radius: 12px;
+    height: 52px;
+    border-radius: 14px;
     border: none;
-    background: #1E3A8A;
+
+    /* 🔑 index Hero와 동일한 블루 → 그린 */
+    background: linear-gradient(
+            135deg,
+            #1E3A8A 0%,
+            #2563EB 40%,
+            #10B981 100%
+    );
+
     color: white;
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 800;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 14px;
+
+    box-shadow:
+            0 10px 25px -5px rgba(16, 185, 129, 0.35),
+            0 4px 12px rgba(30, 58, 138, 0.25);
+
+    transition: all 0.3s ease;
 }
 
-.join-link {
-    margin-top: 16px;
-    text-align: center;
-    font-size: 14px;
+/* Hover */
+.login-btn:hover {
+    transform: translateY(-3px);
+
+    background: linear-gradient(
+            135deg,
+            #1E40AF 0%,
+            #2563EB 35%,
+            #34D399 100%
+    );
+
+    box-shadow:
+            0 18px 40px -8px rgba(16, 185, 129, 0.5),
+            0 8px 20px rgba(30, 58, 138, 0.35);
 }
+
+/* Active (클릭) */
+.login-btn:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow:
+            0 8px 18px rgba(16, 185, 129, 0.35);
+}
+
+
+/* 회원가입 링크 */
+.join-link {
+    margin-top: 18px;
+    text-align: center;
+
+    /* 설명 문구와 동일한 톤 */
+    color: rgba(248, 250, 252, 0.85);
+
+    font-size: 14px;
+    font-weight: 500;
+
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
 
 .join-link a {
-    color: #2563EB;
+    color: blue; /* 밝은 민트 화이트 */
+    font-weight: 700;
     text-decoration: none;
-    font-weight: 600;
 }
 
+.join-link a:hover {
+    text-decoration: underline;
+    color :#ffffff;
+}
+
+
+/* 구분선 */
 .divider {
     display: flex;
     align-items: center;
-    margin: 28px 0 20px;
+    margin: 30px 0 22px;
     color: #94A3B8;
     font-size: 13px;
 }
@@ -100,34 +208,52 @@ body {
     content: "";
     flex: 1;
     height: 1px;
-    background: #E2E8F0;
+    background: rgba(148, 163, 184, 0.3);
 }
 
 .divider span {
-    margin: 0 10px;
+    margin: 0 12px;
 }
 
+/* 소셜 로그인 버튼 */
 .social-btn {
     width: 100%;
-    height: 48px;
-    border-radius: 12px;
+    height: 50px;
+    border-radius: 14px;
     border: none;
     cursor: pointer;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 12px;
+    transition: 0.2s;
 }
 
+/* 카카오 */
 .kakao {
     background: #FEE500;
+    color: #3b3b3b;
 }
 
+.kakao:hover {
+    filter: brightness(0.95);
+}
+
+/* 네이버 */
 .naver {
     background: #03C75A;
     color: white;
 }
 
+.naver:hover {
+    filter: brightness(0.95);
+}
+
+/* 구글 */
 .google {
+    background: rgba(255,255,255,0.8);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+}
+
+.google:hover {
     background: white;
-    border: 1px solid #CBD5E1;
 }
