@@ -433,3 +433,57 @@ body {
     background: rgba(248, 250, 252, 0.95) !important;
     color: #475569 !important;
 }
+
+/* 의약품 섹션 배경 */
+.medicine-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 배경 이미지 레이어 */
+.medicine-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: url("../img/medicineex01.jpg");
+    background-size: contain;
+    background-position: left center;
+    background-repeat: no-repeat;
+
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+/* 기존 콘텐츠는 항상 위 */
+.medicine-bg > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* 가족 건강 기록 섹션 배경 */
+.family-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 배경 이미지 레이어 */
+.family-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: url("../img/family_healthex01.jpg");
+    background-size: contain;
+    background-position: right center;
+    background-repeat: no-repeat;
+
+    opacity: 0.11;
+    pointer-events: none;
+}
+
+/* 기존 콘텐츠는 항상 위 */
+.family-bg > * {
+    position: relative;
+    z-index: 1;
+}

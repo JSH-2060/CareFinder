@@ -76,9 +76,7 @@
     </div>
 </div>
 
-<div class="info-section section-gray clickable"
-     onclick="location.href='/drug'">
-
+<div class="info-section section-gray clickable medicine-bg">
     <div class="info-container">
         <div class="info-text">
             <span class="info-tag">SMART DICTIONARY</span>
@@ -88,23 +86,26 @@
                 약 이름, 혹은 모양을 검색해보세요. <br>
                 복용 방법부터 효능, 주의사항까지 필요한 약 정보를 쉽게 확인할 수 있어요.
             </p>
-            <button class="info-btn">
+            <button class="info-btn" onclick="location.href='/drug'">
                 <i class="fa-solid fa-book-medical" style="margin-right:8px;"></i>
                 의약품 사전 바로가기
             </button>
         </div>
 
         <div class="info-visual">
-            <div class="feature-card card-drug">
-                <i class="fa-solid fa-tablets feature-icon" style="color: #8B5CF6;"></i>
+            <div class="feature-card card-drug" onclick="location.href='/drug'">
+                <i class="fa-solid fa-tablets feature-icon" style="color: #8B5CF6;"  onclick="location.href='/drug'"></i>
                 <h4>스마트 의약품 검색</h4>
                 <p>4만여 개의 의약품 정보<br>실시간 데이터베이스 연동</p>
             </div>
         </div>
     </div>
 </div>
-
-<div class="info-section section-white">
+<br>
+<br>
+<br>
+<br>
+<div class="info-section section-white clickable family-bg">
     <div class="info-container row-reverse">
         <div class="info-text">
             <span class="info-tag tag-green">FAMILY CARE</span>
