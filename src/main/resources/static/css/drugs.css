@@ -512,7 +512,7 @@ h1 {
     padding: 30px;
 }
 
-#newsList p {
+#newsList > p {
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     padding: 40px;
@@ -550,7 +550,7 @@ h1 {
 
 .news-description {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
+    color: whitesmoke;
     margin-bottom: 15px;
     line-height: 1.6;
     overflow: hidden;

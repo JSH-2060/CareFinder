@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="<c:url value='/css/map.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<%-- 1. 카카오 맵 API --%>
+    <%-- 1. 카카오 맵 API --%>
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapsKey}&libraries=services"></script>
 
     <%-- 2. 구글 맵 API --%>
@@ -34,6 +35,12 @@
 </head>
 
 <body>
+<div class="header">
+    <div class="logo" onclick="location.href='/'">
+        <i class="fa-solid fa-laptop-medical logo-icon"></i>
+        <span class="logo-text">CareFinder</span>
+    </div>
+</div>
 
 <div id="mapWrap">
     <div id="listPanel">
@@ -74,6 +81,7 @@
     </div>
 </div>
 
+<!-- ✅ 하단 상세정보 카드 (영업시간 아코디언 제거됨) -->
 <div id="detailCard">
     <div class="detail-card-inner">
         <div class="detail-info-section">
@@ -91,7 +99,6 @@
             <button class="detail-close" onclick="window.markerModule.closeDetailCard()">✕</button>
         </div>
     </div>
-    <div id="routeInfo" class="route-info"></div>
 </div>
 
 <div class="address-modal" id="addressModal">
@@ -175,6 +182,9 @@
     const placeListEl = document.getElementById("placeList");
     const placeResults = [];  // 정렬용 배열 추가
 
+    // ✅ 현재 열린 아코디언 항목 추적
+    let currentOpenAccordion = null;
+
     function esc(s) {
         return String(s ?? "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[m]));
     }
@@ -183,10 +193,70 @@
         resultMarkers.forEach(m => m.setMap(null));
         resultMarkers = [];
         placeListEl.innerHTML = "";
-        placeResults.length = 0;  // ✅ 배열 초기화 추가
+        placeResults.length = 0;
+        currentOpenAccordion = null;  // ✅ 아코디언 상태 초기화
         if (rangeCircle) rangeCircle.setMap(null);
         if (window.markerModule) window.markerModule.clearAllMarkers();
         if (window.routeModule) window.routeModule.clearAllLayers();
+    }
+
+    // ✅ 아코디언 토글 함수
+    function toggleAccordion(li, place) {
+        const accordionContent = li.querySelector('.list-accordion-content');
+        const chevron = li.querySelector('.accordion-chevron');
+
+        // 이미 열려있는 다른 아코디언 닫기
+        if (currentOpenAccordion && currentOpenAccordion !== li) {
+            const prevContent = currentOpenAccordion.querySelector('.list-accordion-content');
+            const prevChevron = currentOpenAccordion.querySelector('.accordion-chevron');
+            if (prevContent) {
+                prevContent.classList.remove('open');
+                currentOpenAccordion.classList.remove('accordion-open');
+            }
+            if (prevChevron) prevChevron.classList.remove('open');
+        }
+
+        // 현재 아코디언 토글
+        if (accordionContent) {
+            const isOpen = accordionContent.classList.toggle('open');
+            li.classList.toggle('accordion-open', isOpen);
+            if (chevron) chevron.classList.toggle('open', isOpen);
+
+            currentOpenAccordion = isOpen ? li : null;
+
+            // 영업시간 로드 (아직 로드되지 않은 경우)
+            if (isOpen) {
+                const hoursEl = accordionContent.querySelector('.accordion-hours');
+                if (hoursEl && hoursEl.textContent === '불러오는 중...') {
+                    loadOpeningHours(place, hoursEl);
+                }
+            }
+        }
+    }
+
+    // ✅ 영업시간 로드 함수
+    function loadOpeningHours(place, hoursEl) {
+        if (typeof window.fetchGoogleDetail !== 'function') {
+            hoursEl.textContent = '영업시간 정보를 불러올 수 없습니다.';
+            return;
+        }
+
+        window.fetchGoogleDetail(
+            place.place_name,
+            Number(place.y),
+            Number(place.x),
+            (googleDetail) => {
+                if (!document.body.contains(hoursEl)) return;
+
+                if (googleDetail?.opening_hours?.weekday_text) {
+                    hoursEl.innerHTML = googleDetail.opening_hours.weekday_text
+                        .map(d => '<div class="hours-row">' + esc(d) + '</div>')
+                        .join('');
+                } else {
+                    hoursEl.textContent = '영업시간 정보가 없습니다.';
+                }
+            }
+        );
     }
 
     // 정렬 함수
@@ -213,13 +283,10 @@
         const isFromAiSearch = sessionStorage.getItem("isAiSearch") === "true";
 
         if (isFromAiSearch && placeResults.length > 0) {
-            // 검색 결과가 화면에 그려진 후 약간의 지연(0.3초)을 두어 자동 클릭 실행 [cite: 109]
             setTimeout(() => {
                 console.log("📍 AI 추천: 가장 가까운 병원의 상세정보를 자동으로 엽니다.");
-                // 최상단 결과(index 0)의 리스트 아이템 클릭 시뮬레이션 [cite: 109]
-                placeResults[0].li.click();
-
-                // 한 번 실행 후 세션 값을 삭제하여 새로고침 시 반복되지 않게 함 [cite: 110]
+                const firstHeader = placeResults[0].li.querySelector('.place-item-header');
+                if (firstHeader) firstHeader.click();
                 sessionStorage.removeItem("isAiSearch");
             }, 300);
         }
@@ -263,13 +330,11 @@
     ========================= */
     document.getElementById('myLocationBtn').addEventListener('click', () => {
         if (myPos) {
-            // 1️⃣ 위치 이동은 panTo()로 부드럽게
             map.panTo(myPos);
 
-            // 2️⃣ 줌 레벨도 단계별로 부드럽게
             const currentLevel = map.getLevel();
             if (currentLevel !== 3) {
-                let step = currentLevel < 3 ? 1 : -1;  // 확대/축소 방향 결정
+                let step = currentLevel < 3 ? 1 : -1;
                 let level = currentLevel;
 
                 const zoomInterval = setInterval(() => {
@@ -277,9 +342,9 @@
                     map.setLevel(level);
 
                     if (level === 3) {
-                        clearInterval(zoomInterval);  // 목표 레벨 도달 시 중단
+                        clearInterval(zoomInterval);
                     }
-                }, 50); // 50ms마다 한 단계씩 줌
+                }, 50);
             }
         } else {
             alert('현재 위치를 찾을 수 없습니다.');
@@ -318,7 +383,6 @@
         bounds.extend(myPos);
 
         function runSearch() {
-            // pagination 매개변수 활용
             places.keywordSearch(keywords[idx], (data, status, pagination) => {
                 if (status === kakao.maps.services.Status.OK) {
                     data.forEach(place => {
@@ -350,21 +414,35 @@
                         const dist = window.markerModule ? window.markerModule.calculateDistance(myPos, pos) : place.distance;
                         const distText = window.markerModule ? window.markerModule.formatDistance(dist) : (place.distance + 'm');
 
+                        // ✅ 새로운 리스트 아이템 구조 (아코디언 포함)
                         const li = document.createElement("li");
                         li.className = "place-item";
-                        li.innerHTML = '<div class="place-name">' + esc(place.place_name) + '</div>' +
+                        li.innerHTML =
+                            '<div class="place-item-header">' +
+                            '<div class="place-item-main">' +
+                            '<div class="place-name">' + esc(place.place_name) + '</div>' +
                             '<div class="place-meta">' +
                             '<span class="distance">' + distText + '</span>' +
                             '<span class="list-open-badge" data-open-badge>확인중...</span>' +
                             esc(place.road_address_name || place.address_name) +
+                            '</div>' +
+                            '</div>' +
+                            '<span class="accordion-chevron">▼</span>' +
+                            '</div>' +
+                            '<div class="list-accordion-content">' +
+                            '<div class="accordion-hours-wrapper">' +
+                            '<div class="accordion-hours-title">🕒 상세 영업시간</div>' +
+                            '<div class="accordion-hours">불러오는 중...</div>' +
+                            '</div>' +
                             '</div>';
+
                         placeListEl.appendChild(li);
 
                         // 정렬용 배열에 저장
                         const placeItem = {
                             place,
                             li,
-                            marker,  // ✅ 마커 저장 (확대/축소용)
+                            marker,
                             distance: dist,
                             isOpen: null
                         };
@@ -385,7 +463,6 @@
                                         const isOpen = googleDetail.opening_hours.open_now;
                                         badgeEl.classList.remove("open", "closed", "no-info");
 
-                                        // ✅ 배열에 영업 상태 저장
                                         placeItem.isOpen = isOpen;
 
                                         if (isOpen) {
@@ -402,23 +479,24 @@
                                         placeItem.isOpen = null;
                                     }
 
-                                    // ✅ 재정렬
                                     sortAndRenderList();
                                 }
                             );
                         }
 
-                        // ✅ 이벤트 연결 (마커 확대/축소 포함)
+                        // ✅ 이벤트 연결 (헤더 클릭 시 상세카드 + 아코디언)
+                        const headerEl = li.querySelector('.place-item-header');
+
                         const openDetail = () => {
                             if (!window.markerModule) return;
 
-                            // 0️⃣ 기존 길찾기 경로 제거
+                            // 기존 길찾기 경로 제거
                             if (window.clearRoute) window.clearRoute();
 
-                            // 1️⃣ 이전 선택으로 숨겨진 마커들 복원
+                            // 이전 선택으로 숨겨진 마커들 복원
                             window.markerModule.showAllMarkers(resultMarkers);
 
-                            // 2️⃣ 상세 카드 갱신
+                            // 상세 카드 갱신 (영업시간 제외)
                             window.markerModule.showDetailCard(
                                 place,
                                 map,
@@ -426,33 +504,34 @@
                                 distText
                             );
 
-                            // 3️⃣ 선택 마커는 반드시 다시 보이게
+                            // 선택 마커는 반드시 다시 보이게
                             marker.setVisible(true);
 
-                            // 4️⃣ 마커 확대 + 나머지 숨김
+                            // 마커 확대 + 나머지 숨김
                             window.markerModule.enlargeMarker(marker, markerImg);
                             window.markerModule.hideOtherMarkers(marker, resultMarkers);
 
-                            // 5️⃣ 지도 이동
+                            // 지도 이동
                             map.panTo(pos);
+
+                            // ✅ 아코디언 토글
+                            toggleAccordion(li, place);
                         };
+
                         kakao.maps.event.addListener(marker, "click", openDetail);
-                        li.onclick = openDetail;
+                        headerEl.onclick = openDetail;
                     });
 
                     map.setBounds(bounds);
 
-                    // 다음 페이지가 있으면 계속 검색
                     if (pagination.hasNextPage) {
                         pagination.nextPage();
                     } else if (++idx < keywords.length) {
                         runSearch();
                     } else {
-                        // 모든 검색 완료
                         checkAndExpandRadius();
                     }
                 } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-                    // 결과가 없는 경우 다음 키워드로
                     if (++idx < keywords.length) {
                         runSearch();
                     } else {
@@ -462,7 +541,6 @@
             }, { location: myPos, radius: currentRadius, sort: kakao.maps.services.SortBy.DISTANCE });
         }
 
-        // ✅ 결과 없으면 자동으로 반경 확장 (사용자가 직접 선택한 경우 제외)
         function checkAndExpandRadius() {
             if (totalResults === 0 && currentRadius < 3000 && !userSelectedRadius) {
                 const nextRadius = radiusSteps.find(r => r > currentRadius);
@@ -494,7 +572,7 @@
         myPos = new kakao.maps.LatLng(lat, lng);
         map.setCenter(myPos); myMarker.setPosition(myPos);
         document.getElementById('addressModal').style.display = 'none';
-        userSelectedRadius = false; // 새 위치에서는 자동 확장 허용
+        userSelectedRadius = false;
         searchWithinRadiusByMode();
     };
 
@@ -513,7 +591,7 @@
     requestLocation();
 
     /* =========================
-       8. 주소 검색 (위치 권한 거부 시) - keywordSearch 사용
+       8. 주소 검색 (위치 권한 거부 시)
     ========================= */
     function searchAddress() {
         const input = document.getElementById('addressInput');
@@ -524,13 +602,11 @@
             return;
         }
 
-        // ✅ keywordSearch로 변경 - 장소명, 주소 모두 검색 가능
         places.keywordSearch(keyword, (result, status) => {
             const resultsEl = document.getElementById('addressResults');
             resultsEl.innerHTML = "";
 
             if (status === kakao.maps.services.Status.OK) {
-                // 상위 5개 결과만 표시
                 result.slice(0, 5).forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'address-result-item';
@@ -548,17 +624,15 @@
         });
     }
 
-    // 위치 권한 재요청 함수
     function retryLocation() {
         document.getElementById('addressModal').style.display = 'none';
         requestLocation();
     }
 
     /* =========================
-       9. 길찾기 버튼 이벤트 (도보/자동차)
+       9. 길찾기 버튼 이벤트
     ========================= */
     document.addEventListener("DOMContentLoaded", function() {
-        // 도보 버튼
         const walkBtn = document.getElementById("cardWalkBtn");
         if (walkBtn) {
             walkBtn.onclick = function() {
@@ -569,7 +643,6 @@
             };
         }
 
-        // 자동차 버튼
         const driveBtn = document.getElementById("cardDriveBtn");
         if (driveBtn) {
             driveBtn.onclick = function() {
@@ -594,7 +667,6 @@
     function fetchGoogleDetail(placeName, lat, lng, callback) {
         const location = new google.maps.LatLng(lat, lng);
 
-        // 1️⃣ 주변 검색 (이름 기준)
         googleService.nearbySearch({
             location,
             radius: 50,
@@ -607,7 +679,6 @@
 
             const placeId = results[0].place_id;
 
-            // 2️⃣ 상세 정보 요청
             googleService.getDetails({
                 placeId,
                 fields: ["opening_hours", "formatted_phone_number", "website", "utc_offset_minutes"]
@@ -624,34 +695,45 @@
 
 </script>
 <jsp:include page="../common/chatbot.jsp"/>
-<script src="/js/chatbot.js"></script> <%--챗봇 자바스크립트 입니다--%>
+<script src="/js/chatbot.js"></script>
 <script src="/js/map-chatbot-init.js"></script>
 
-<script>console.log("map element:", document.getElementById("map"));
-console.log("map height:", document.getElementById("map")?.offsetHeight);
-/* =========================
-리스트 접기 / 펼치기
-========================= */
-const listPanel = document.getElementById("listPanel");
-const listToggleBtn = document.getElementById("listToggleBtn");
+<script>
+    console.log("map element:", document.getElementById("map"));
+    console.log("map height:", document.getElementById("map")?.offsetHeight);
 
-listToggleBtn.addEventListener("click", () => {
-    const isClosed = listPanel.classList.toggle("closed");
+    /* =========================
+       리스트 접기 / 펼치기
+    ========================= */
+    const listPanel = document.getElementById("listPanel");
+    const listToggleBtn = document.getElementById("listToggleBtn");
 
-    // 버튼 방향 변경
-    listToggleBtn.textContent = isClosed ? "❯" : "❮";
-});
+    listToggleBtn.addEventListener("click", () => {
+        const isClosed = listPanel.classList.toggle("closed");
+        listToggleBtn.textContent = isClosed ? "❯" : "❮";
+    });
 
-/* =========================
-    ✅ 지도 클릭 시 상세 카드 닫기 + 모든 마커 복원
-========================= */
-kakao.maps.event.addListener(map, 'click', function () {
-    if (window.markerModule) {
-        window.markerModule.closeDetailCard();
-        // ✅ 모든 마커 복원 (내 위치 마커는 Z-index 1000으로 항상 최상단)
-        window.markerModule.showAllMarkers(resultMarkers);
-    }
-});
+    /* =========================
+        ✅ 지도 클릭 시 상세 카드 닫기 + 아코디언 닫기 + 모든 마커 복원
+    ========================= */
+    kakao.maps.event.addListener(map, 'click', function () {
+        if (window.markerModule) {
+            window.markerModule.closeDetailCard();
+            window.markerModule.showAllMarkers(resultMarkers);
+        }
+
+        // ✅ 열린 아코디언 닫기
+        if (currentOpenAccordion) {
+            const content = currentOpenAccordion.querySelector('.list-accordion-content');
+            const chevron = currentOpenAccordion.querySelector('.accordion-chevron');
+            if (content) {
+                content.classList.remove('open');
+                currentOpenAccordion.classList.remove('accordion-open');
+            }
+            if (chevron) chevron.classList.remove('open');
+            currentOpenAccordion = null;
+        }
+    });
 
 </script>
 

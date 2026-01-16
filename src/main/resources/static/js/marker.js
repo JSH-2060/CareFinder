@@ -1,6 +1,6 @@
 /**
  * marker.js
- * 마커 관리 및 상세 카드 제어 모듈 (✅ Google 영업시간 기능 + 마커 확대/축소)
+ * 마커 관리 및 상세 카드 제어 모듈 (✅ 영업시간을 리스트 아코디언으로 이동)
  */
 
 // [중요] 변수는 여기서만 선언합니다.
@@ -268,7 +268,7 @@ function clearAllMarkers() {
 }
 
 // ========================================
-// ✅ 상세정보 카드 표시 (구글 운영시간 + 영업상태 포함)
+// ✅ 상세정보 카드 표시 (영업시간 아코디언 제거됨 - 리스트로 이동)
 // ========================================
 function showDetailCard(place, map, myPos, distanceText) {
     if (!detailCard) detailCard = document.getElementById('detailCard');
@@ -277,6 +277,7 @@ function showDetailCard(place, map, myPos, distanceText) {
     // ✅ currentPlace 저장 (길찾기 버튼에서 사용)
     window.markerModule.currentPlace = place;
 
+    // ✅ 영업시간 아코디언 제거됨 - 간결한 상세 카드
     detailCard.innerHTML = `
     <div class="detail-card-inner">
       <div class="detail-info-section">
@@ -289,18 +290,6 @@ function showDetailCard(place, map, myPos, distanceText) {
             ${esc(place.road_address_name || place.address_name)}
         </p>
         <p class="detail-phone">${place.phone ? esc(place.phone) : "전화번호 없음"}</p>
-
-        <div class="detail-google">
-            <details class="hours-accordion">
-                <summary class="detail-hours-head">
-                    <b>🕒 상세 영업시간 보기</b>
-                    <span class="chevron">▼</span>
-                </summary>
-                <div id="googleOpeningHours" class="opening-hours">
-                    불러오는 중...
-                </div>
-            </details>
-        </div>
       </div>
 
       <div class="detail-actions">
@@ -333,23 +322,20 @@ function showDetailCard(place, map, myPos, distanceText) {
         };
     }
 
-    // Google 운영시간 로드
+    // ✅ 영업 상태 뱃지만 업데이트 (영업시간 상세는 리스트 아코디언에서 표시)
     const badgeEl = document.getElementById("googleOpenNowBadge");
-    const hoursEl = document.getElementById("googleOpeningHours");
-
     const key = getPlaceKey(place);
 
     // 1) 캐시가 있으면 먼저 즉시 반영
     if (googleDetailCache.has(key)) {
         const cached = googleDetailCache.get(key);
-        renderGoogleDetailToCard(cached, badgeEl, hoursEl);
+        renderOpenBadgeOnly(cached, badgeEl);
         return;
     }
 
     // 2) 캐시 없으면 구글 호출
     if (typeof window.fetchGoogleDetail !== "function") {
         if (badgeEl) badgeEl.textContent = "기능 준비 안됨";
-        if (hoursEl) hoursEl.textContent = "운영시간 기능 준비 안됨";
         return;
     }
 
@@ -364,17 +350,16 @@ function showDetailCard(place, map, myPos, distanceText) {
             if (tokenAtRequest !== searchToken) return;
 
             if (googleDetail) googleDetailCache.set(key, googleDetail);
-            renderGoogleDetailToCard(googleDetail, badgeEl, hoursEl);
+            renderOpenBadgeOnly(googleDetail, badgeEl);
         }
     );
 }
 
-// 상세카드에 구글 상세정보 렌더
-function renderGoogleDetailToCard(googleDetail, badgeEl, hoursEl) {
+// ✅ 영업 상태 뱃지만 렌더링 (영업시간 상세 제거)
+function renderOpenBadgeOnly(googleDetail, badgeEl) {
     if (!googleDetail?.opening_hours) {
-        // 데이터가 없으면 뱃지를 계속 숨김 처리
+        // 데이터가 없으면 뱃지를 숨김 처리
         if (badgeEl) badgeEl.style.display = 'none';
-        if (hoursEl) hoursEl.textContent = "운영시간 정보 없음";
         return;
     }
 
@@ -386,19 +371,11 @@ function renderGoogleDetailToCard(googleDetail, badgeEl, hoursEl) {
 
         if (info.state === "open") {
             badgeEl.classList.add("open");
-            badgeEl.style.display = 'inline-flex'; // ✅ 영업중일 때만 표시
+            badgeEl.style.display = 'inline-flex';
         } else if (info.state === "closed") {
             badgeEl.classList.add("closed");
-            badgeEl.style.display = 'inline-flex'; // ✅ 영업종료일 때만 표시
+            badgeEl.style.display = 'inline-flex';
         }
-    }
-
-    // 요일별 시간 렌더링
-    const weekday = googleDetail.opening_hours.weekday_text;
-    if (weekday && hoursEl) {
-        hoursEl.innerHTML = weekday
-            .map(d => `<div>${esc(d)}</div>`)
-            .join("");
     }
 }
 
