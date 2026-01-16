@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<c:url value='/css/map.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/chatbotMap.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <%-- 1. 카카오 맵 API --%>
