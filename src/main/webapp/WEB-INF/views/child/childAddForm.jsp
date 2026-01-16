@@ -47,7 +47,7 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 
-<script src="/js/childAdd.js"></script>
+<script src="/js/childAddForm.js"></script>
 
 </body>
 </html>
