@@ -91,6 +91,26 @@ a { text-decoration: none; color: inherit; }
     color: #1E3A8A; /* 호버 시 글자색은 브랜드 네이비로 */
 }
 
+.btn-outline-secondary, .btn-outline-light {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #475569; backdrop-filter: blur(4px);
+    transition: all 0.2s; border-radius: 999px;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-outline-secondary:hover, .btn-outline-light:hover {
+    background: #ffffff;
+    color: var(--height-color); border-color: var(--height-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
 /* ==================================================
    3. 레이아웃
    ================================================== */
