@@ -114,12 +114,15 @@
     function toggleShapeSearch() {
         var form = document.getElementById('shapeSearchForm');
         var icon = document.getElementById('toggleIcon');
+        var button = document.querySelector('.shape-toggle-btn'); // 이 줄 추가
 
         if (form.classList.contains('open')) {
             form.classList.remove('open');
+            button.classList.remove('active'); // 이 줄 추가
             icon.textContent = '▼';
         } else {
             form.classList.add('open');
+            button.classList.add('active'); // 이 줄 추가
             icon.textContent = '▲';
         }
     }

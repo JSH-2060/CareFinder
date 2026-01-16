@@ -95,7 +95,7 @@ h1 {
    검색 컨테이너 - 글래스 카드 (강화)
    ========================================= */
 .search-container {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.11);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
     padding: 42px 36px;
@@ -196,6 +196,7 @@ h1 {
    모양 검색 토글 버튼
    ========================================= */
 .shape-toggle-btn {
+    position: relative; /* ::after를 위해 필요 */
     width: 100%;
     padding: 18px 24px;
     border-radius: 14px;
@@ -229,29 +230,71 @@ h1 {
     font-size: 20px;
 }
 
+/* 버튼 아래 살짝 보이는 투명 상자 */
+.shape-toggle-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; /* 버튼 아래로 살짝 나오게 */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 99%; /* 버튼보다 살짝 좁게 */
+    height: 15px; /* 삐끗 보일 높이 */
+
+    background: rgba(255, 255, 255, 0.11);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    border-radius: 0 0 15px 15px; /* 아래쪽만 둥글게 */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-top: none; /* 위쪽 테두리 제거 */
+
+    z-index: -1;
+
+    transition: all 0.3s ease;
+}
+
+/* 펼쳐졌을 때는 숨김 */
+.shape-toggle-btn.active::after {
+    opacity: 0;
+    bottom: 0;
+}
+
+/* =========================================
+   모양 검색 폼
+   ========================================= */
 /* =========================================
    모양 검색 폼
    ========================================= */
 .shape-search-form {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.4s ease, margin 0.4s ease;
 
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    padding: 0;
+    margin: 0;
+    border: 0;
+
+    transition:
+            max-height 0.4s ease,
+            padding 0.4s ease,
+            margin 0.4s ease,
+            background 0.3s ease,
+            backdrop-filter 0.3s ease;
 }
+
 
 .shape-search-form.open {
     max-height: 500px;
     padding: 30px;
     margin-top: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.4); /* 펼쳐졌을 때만 보임 */
 }
 
 .shape-form-title {
-    font-size: 15px;
+    font-size: 30px;
     font-weight: 700;
     margin-bottom: 25px;
     text-align: center;
@@ -494,15 +537,6 @@ h1 {
             0 0 0 1px rgba(16, 185, 129, 0.3);
 }
 
-/* 🎨 홀수/짝수 카드 좌측 액센트 */
-.drug-card:nth-child(odd) {
-    border-left: 4px solid #2563EB;
-}
-
-.drug-card:nth-child(even) {
-    border-left: 4px solid #10B981;
-}
-
 .drug-name {
     font-size: 22px;
     font-weight: 800;
@@ -524,7 +558,7 @@ h1 {
     margin-bottom: 20px;
     font-weight: 600;
 
-    /* 🎨 민트 계열 */
+    /* 민트 계열 */
     color: #a7f3d0;
 }
 
@@ -547,7 +581,7 @@ h1 {
     margin: 20px 0;
 }
 
-/* 🎨 라벨 - 그라데이션 배지 스타일 */
+/* 그라데이션 배지 스타일 */
 .info-label {
     display: inline-block;
     font-size: 13px;
@@ -586,7 +620,7 @@ h1 {
     border-radius: 28px;
     border: 1px solid rgba(255, 255, 255, 0.55);
 
-    /* 🎨 그라데이션 텍스트 */
+    /* 그라데이션 텍스트 */
     background-image: linear-gradient(135deg, #ffffff 0%, #a7f3d0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -690,22 +724,12 @@ h1 {
             0 0 0 1px rgba(16, 185, 129, 0.3);
 }
 
-/* 🎨 뉴스 아이템 좌측 액센트 */
-.news-item:nth-child(odd) {
-    border-left: 3px solid #2563EB;
-}
-
-.news-item:nth-child(even) {
-    border-left: 3px solid #10B981;
-}
-
 .news-item h3 {
     font-size: 17px;
     font-weight: 800;
     margin-bottom: 12px;
     line-height: 1.5;
 
-    /* 🎨 화이트 → 민트 그라데이션 */
     background: linear-gradient(135deg, #ffffff 0%, #e0f2fe 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
