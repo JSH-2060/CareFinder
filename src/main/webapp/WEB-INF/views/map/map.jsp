@@ -95,8 +95,8 @@
         </div>
 
         <div class="detail-actions">
-            <button id="cardWalkBtn" class="route-btn walk-btn" title="도보 길찾기">🚶 도보</button>
-            <button id="cardDriveBtn" class="route-btn drive-btn" title="자동차 길찾기">🚗 차량</button>
+            <button id="cardWalkBtn" class="route-btn walk-btn" title="도보 길찾기">도보</button>
+            <button id="cardDriveBtn" class="route-btn drive-btn" title="자동차 길찾기">차량</button>
             <button class="detail-close" onclick="window.markerModule.closeDetailCard()">✕</button>
         </div>
     </div>
@@ -432,7 +432,7 @@
                             '</div>' +
                             '<div class="list-accordion-content">' +
                             '<div class="accordion-hours-wrapper">' +
-                            '<div class="accordion-hours-title">🕒 상세 영업시간</div>' +
+                            '<div class="accordion-hours-title">상세 영업시간</div>' +
                             '<div class="accordion-hours">불러오는 중...</div>' +
                             '</div>' +
                             '</div>';
