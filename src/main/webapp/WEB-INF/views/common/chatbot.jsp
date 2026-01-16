@@ -2,11 +2,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <meta charset="UTF-8"/>
 
-<div id="chatbot-fab">💻</div>
+<div id="chatbot-fab">
+    <img
+            src="${pageContext.request.contextPath}/img/chatbot-icon.png"
+            alt="AI 상담 챗봇"
+            class="chatbot-icon"
+    />
+</div>
 
 <div id="chatbot-panel">
     <div class="chatbot-header">
-        AI 상담
+        AI 상담 챗봇
         <span id="chatbot-close">✕</span>
     </div>
 

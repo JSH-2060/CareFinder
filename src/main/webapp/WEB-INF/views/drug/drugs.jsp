@@ -103,39 +103,11 @@
 </div>
 
 <script>
-    // 로딩 HTML 생성 함수 (픽셀 프로그레스 바)
+    // 로딩 HTML 생성 함수
     function getLoadingHtml() {
         return '<div class="loading">' +
-            '<img src="/img/loading_pixel.gif" alt="로딩중">' +
-            '<div class="loading-text">약 정보를 찾고 있어요...</div>' +
-            '<div class="pixel-progress-container">' +
-            '<div class="pixel-progress-bar" id="loadingProgress"></div>' +
-            '</div>' +
-            '<div class="loading-timer" id="loadingTimer">Loading...</div>' +
+            '<img src="/img/loading_circle.gif" alt="로딩중">' +
             '</div>';
-    }
-
-    // 프로그레스 바 애니메이션
-    function startLoadingTimer() {
-        const progressEl = document.getElementById('loadingProgress');
-        const timerEl = document.getElementById('loadingTimer');
-        let width = 0;
-
-        const interval = setInterval(function() {
-            if (progressEl && timerEl) {
-                width += 1;
-                if (width <= 100) {
-                    progressEl.style.width = width + '%';
-                    timerEl.textContent = 'Loading... ' + width + '%';
-                } else {
-                    timerEl.textContent = 'Loading... 100%';
-                }
-            } else {
-                clearInterval(interval);
-            }
-        }, 470); // 47초 = 100 * 470ms
-
-        return interval;
     }
 
     // 모양 검색 폼 토글
@@ -164,12 +136,8 @@
         var resultDiv = document.getElementById('result');
         resultDiv.innerHTML = getLoadingHtml();
 
-        // ✅ 타이머 시작
-        var timerInterval = startLoadingTimer();
-
         fetch('/drug/search?name=' + encodeURIComponent(keyword))
             .then(function(response) {
-                clearInterval(timerInterval); // ✅ 타이머 종료
                 return response.json();
             })
             .then(function(data) {
@@ -250,13 +218,12 @@
                 resultDiv.innerHTML = html;
             })
             .catch(function(error) {
-                clearInterval(timerInterval); // ✅ 에러 시에도 타이머 종료
                 console.error('에러:', error);
                 resultDiv.innerHTML = '<div class="empty-message">오류가 발생했습니다. 다시 시도해주세요.</div>';
             });
     }
 
-    // 모양으로 검색 기능 (서버 필터링 버전)
+    // 모양으로 검색 기능
     function searchByShape() {
         var shape = document.getElementById('shapeSelect').value;
         var color = document.getElementById('colorSelect').value;
@@ -269,9 +236,7 @@
 
         var resultDiv = document.getElementById('result');
         resultDiv.innerHTML = getLoadingHtml();
-        var timerInterval = startLoadingTimer();
 
-        // 필터 조건을 서버로 전달
         var params = new URLSearchParams();
         if (shape) params.append('shape', shape);
         if (color) params.append('color', color);
@@ -279,7 +244,6 @@
 
         fetch('/drug/searchByShape?' + params.toString())
             .then(function(response) {
-                clearInterval(timerInterval);
                 return response.json();
             })
             .then(function(data) {
@@ -358,7 +322,6 @@
                 resultDiv.innerHTML = html;
             })
             .catch(function(error) {
-                clearInterval(timerInterval);
                 console.error('에러:', error);
                 resultDiv.innerHTML = '<div class="empty-message">오류가 발생했습니다. 다시 시도해주세요.</div>';
             });

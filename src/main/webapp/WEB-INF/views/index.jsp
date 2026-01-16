@@ -4,7 +4,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>AI 병원 추천 & 건강 관리</title>
+    <title>증강검색 기반 병원 추천 & 건강 관리</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
@@ -41,11 +41,11 @@
 
 <div class="hero-section">
     <div class="hero-content">
-        <h2>AI 기반 실시간 병원 추천</h2>
+        <h2>AI 기반 스마트 병원 추천</h2>
         <p>증상을 자연스럽게 입력하면 가장 가까운 병원을 추천합니다</p>
 
         <div class="search-box">
-            <input type="text" id="aiSearchInput" placeholder="예: 스키 타다 넘어져서 갈비뼈가 아파요" autocomplete="off">
+            <input type="text" id="aiSearchInput" placeholder="예: 숨 쉴 때 옆구리가 아픈데 어디 병원을 가야 하나요?" autocomplete="off">
             <button id="aiSearchBtn">검색</button>
         </div>
     </div>
@@ -76,7 +76,9 @@
     </div>
 </div>
 
-<div class="info-section section-gray">
+<div class="info-section section-gray clickable"
+     onclick="location.href='/drug'">
+
     <div class="info-container">
         <div class="info-text">
             <span class="info-tag">SMART DICTIONARY</span>
@@ -84,12 +86,14 @@
             <p>
                 이 약이 어떤 효능이 있는지, 부작용은 없는지 궁금하셨죠?<br>
                 약 이름, 혹은 모양을 검색해보세요. <br>
-                AI가 어려운 의학 용어를 쉽게 설명해 드립니다.
+                복용 방법부터 효능, 주의사항까지 필요한 약 정보를 쉽게 확인할 수 있어요.
             </p>
-            <button class="info-btn" onclick="location.href='/drug'">
-                <i class="fa-solid fa-book-medical" style="margin-right:8px;"></i> 의약품 사전 바로가기
+            <button class="info-btn">
+                <i class="fa-solid fa-book-medical" style="margin-right:8px;"></i>
+                의약품 사전 바로가기
             </button>
         </div>
+
         <div class="info-visual">
             <div class="feature-card card-drug">
                 <i class="fa-solid fa-tablets feature-icon" style="color: #8B5CF6;"></i>
@@ -123,7 +127,7 @@
         </div>
     </div>
 </div>
-
+<%----------------------------------------------짭봇 -------------------------------------%>
 <button class="chatbot-toggle-btn" id="floatingChatbotBtn" onclick="connectChatbotToggle()">
     <i class="fa-solid fa-robot"></i>
 </button>
