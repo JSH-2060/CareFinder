@@ -29,22 +29,4 @@ function openBmiEditModal(bmiNo, height, weight) {
     modal.show();
 }
 
-/* =========================
-   헤더 스크롤 처리
-   ========================= */
-(function () {
-    const header = document.querySelector('.brand-header');
-    if (!header) return;
 
-    let ticking = false;
-
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                header.classList.toggle('scrolled', window.scrollY > 20);
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
-})();

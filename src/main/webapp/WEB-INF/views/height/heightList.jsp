@@ -10,9 +10,13 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/height.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
 </head>
 
 <c:if test="${not empty msg}">
@@ -157,7 +161,8 @@
                 <tr class="data-row"
                     onclick="openHeightEditModal('${h.heightId}','${h.height}','${h.recordDate}')">
                     <td>${h.recordDate}</td>
-                    <td class="fw-bold text-primary">${h.height}</td>
+                    <td style="color: black;">${h.height}</td>
+
                     <td>
                         <form action="/height/delete" method="post" onclick="event.stopPropagation();"
                               onsubmit="return confirm('삭제하시겠습니까?');">
@@ -230,10 +235,10 @@
                                 이전 기록(${fn:substring(list[0].recordDate, 0, 10)}) 기준으로 자동 입력되었습니다.
                             </div>
                         </c:if>
+
                         <label class="form-label fw-bold">측정 날짜</label>
-                        <input type="date" name="recordDate" class="form-control"
-                               value="<%= java.time.LocalDate.now() %>"
-                               readonly> </div>
+                        <input type="text" name="recordDate" class="form-control datepicker" required style="background:white;">
+                    </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">키 (cm)</label>
@@ -272,7 +277,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">측정 날짜</label>
-                        <input type="date" name="recordDate" id="editRecordDate" class="form-control" readonly>
+                        <input type="text" name="recordDate" id="editRecordDate" class="form-control datepicker" required style="background:white;">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -281,6 +286,7 @@
                     </button>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
