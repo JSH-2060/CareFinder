@@ -26,3 +26,12 @@ if (heightModal) {
         }
     });
 }
+document.addEventListener("DOMContentLoaded", function() {
+    flatpickr(".datepicker", {
+        enableTime: true,       // 시간 선택 활성화
+        dateFormat: "Y-m-d", // 날짜 형식 (예: 2026-01-16 14:47)
+        time_24hr: true,        // 24시간제 사용
+        locale: "ko",           // 한국어 설정
+        defaultDate: new Date() // 기본값: 현재 시간
+    });
+});
