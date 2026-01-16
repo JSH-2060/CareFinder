@@ -86,27 +86,24 @@ a { text-decoration: none; color: inherit; }
 
 .logout-btn-header:hover { background: white; color: #1E3A8A; }
 
-/* 홈으로 버튼 (아이콘 X, 텍스트 Only) */
-.btn-home {
-    display: inline-flex; justify-content: center; align-items: center;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    color: #475569; /* 차분한 회색 */
-    padding: 6px 20px; /* 글자만 있으니 좌우 여백을 넉넉하게 */
-    border-radius: 99px; /* 둥근 캡슐 모양 */
-    font-size: 13px; font-weight: 700;
-    text-decoration: none;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-    transition: all 0.2s ease;
+.btn-outline-secondary, .btn-outline-light {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #475569; backdrop-filter: blur(4px);
+    transition: all 0.2s; border-radius: 999px;
+    font-weight: 600;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
-/* 🔥 BMI 테마 (호버 시 주황색) */
-.btn-home:hover {
-    background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
-    color: #ffffff;
-    border-color: #fb923c;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
+.btn-outline-secondary:hover, .btn-outline-light:hover {
+    background: #ffffff;
+    color: var(--bmi-color); border-color: var(--bmi-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 /* ==================================================

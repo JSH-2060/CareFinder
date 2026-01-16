@@ -63,9 +63,7 @@
                     <small class="text-muted">키 성장 기록장</small>
                 </div>
             </div>
-            <a href="/" class="btn-home">
-                홈으로
-            </a>
+
         </div>
 
         <div class="d-flex justify-content-between align-items-end border-top pt-3">
@@ -104,7 +102,9 @@
         <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">
             <i class="fa-solid fa-calendar-days"></i> 날짜 검색
         </button>
-
+        <a href="/" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-house"></i> 홈으로
+        </a>
         <button class="btn btn-height"
                 data-bs-toggle="modal"
                 data-bs-target="#heightModal">

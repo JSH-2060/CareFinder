@@ -65,9 +65,6 @@
                         <small class="text-muted">BMI 기록장</small>
                     </div>
                 </div>
-                <a href="/" class="btn-home">
-                    홈으로
-                </a>
             </div>
 
         <!-- ===== 탭 + 프로필 ===== -->
@@ -141,6 +138,10 @@
         <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">
             <i class="fa-solid fa-calendar-days"></i> 날짜 검색
         </button>
+
+        <a href="/" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-house"></i> 홈으로
+        </a>
 
         <button class="btn btn-bmi"
                 data-bs-toggle="modal"
