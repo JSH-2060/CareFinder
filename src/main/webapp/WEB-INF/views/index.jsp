@@ -120,8 +120,8 @@
             </button>
         </div>
         <div class="info-visual">
-            <div class="feature-card card-health">
-                <i class="fa-solid fa-user-doctor feature-icon" style="color: #10B981;"></i>
+            <div class="feature-card card-health" onclick="checkLoginAndOpenHealth()">
+                <i class="fa-solid fa-user-doctor feature-icon" style="color: #10B981;" ></i>
                 <h4>통합 건강 관리</h4>
                 <p>체온 · BMI · 예방접종 · 성장<br>맞춤형 헬스케어 대시보드</p>
             </div>
