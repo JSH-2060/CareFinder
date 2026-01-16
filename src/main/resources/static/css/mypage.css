@@ -54,7 +54,7 @@ body {
     align-items: center;
     gap: 10px;
     font-size: 24px;
-    font-weight: 800; /* 폰트 굵기 강조 */
+    font-weight: 700; /* 폰트 굵기 강조 */
     color: #ffffff;
     cursor: pointer;
     text-decoration: none;
