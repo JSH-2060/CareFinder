@@ -76,9 +76,7 @@
     </div>
 </div>
 
-<div class="info-section section-gray clickable"
-     onclick="location.href='/drug'">
-
+<div class="info-section section-gray clickable medicine-bg">
     <div class="info-container">
         <div class="info-text">
             <span class="info-tag">SMART DICTIONARY</span>
@@ -88,23 +86,26 @@
                 약 이름, 혹은 모양을 검색해보세요. <br>
                 복용 방법부터 효능, 주의사항까지 필요한 약 정보를 쉽게 확인할 수 있어요.
             </p>
-            <button class="info-btn">
+            <button class="info-btn" onclick="location.href='/drug'">
                 <i class="fa-solid fa-book-medical" style="margin-right:8px;"></i>
                 의약품 사전 바로가기
             </button>
         </div>
 
         <div class="info-visual">
-            <div class="feature-card card-drug">
-                <i class="fa-solid fa-tablets feature-icon" style="color: #8B5CF6;"></i>
+            <div class="feature-card card-drug" onclick="location.href='/drug'">
+                <i class="fa-solid fa-tablets feature-icon" style="color: #8B5CF6;"  onclick="location.href='/drug'"></i>
                 <h4>스마트 의약품 검색</h4>
                 <p>4만여 개의 의약품 정보<br>실시간 데이터베이스 연동</p>
             </div>
         </div>
     </div>
 </div>
-
-<div class="info-section section-white">
+<br>
+<br>
+<br>
+<br>
+<div class="info-section section-white clickable family-bg">
     <div class="info-container row-reverse">
         <div class="info-text">
             <span class="info-tag tag-green">FAMILY CARE</span>
@@ -165,7 +166,7 @@
 
 <div id="healthModal" class="modal">
     <div class="modal-content">
-        <h3 style="margin-top:0; color:#1e293b; margin-bottom: 20px;">어떤 기록을 관리할까요?</h3>
+        <h3 style="margin-top:0; color:#fff; margin-bottom: 20px;">어떤 기록을 관리할까요?</h3>
         <button type="button" class="health-btn" style="background: #e0f2fe; color: #0284c7;" onclick="location.href='/heat/select'">
             <i class="fa-solid fa-temperature-half"></i> 체온 관리
         </button>
@@ -175,7 +176,7 @@
         <button type="button" class="health-btn" style="background: #fff7ed; color: #ea580c;" onclick="location.href='/bmi/select'">
             <i class="fa-solid fa-weight-scale"></i> BMI (비만도)
         </button>
-        <button type="button" class="health-btn" style="background: #e6fffa; color: #0f766e;" onclick="location.href='/height/select'">
+        <button type="button" class="health-btn" style="background: #f0fdfa; color: #0d9488;" onclick="location.href='/height/select'">
             <i class="fa-solid fa-ruler-vertical"></i> 키 성장 기록
         </button>
         <button type="button" class="modal-close" onclick="closeModal('healthModal')">닫기</button>
