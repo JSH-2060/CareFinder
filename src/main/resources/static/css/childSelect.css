@@ -1,18 +1,44 @@
 @charset "UTF-8";
 
-/* [1] 헤더 스타일 추가 (mypage.css와 동일) */
+/* =========================================
+   Base Background & Typography
+   ========================================= */
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', Arial, sans-serif;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* 화면 정중앙 정렬 */
+
+    background:
+            linear-gradient(135deg, #1E3A8A 0%, #10B981 100%),
+            radial-gradient(at 0% 0%, hsla(253,16%,7%,0.35) 0, transparent 50%),
+            radial-gradient(at 100% 0%, hsla(160,84%,39%,0.25) 0, transparent 55%);
+    background-attachment: fixed;
+
+    color: #f8fafc;
+}
+
+/* =========================================
+   Header Styling (인덱스와 완벽 통일)
+   ========================================= */
 .header {
     height: 70px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 24px;
-    position: fixed;
+    padding: 0 24px; /* 인덱스와 동일한 패딩 */
+
+    /* 상단 고정 (absolute) */
+    position: absolute;
     top: 0; left: 0; right: 0;
-    z-index: 1000;
-    /* CareFinder 그라데이션 */
-    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+    background: transparent;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -23,92 +49,62 @@
     font-weight: 700;
     color: white;
     cursor: pointer;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    text-decoration: none; /* a태그일 경우 밑줄 제거 */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1); /* 인덱스 그림자 복사 */
 }
 
+/* 로고 아이콘 스타일 추가 */
 .logo-icon {
-    font-size: 28px;
     color: #fff;
+    font-size: 28px;
     opacity: 0.95;
 }
 
-/* 헤더 우측 유저 메뉴 */
-.header-right {
+.header-right .user-menu {
     display: flex;
     align-items: center;
-}
-
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.user-name {
-    color: white;
-    font-weight: 600;
+    gap: 20px;
+    color: rgba(255,255,255,0.9);
     font-size: 15px;
-    /* 반투명 유리 효과 */
-    background: rgba(255, 255, 255, 0.15);
-    padding: 8px 16px;
-    border-radius: 20px;
-    backdrop-filter: blur(5px);
-}
-
-.logout-btn-header {
-    background: transparent;
-    border: 1px solid rgba(255,255,255,0.4);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px; /* 둥글게 */
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s;
-}
-
-.logout-btn-header:hover {
-    background: white;
-    color: #1E3A8A;
-}
-
-/* =========================================
-   1. 배경 및 레이아웃 (마이페이지와 통일)
-   ========================================= */
-body {
-    margin: 0;
-    font-family: 'Pretendard', sans-serif;
-
-    /* 오로라 스팟 조명 배경 */
-    background-color: #F8FAFC;
-    background-image:
-            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 60%),
-            radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
-    background-attachment: fixed;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: #1e293b;
-    /* [수정] 헤더 높이만큼 공간 확보 (중앙 정렬 깨지지 않게) */
-    padding-top: 80px;
-    box-sizing: border-box;
-}
-
-/* 텍스트 스타일 */
-h3 {
-    color: #1e3a8a; /* 브랜드 다크 블루 */
-    font-weight: 800 !important;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.text-muted {
-    color: #64748b !important;
     font-weight: 500;
 }
 
+/* 로그아웃 버튼 (인덱스 스타일 적용) */
+.logout-btn-header {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255, 255, 255, 0.11);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.logout-btn-header:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   Content Styling
+   ========================================= */
+h3 {
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    margin-bottom: 10px;
+}
+
+.text-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-weight: 400;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    margin-bottom: 40px;
+}
+
+/* 카드 컨테이너 */
 .card-container {
     display: flex;
     gap: 24px;
@@ -118,156 +114,105 @@ h3 {
     padding: 20px;
 }
 
-/* =========================================
-   2. 카드 스타일 (유리 질감 + 애니메이션)
-   ========================================= */
-/* 카드 감싸는 래퍼 (삭제 버튼 위치 기준점) */
 .card-wrapper {
     position: relative;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* 호버 시 둥둥 떠오르는 효과 */
-.card-wrapper:hover {
-    transform: translateY(-10px);
-    z-index: 10;
-}
-
+/* =========================================
+   Glass Card Styles
+   ========================================= */
 .select-card {
-    width: 200px;
-    height: 240px;
+    width: 180px;
+    height: 220px;
 
-    /* 유리 질감 적용 */
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 
-    border-radius: 28px;
+    border-radius: 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    /* 그림자와 테두리 */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-
-    cursor: pointer;
-    text-decoration: none !important; /* a태그 밑줄 제거 */
-    color: #334155;
+    text-decoration: none;
+    color: white;
     transition: all 0.3s ease;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
 }
 
-/* 프로필 이미지 */
+.select-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 15px 40px 0 rgba(0, 0, 0, 0.3);
+}
+
+.card-me {
+    background: rgba(30, 58, 138, 0.3);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.card-add {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.card-add:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #fff;
+    color: #fff;
+}
+
 .profile-img {
     width: 80px;
     height: 80px;
     border-radius: 50%;
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+    color: #475569;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 32px;
     margin-bottom: 20px;
     font-weight: 800;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.card-me .profile-img {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    color: white;
 }
 
 .name {
     font-weight: 700;
-    font-size: 1.15rem;
-    color: #1e293b;
+    font-size: 1.1rem;
+    letter-spacing: -0.5px;
 }
 
-/* [Me 카드] 강조 스타일 */
-.card-me {
-    background: rgba(255, 255, 255, 0.9); /* 좀 더 불투명하게 */
-    border: 2px solid #3b82f6; /* 파란 테두리 */
-    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
-}
-.card-me .profile-img {
-    background: linear-gradient(135deg, #2563EB, #1d4ed8) !important;
-}
-
-/* [일반 가족 카드] 스타일 */
-.bg-warning {
-    background: linear-gradient(135deg, #F59E0B, #D97706) !important;
-}
-
-/* [추가 카드] 스타일 */
-.card-add {
-    background: rgba(255, 255, 255, 0.4);
-    border: 2px dashed #94a3b8; /* 진한 회색 점선 */
-    color: #64748b;
-}
-.card-add:hover {
-    border-color: #2563EB; /* 호버시 파란색 */
-    color: #2563EB;
-    background: rgba(255, 255, 255, 0.8);
-}
-
-/* =========================================
-   3. 삭제 버튼 (UX 개선)
-   ========================================= */
 .btn-delete {
     position: absolute;
     top: -10px;
     right: -10px;
-    width: 32px; /* 크기 키움 */
+    width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: #ef4444; /* 빨간색 */
+    background-color: #ef4444;
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
-    border: 2px solid white; /* 흰색 테두리로 구분감 */
+    font-size: 14px;
+    border: 2px solid rgba(255,255,255,0.2);
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
-
-    /* 평소엔 숨김 -> 호버 시 등장 */
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* 카드를 감싸는 래퍼에 마우스를 올리면 삭제 버튼 등장 */
-.card-wrapper:hover .btn-delete {
-    opacity: 1;
-    transform: scale(1);
-    top: -12px; /* 살짝 더 위로 올라오며 등장 */
+    transition: 0.2s;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 .btn-delete:hover {
     background-color: #dc2626;
-    transform: scale(1.1) !important;
-}
-
-/* =========================================
-   4. 하단 돌아가기 버튼 (텍스트 링크형)
-   ========================================= */
-.btn-back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #64748b;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    padding: 10px 20px;
-    border-radius: 99px;
-    transition: all 0.2s;
-    background: rgba(255,255,255,0.5); /* 살짝 배경 깔기 */
-}
-
-.btn-back-link:hover {
-    color: #1e3a8a;
-    background: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transform: translateY(-2px);
-}
-.btn-back-link::before {
-    content: '←';
-    font-size: 18px;
-    font-weight: bold;
+    transform: scale(1.1);
 }
