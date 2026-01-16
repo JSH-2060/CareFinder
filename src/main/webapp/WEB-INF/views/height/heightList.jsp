@@ -237,7 +237,7 @@
                             </div>
                         </c:if>
                         <label class="form-label fw-bold">측정 날짜</label>
-                        <input type="text" name="measureDateTime" class="form-control datepicker" required style="background:white;">
+                        <input type="text" name="recordDate" class="form-control datepicker" required style="background:white;">
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">키 (cm)</label>
@@ -276,7 +276,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">측정 날짜</label>
-                        <input type="text" name="measureDateTime" id="edit_measureDate" class="form-control datepicker" required style="background:white;">
+                        <input type="text" name="recordDate" id="edit_recordDate" class="form-control datepicker" required style="background:white;">
                     </div>
                 </div>
                 <div class="modal-footer">
