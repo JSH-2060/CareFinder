@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="<c:url value='/css/map.css'/>">
     <link rel="stylesheet" href="<c:url value='/css/style.css'/>">
-    <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
+    <link rel="stylesheet" href="<c:url value='/css/chatbotMap.css'/>">
 
 <%-- 1. 카카오 맵 API --%>
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapsKey}&libraries=services"></script>

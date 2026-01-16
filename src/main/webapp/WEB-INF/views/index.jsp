@@ -4,7 +4,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>AI 병원 추천 & 건강 관리</title>
+    <title>증강검색 기반 병원 추천 & 건강 관리</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="<c:url value='/css/chatbot.css'/>">
@@ -40,11 +40,11 @@
 
 <div class="hero-section">
     <div class="hero-content">
-        <h2>AI 기반 실시간 병원 추천</h2>
+        <h2>AI 기반 스마트 병원 추천</h2>
         <p>증상을 자연스럽게 입력하면 가장 가까운 병원을 추천합니다</p>
 
         <div class="search-box">
-            <input type="text" id="aiSearchInput" placeholder="예: 스키 타다 넘어져서 갈비뼈가 아파요" autocomplete="off">
+            <input type="text" id="aiSearchInput" placeholder="예: 숨 쉴 때 옆구리가 아픈데 어디 병원을 가야 하나요?" autocomplete="off">
             <button id="aiSearchBtn">검색</button>
         </div>
     </div>
@@ -122,7 +122,7 @@
         </div>
     </div>
 </div>
-
+<%----------------------------------------------짭봇 -------------------------------------%>
 <button class="chatbot-toggle-btn" id="floatingChatbotBtn" onclick="connectChatbotToggle()">
     <i class="fa-solid fa-robot"></i>
 </button>
