@@ -140,17 +140,17 @@ html, body {
     justify-content: center;
 }
 
-.home-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-6px) scale(1.05);
+/*.home-btn:hover {*/
+/*    background: rgba(255, 255, 255, 0.25);*/
+/*    border-color: rgba(255, 255, 255, 0.5);*/
+/*    transform: translateY(-6px) scale(1.05);*/
 
-    box-shadow:
-            0 12px 40px rgba(37, 99, 235, 0.7),
-            0 0 40px rgba(37, 99, 235, 0.6),
-            0 0 60px rgba(37, 99, 235, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
+/*    box-shadow:*/
+/*            0 12px 40px rgba(37, 99, 235, 0.7),*/
+/*            0 0 40px rgba(37, 99, 235, 0.6),*/
+/*            0 0 60px rgba(37, 99, 235, 0.4),*/
+/*            inset 0 1px 0 rgba(255, 255, 255, 0.5);*/
+/*}*/
 
 .home-btn:active {
     transform: translateY(-3px) scale(1.02);
