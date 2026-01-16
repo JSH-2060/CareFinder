@@ -112,7 +112,7 @@ public class VaccineController {
         model.addAttribute("childList", vaccineService.getChildList(mno));
 
         // ★ JSP에 bmi 모드 전달
-        model.addAttribute("mode", "bmi");
+        model.addAttribute("mode", "vaccine");
 
         return "heat/childSelect";
     }
