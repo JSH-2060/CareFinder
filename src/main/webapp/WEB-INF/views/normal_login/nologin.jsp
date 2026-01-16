@@ -9,9 +9,21 @@
 
     <!-- 외부 CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/nologin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='/'">
+            <i class="fa-solid fa-laptop-medical logo-icon"></i>
+            <span class="logo-text">CareFinder</span>
+        </div>
+
+
+    </div>
+
+
 
 <div class="login-box">
 

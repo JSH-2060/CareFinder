@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ko.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/join.css">
 
@@ -21,9 +22,19 @@
             font-weight: bold;
         }
     </style>
+
 </head>
 
 <body>
+<%--    헤더--%>
+    <div class="header">
+        <div class="logo" onclick="location.href='/'">
+            <i class="fa-solid fa-laptop-medical logo-icon"></i>
+            <span class="logo-text">CareFinder</span>
+        </div>
+
+
+    </div>
 
 <div class="register-box">
 
