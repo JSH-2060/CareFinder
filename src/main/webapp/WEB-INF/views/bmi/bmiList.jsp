@@ -19,29 +19,53 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
 </head>
 <body>
-<div class="container mt-4" style="max-width:900px;">
+<div class="header">
+    <div class="logo" onclick="location.href='/'">
+        <i class="fa-solid fa-laptop-medical logo-icon"></i>
+        <span class="logo-text">CareFinder</span>
+    </div>
 
-    <!-- ===== 헤더 ===== -->
-    <div class="card-box p-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex align-items-center gap-3">
-                <div class="avatar-circle-bmi">
-                    <c:choose>
-                        <c:when test="${not empty childName}">
-                            ${fn:substring(childName,0,1)}
-                        </c:when>
-                        <c:otherwise>Me</c:otherwise>
-                    </c:choose>
-                </div>
-                <div>
-                    <h5 class="mb-0 fw-bold">${childName}</h5>
-                    <small class="text-muted">BMI 기록장</small>
+    <div class="header-right">
+        <div class="user-menu">
+            <span class="user-name">
+                <i class="fa-regular fa-user"></i> ${userName}님 (${loginType})
+            </span>
+            <button class="logout-btn-header" onclick="location.href='/nlogout'">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= 컨텐츠 ================= -->
+<div class="container bmi-page" style="max-width:900px;">
+
+        <!-- ===== 기존 상단 카드 ===== -->
+        <div class="card-box p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="avatar-circle-bmi">
+                        <c:choose>
+                            <c:when test="${not empty childName}">
+                                ${fn:substring(childName,0,1)}
+                            </c:when>
+                            <c:otherwise>Me</c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div>
+                        <h5 class="mb-0 fw-bold">${childName}</h5>
+                        <small class="text-muted">BMI 기록장</small>
+                    </div>
                 </div>
             </div>
-            <a href="/" class="btn btn-sm btn-outline-secondary">홈으로</a>
-        </div>
 
         <!-- ===== 탭 + 프로필 ===== -->
         <div class="d-flex justify-content-between align-items-end border-top pt-3">
@@ -111,7 +135,10 @@
 
     <!-- ===== 버튼 (기존 BMI 기능 그대로) ===== -->
     <div class="d-flex justify-content-end gap-2 my-3">
-        <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">날짜 검색</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">
+            <i class="fa-solid fa-calendar-days"></i> 날짜 검색
+        </button>
+
         <button class="btn btn-bmi"
                 data-bs-toggle="modal"
                 data-bs-target="#bmiModal">
@@ -157,7 +184,10 @@
 
     <!-- ===== 그래프 ===== -->
     <div class="card-box p-3">
-        <h6 class="fw-bold mb-3"> BMI 변화</h6>
+        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-weight-scale icon-orange"></i>
+            BMI 변화
+        </h6>
 
         <c:choose>
             <c:when test="${empty graphList}">
@@ -176,7 +206,10 @@
         <!-- 성인 -->
         <c:if test="${sidebarBmi.adult}">
             <div class="card-box p-3">
-                <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+                <h6 class="fw-bold mb-2 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-chart-simple icon-navy"></i>
+                    BMI 기준
+                </h6>
 
                 <div class="bmi-wrapper">
                     <div class="bmi-track" data-type="adult">
@@ -208,7 +241,10 @@
         <!-- 청소년 -->
         <c:if test="${!sidebarBmi.adult}">
             <div class="card-box p-3">
-                <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+                <h6 class="fw-bold mb-2 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-chart-simple icon-navy"></i>
+                    BMI 기준
+                </h6>
 
                 <div class="bmi-wrapper">
                     <div class="bmi-track" data-type="child">
@@ -238,7 +274,10 @@
 
     <!-- ===== 테이블 ===== -->
     <div class="card-box p-3">
-        <h6 class="fw-bold mb-3">📋 상세 기록</h6>
+        <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-clipboard-list icon-green"></i>
+            상세 기록
+        </h6>
 
         <table class="table table-hover text-center align-middle">
             <thead class="table-light">
@@ -302,40 +341,63 @@
 <!-- BMI JS -->
 <script src="/js/bmi.js"></script>
 
-<!-- ===== 차트 ===== -->
 <c:if test="${not empty graphList}">
     <script>
-        const labels = [
-            <c:forEach var="b" items="${graphList}" varStatus="s">
-            "${b.dateStr}"<c:if test="${!s.last}">,</c:if>
-            </c:forEach>
-        ];
+        // 1. 데이터 배열 준비
+        const labels = [];
+        const values = [];
+        const results = []; // 판정 결과(정상, 비만 등)를 담을 배열
 
-        const values = [
-            <c:forEach var="b" items="${graphList}" varStatus="s">
-            ${b.bmiValue}<c:if test="${!s.last}">,</c:if>
-            </c:forEach>
-        ];
+        // JSP 반복문으로 데이터 채우기
+        <c:forEach var="b" items="${graphList}">
+        // 🟢 수정 후: 자르지 않고 "날짜+시간" 그대로 다 보여주기
+        labels.push("${b.dateStr}");
 
-        // 🔥 핵심: 시간 순서 뒤집기
+        values.push(${b.bmiValue});
+        results.push("${b.result}");
+        </c:forEach>
+
         labels.reverse();
         values.reverse();
+        results.reverse();
+
+        // (점 색깔 로직은 그대로 유지)
+        const pointColors = results.map(res => {
+            if (res === '저체중') return '#3b82f6';
+            if (res === '정상') return '#10b981';
+            if (res === '과체중') return '#f59e0b';
+            if (res === '비만') return '#f97316';
+            if (res === '고도비만') return '#ef4444';
+            return '#94a3b8';
+        });
 
         new Chart(document.getElementById('bmiChart'), {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
+                    label: 'BMI',
                     data: values,
-                    borderWidth: 2,
+                    borderColor: '#ea580c',
+                    backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                    borderWidth: 3,
                     tension: 0.3,
-                    fill: false
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: pointColors,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
                 }]
             },
             options: {
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { suggestedMin: 15, suggestedMax: 35 }
+                    y: { grace: '10%' },
+                    x: {
+                        grid: { display: false },
+
+                    }
                 }
             }
         });

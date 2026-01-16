@@ -1,103 +1,273 @@
 @charset "UTF-8";
 
+/* [1] 헤더 스타일 추가 (mypage.css와 동일) */
+.header {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    /* CareFinder 그라데이션 */
+    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-decoration: none; /* a태그일 경우 밑줄 제거 */
+}
+
+.logo-icon {
+    font-size: 28px;
+    color: #fff;
+    opacity: 0.95;
+}
+
+/* 헤더 우측 유저 메뉴 */
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    /* 반투명 유리 효과 */
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.logout-btn-header {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px; /* 둥글게 */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.logout-btn-header:hover {
+    background: white;
+    color: #1E3A8A;
+}
+
+/* =========================================
+   1. 배경 및 레이아웃 (마이페이지와 통일)
+   ========================================= */
 body {
-    background: #f8f9fa;
+    margin: 0;
+    font-family: 'Pretendard', sans-serif;
+
+    /* 오로라 스팟 조명 배경 */
+    background-color: #F8FAFC;
+    background-image:
+            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 60%),
+            radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    background-attachment: fixed;
+
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    font-family: 'Pretendard', sans-serif;
+    color: #1e293b;
+    /* [수정] 헤더 높이만큼 공간 확보 (중앙 정렬 깨지지 않게) */
+    padding-top: 80px;
+    box-sizing: border-box;
+}
+
+/* 텍스트 스타일 */
+h3 {
+    color: #1e3a8a; /* 브랜드 다크 블루 */
+    font-weight: 800 !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.text-muted {
+    color: #64748b !important;
+    font-weight: 500;
 }
 
 .card-container {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 900px;
+    max-width: 1000px;
+    padding: 20px;
 }
 
-/* 카드 기본 스타일 */
+/* =========================================
+   2. 카드 스타일 (유리 질감 + 애니메이션)
+   ========================================= */
+/* 카드 감싸는 래퍼 (삭제 버튼 위치 기준점) */
+.card-wrapper {
+    position: relative;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 호버 시 둥둥 떠오르는 효과 */
+.card-wrapper:hover {
+    transform: translateY(-10px);
+    z-index: 10;
+}
+
 .select-card {
-    width: 180px;
-    height: 200px;
-    background: white;
-    border-radius: 20px;
+    width: 200px;
+    height: 240px;
+
+    /* 유리 질감 적용 */
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border-radius: 28px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+
+    /* 그림자와 테두리 */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
     cursor: pointer;
-    text-decoration: none;
-    color: #333;
-    transition: 0.2s;
-    border: 2px solid transparent;
-    position: relative; /* 삭제 버튼 위치 잡기 위해 필수 */
+    text-decoration: none !important; /* a태그 밑줄 제거 */
+    color: #334155;
+    transition: all 0.3s ease;
 }
 
-.select-card:hover {
-    transform: translateY(-5px);
-    border-color: #0d6efd;
-}
-
-.card-me {
-    background: #e0f2fe;
-    border: 2px solid #0ea5e9;
-}
-
-.card-add {
-    border: 2px dashed #adb5bd;
-    background: transparent;
-    color: #adb5bd;
-}
-
-.card-add:hover {
-    border-color: #6c757d;
-    color: #6c757d;
-    background: rgba(0,0,0,0.03);
-}
-
+/* 프로필 이미지 */
 .profile-img {
-    width: 70px;
-    height: 70px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    background: #eee;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 28px;
-    margin-bottom: 15px;
-    font-weight: bold;
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: 800;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
 }
 
 .name {
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #1e293b;
 }
 
-/* ★ 삭제 버튼 스타일 ★ */
+/* [Me 카드] 강조 스타일 */
+.card-me {
+    background: rgba(255, 255, 255, 0.9); /* 좀 더 불투명하게 */
+    border: 2px solid #3b82f6; /* 파란 테두리 */
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.2);
+}
+.card-me .profile-img {
+    background: linear-gradient(135deg, #2563EB, #1d4ed8) !important;
+}
+
+/* [일반 가족 카드] 스타일 */
+.bg-warning {
+    background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+}
+
+/* [추가 카드] 스타일 */
+.card-add {
+    background: rgba(255, 255, 255, 0.4);
+    border: 2px dashed #94a3b8; /* 진한 회색 점선 */
+    color: #64748b;
+}
+.card-add:hover {
+    border-color: #2563EB; /* 호버시 파란색 */
+    color: #2563EB;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* =========================================
+   3. 삭제 버튼 (UX 개선)
+   ========================================= */
 .btn-delete {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 24px;
-    height: 24px;
+    top: -10px;
+    right: -10px;
+    width: 32px; /* 크기 키움 */
+    height: 32px;
     border-radius: 50%;
-    background-color: #dee2e6;
-    color: #666;
+    background-color: #ef4444; /* 빨간색 */
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
+    font-size: 16px;
+    border: 2px solid white; /* 흰색 테두리로 구분감 */
     cursor: pointer;
-    transition: 0.2s;
-    z-index: 10; /* 카드 클릭보다 위에 오도록 */
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+
+    /* 평소엔 숨김 -> 호버 시 등장 */
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 카드를 감싸는 래퍼에 마우스를 올리면 삭제 버튼 등장 */
+.card-wrapper:hover .btn-delete {
+    opacity: 1;
+    transform: scale(1);
+    top: -12px; /* 살짝 더 위로 올라오며 등장 */
 }
 
 .btn-delete:hover {
-    background-color: #ef4444; /* 빨간색 */
-    color: white;
+    background-color: #dc2626;
+    transform: scale(1.1) !important;
+}
+
+/* =========================================
+   4. 하단 돌아가기 버튼 (텍스트 링크형)
+   ========================================= */
+.btn-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 99px;
+    transition: all 0.2s;
+    background: rgba(255,255,255,0.5); /* 살짝 배경 깔기 */
+}
+
+.btn-back-link:hover {
+    color: #1e3a8a;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transform: translateY(-2px);
+}
+.btn-back-link::before {
+    content: '←';
+    font-size: 18px;
+    font-weight: bold;
 }

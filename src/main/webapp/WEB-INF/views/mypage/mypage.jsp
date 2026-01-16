@@ -4,27 +4,42 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>마이페이지</title>
+    <title>마이페이지 - CareFinder</title>
 
-    <!-- CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <link rel="stylesheet" href="/css/mypage.css">
 </head>
 <body>
 
-<div class="container">
-
-    <!-- 상단 바 -->
-    <div class="top-bar">
-        <h2>👤 마이페이지</h2>
-        <button class="home-btn" onclick="goHome()">홈</button>
+<div class="header">
+    <div class="logo" onclick="location.href='/'">
+        <i class="fa-solid fa-laptop-medical logo-icon"></i>
+        <span class="logo-text">CareFinder</span>
     </div>
 
-    <!-- 내 정보 -->
+    <div class="header-right">
+        <div class="user-menu">
+            <span class="user-name">
+                <i class="fa-regular fa-user"></i> ${userName}님 (${loginType})
+            </span>
+            <button class="logout-btn-header" onclick="location.href='/nlogout'">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="page-header">
+        <h2>내 정보 관리</h2>
+    </div>
+
     <div class="card">
-        <div class="section-title">내 정보</div>
+        <div class="section-title">기본 정보</div>
 
         <form action="/mypage/update" method="post">
-
             <div class="info-row">
                 <span>이름</span>
                 <input type="text" name="name" value="${name}" required>
@@ -32,7 +47,9 @@
 
             <div class="info-row">
                 <span>이메일</span>
-                <span class="readonly">${email}</span>
+                <div class="readonly">
+                    <i class="fa-regular fa-envelope" style="margin-right:8px; opacity:0.6;"></i> ${email}
+                </div>
             </div>
 
             <div class="info-row">
@@ -40,7 +57,8 @@
                 <input type="text"
                        name="phonenumber"
                        value="${empty phonenumber ? '' : phonenumber}"
-                       placeholder="01012345678 또는 010-1234-5678">
+                       placeholder="010-0000-0000"
+                       autocomplete="off">
             </div>
 
             <c:if test="${param.error == 'phone'}">
@@ -50,11 +68,10 @@
             </c:if>
 
             <div class="btn-area">
-                <button class="btn btn-save" type="submit">정보 저장</button>
+                <button class="btn btn-save" type="submit">수정 완료</button>
             </div>
         </form>
 
-        <!-- 회원탈퇴 -->
         <div class="withdraw-area">
             <a href="/mypage/withdraw" onclick="return confirmWithdraw();">
                 회원탈퇴
@@ -64,7 +81,7 @@
 
 </div>
 
-<!-- JS -->
 <script src="/js/mypage.js"></script>
+
 </body>
 </html>
