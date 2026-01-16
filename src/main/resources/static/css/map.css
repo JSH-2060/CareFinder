@@ -502,29 +502,27 @@ body {
     justify-content: center;
 }
 
-/* 도보 버튼 - 올리브 그라디언트 */
 .walk-btn {
-    background: linear-gradient(135deg, #bab86c 0%, #808000 100%);
+    background: linear-gradient(135deg, #378ba8 0%, #1b5087 100%);
     border: none;
     color: white;
     transition: all 0.3s ease;
 }
 .walk-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(128, 128, 0, 0.4);
-    filter: brightness(1.1);
+    box-shadow: 0 4px 8px rgb(26, 77, 129, 0.4);
+    filter: brightness(1.05);
 }
 
-/* 차량 버튼 - 세련된 로즈 핑크 그라디언트 */
 .drive-btn {
-    background: linear-gradient(135deg, #ff9a9e 0%, #f06292 100%);
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     border: none;
     color: white;
     transition: all 0.3s ease;
 }
 .drive-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(240, 98, 146, 0.4);
+    box-shadow: 0 4px 8px rgba(240, 98, 146, 0.4);
     filter: brightness(1.05);
 }
 

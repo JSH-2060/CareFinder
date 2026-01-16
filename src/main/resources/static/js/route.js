@@ -56,29 +56,21 @@ async function showWalkingRoute(place, map, myPos) {
             // 올리브 그라디언트 3중 레이어 경로선 (실선)
             const layer1 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 12,
-                strokeColor: '#808000',  // 다크 올리브
-                strokeOpacity: 0.3,
+                strokeWeight: 9.4,
+                strokeColor: '#1b5087',
+                strokeOpacity: 0.8,
                 map: map
             });
 
             const layer2 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 8,
-                strokeColor: '#9a9850',  // 미디엄 올리브
+                strokeWeight: 7,
+                strokeColor: '#378ba8',
                 strokeOpacity: 0.6,
                 map: map
             });
 
-            const layer3 = new kakao.maps.Polyline({
-                path: path,
-                strokeWeight: 5,
-                strokeColor: '#bab86c',  // 라이트 올리브
-                strokeOpacity: 1.0,
-                map: map
-            });
-
-            routeLayers.push(layer1, layer2, layer3);
+            routeLayers.push(layer1, layer2);
 
             // 시간 계산
             const totalDist = data.features[0].properties.totalDistance;
@@ -87,9 +79,9 @@ async function showWalkingRoute(place, map, myPos) {
 
             // UI 업데이트 (올리브 그라디언트)
             const infoHTML = `
-                <div style="padding: 15px; background: linear-gradient(135deg, #bab86c 0%, #808000 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
+                <div style="padding: 15px; background: linear-gradient(135deg, #378ba8 0%, #1b5087 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
                     <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
-                        🚶 도보 약 ${walkingTime}분
+                        도보 약 ${walkingTime}분
                     </div>
                     <div style="font-size: 0.95rem; opacity: 0.9;">
                         거리 ${totalDist}m · 칼로리 ${kcal}kcal
@@ -182,29 +174,21 @@ async function showDrivingRoute(place, map, myPos) {
             // 3중 레이어 경로선
             const layer1 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 12,
-                strokeColor: '#FFB1B1',
-                strokeOpacity: 0.3,
+                strokeWeight: 9.4,
+                strokeColor: '#f5576c',
+                strokeOpacity: 0.8,
                 map: map
             });
 
             const layer2 = new kakao.maps.Polyline({
                 path: path,
-                strokeWeight: 8,
-                strokeColor: '#FF8A9B',
+                strokeWeight: 7,
+                strokeColor: '#f093fb',
                 strokeOpacity: 0.6,
                 map: map
             });
 
-            const layer3 = new kakao.maps.Polyline({
-                path: path,
-                strokeWeight: 5,
-                strokeColor: '#F06292',
-                strokeOpacity: 1.0,
-                map: map
-            });
-
-            routeLayers.push(layer1, layer2, layer3);
+            routeLayers.push(layer1, layer2);
 
             // 거리/시간 정보
             const distance = route.summary.distance;
@@ -223,7 +207,7 @@ async function showDrivingRoute(place, map, myPos) {
             const infoHTML = `
                 <div style="padding: 15px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
                     <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
-                        🚗 차량 약 ${timeText}
+                        차량 약 ${timeText}
                     </div>
                     <div style="font-size: 0.95rem; opacity: 0.9;">
                         거리 ${distText}
