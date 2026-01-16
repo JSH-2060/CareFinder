@@ -107,6 +107,7 @@
     function getLoadingHtml() {
         return '<div class="loading">' +
             '<img src="/img/loading_circle.gif" alt="로딩중">' +
+            '<p class="loading-text">Loading . . .</p>' +
             '</div>';
     }
 
