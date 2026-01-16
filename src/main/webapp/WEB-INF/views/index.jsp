@@ -170,7 +170,7 @@
         <button type="button" class="health-btn" style="background: #fff7ed; color: #ea580c;" onclick="location.href='/bmi/select'">
             <i class="fa-solid fa-weight-scale"></i> BMI (비만도)
         </button>
-        <button type="button" class="health-btn" style="background: #e6fffa; color: #0f766e;" onclick="location.href='/height/select'">
+        <button type="button" class="health-btn" style="background: #f0fdfa; color: #0d9488;" onclick="location.href='/height/select'">
             <i class="fa-solid fa-ruler-vertical"></i> 키 성장 기록
         </button>
         <button type="button" class="modal-close" onclick="closeModal('healthModal')">닫기</button>

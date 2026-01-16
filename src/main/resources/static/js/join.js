@@ -11,6 +11,16 @@ $(document).ready(function () {
         disableMobile: true
     });
 
+    /* [중요 추가] 페이지 로딩 시, 서버에서 받아온 아이디가 이미 있다면
+       중복 체크를 통과한 것으로 간주 (또는 다시 체크)
+    */
+    if ($("#id").val().trim() !== "") {
+        // 이미 아이디가 입력되어 있다면(에러 후 돌아온 경우 등), 일단 통과 상태로 둠
+        // (더 확실하게 하려면 여기서 ajax를 한번 더 호출해도 됩니다)
+        isIdSafe = true;
+        $(".submit-btn").prop("disabled", false);
+    }
+
     /* 2. 아이디 중복 체크 */
     $("#id").on("keyup", function () {
         const userId = $(this).val().trim();
@@ -65,4 +75,3 @@ $(document).ready(function () {
         return true;
     });
 });
-

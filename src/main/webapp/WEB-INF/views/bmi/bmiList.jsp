@@ -135,7 +135,10 @@
 
     <!-- ===== 버튼 (기존 BMI 기능 그대로) ===== -->
     <div class="d-flex justify-content-end gap-2 my-3">
-        <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">날짜 검색</button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">
+            <i class="fa-solid fa-calendar-days"></i> 날짜 검색
+        </button>
+
         <button class="btn btn-bmi"
                 data-bs-toggle="modal"
                 data-bs-target="#bmiModal">
@@ -203,7 +206,10 @@
         <!-- 성인 -->
         <c:if test="${sidebarBmi.adult}">
             <div class="card-box p-3">
-                <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+                <h6 class="fw-bold mb-2 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-chart-simple icon-navy"></i>
+                    BMI 기준
+                </h6>
 
                 <div class="bmi-wrapper">
                     <div class="bmi-track" data-type="adult">
@@ -235,7 +241,10 @@
         <!-- 청소년 -->
         <c:if test="${!sidebarBmi.adult}">
             <div class="card-box p-3">
-                <h6 class="fw-bold mb-2">📊 BMI 기준</h6>
+                <h6 class="fw-bold mb-2 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-chart-simple icon-navy"></i>
+                    BMI 기준
+                </h6>
 
                 <div class="bmi-wrapper">
                     <div class="bmi-track" data-type="child">
@@ -357,9 +366,21 @@
                 labels: labels,
                 datasets: [{
                     data: values,
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: false
+
+                    /* 1. 선 색상을 BMI 테마(주황색)로 변경 */
+                    borderColor: '#ea580c',
+
+                    /* 2. 선 아래 채우기 색상 (선택사항: 은은한 주황색) */
+                    backgroundColor: 'rgba(234, 88, 12, 0.1)',
+
+                    borderWidth: 3,       /* 선 두께를 조금 더 두껍게 (2 -> 3) */
+                    tension: 0.3,         /* 곡선 부드럽게 */
+                    fill: true,           /* 선 아래 색 채우기 */
+
+                    /* 3. 포인트(점) 디자인 */
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#ea580c',
+                    pointRadius: 4
                 }]
             },
             options: {

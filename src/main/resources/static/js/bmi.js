@@ -30,7 +30,7 @@ function openBmiEditModal(bmiNo, height, weight) {
 }
 
 /* =========================
-   브랜드 헤더 스크롤 처리
+   헤더 스크롤 처리
    ========================= */
 (function () {
     const header = document.querySelector('.brand-header');

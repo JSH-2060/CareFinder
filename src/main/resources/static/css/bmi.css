@@ -1,38 +1,43 @@
 @charset "UTF-8";
 
-
+/* ==================================================
+   1. GLOBAL & RESET
+   ================================================== */
 :root {
-    /* 홈 화면의 Hero 섹션과 동일한 그라데이션 */
-    --primary-gradient: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
-    --primary-color: #1E3A8A; /* 메인 색상을 네이비로 변경 */
-    --bg-color: #f8fafc;            /* 배경색 (아주 연한 회색) */
-    --text-main: #1e293b;           /* 진한 텍스트 */
-    --text-sub: #64748b;            /* 연한 텍스트 */
-    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06); /* 부드러운 그림자 */
+    /* 브랜드 공통 테마 (헤더용) */
+    --brand-gradient: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
+
+    /* BMI 전용 테마: 활기찬 오렌지 & 코랄 */
+    --bmi-gradient: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
+    --bmi-color: #ea580c; /* 진한 주황색 (텍스트용) */
+
+    --bg-color: #f8fafc;
+    --text-main: #1e293b;
+    --text-sub: #64748b;
     --radius-md: 16px;
     --radius-full: 999px;
 }
 
 body {
     margin: 0;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
-    /* [수정] 마이페이지와 동일한 은은한 오로라 조명 배경 */
-    background-color: #F8FAFC;
+    /* [수정] 배경 조명을 BMI 테마(따뜻한 오렌지빛)로 변경 */
+    background-color: var(--bg-color);
     background-image:
-            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 60%),
-            radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
-    background-attachment: fixed; /* 스크롤해도 빛 위치 고정 */
-
-    /* 자간(letter-spacing) 설정 제거 -> 홈페이지와 동일한 폰트 간격 유지 */
+            radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.15) 0%, transparent 60%), /* Orange 빛 */
+            radial-gradient(circle at 80% 10%, rgba(252, 165, 165, 0.1) 0%, transparent 50%); /* Red/Coral 빛 */
+    background-attachment: fixed;
 
     color: var(--text-main);
-    -webkit-font-smoothing: antialiased; /* 폰트 부드럽게 */
+    -webkit-font-smoothing: antialiased;
 }
 
-/*a { text-decoration: none; color: inherit; }*/
+a { text-decoration: none; color: inherit; }
 
-/* [1] 헤더 스타일 추가 (mypage.css와 동일) */
+/* ==================================================
+   2. 헤더 스타일 (브랜드 통일 - 진한 네이비)
+   ================================================== */
 .header {
     height: 70px;
     display: flex;
@@ -42,50 +47,30 @@ body {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 1000;
-    /* CareFinder 그라데이션 */
-    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
+
+    /* ✨ 헤더는 브랜드 공통색(Navy)으로 통일! */
+    background: var(--brand-gradient);
+
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     font-family: 'Pretendard', sans-serif;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 24px;
-    font-weight: 700;
-    color: white;
-    cursor: pointer;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    text-decoration: none; /* a태그일 경우 밑줄 제거 */
+    display: flex; align-items: center; gap: 10px;
+    font-size: 24px; font-weight: 700; color: white;
+    cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.logo-icon {
-    font-size: 28px;
-    color: #fff;
-    opacity: 0.95;
-}
+.logo-icon { font-size: 28px; color: #fff; opacity: 0.95; }
 
-/* 헤더 우측 유저 메뉴 */
-.header-right {
-    display: flex;
-    align-items: center;
-}
+.header-right { display: flex; align-items: center; }
 
-.user-menu {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+.user-menu { display: flex; align-items: center; gap: 12px; }
 
 .user-name {
-    color: white;
-    font-weight: 600;
-    font-size: 15px;
-    /* 반투명 유리 효과 */
+    color: white; font-weight: 600; font-size: 15px;
     background: rgba(255, 255, 255, 0.15);
-    padding: 8px 16px;
-    border-radius: 20px;
+    padding: 8px 16px; border-radius: 20px;
     backdrop-filter: blur(5px);
 }
 
@@ -93,469 +78,268 @@ body {
     background: transparent;
     border: 1px solid rgba(255,255,255,0.4);
     color: white;
-    padding: 8px 16px;
-    border-radius: 20px; /* 둥글게 */
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
+    padding: 8px 16px; border-radius: 20px;
+    cursor: pointer; font-size: 14px; font-weight: 600;
     transition: all 0.2s;
 }
 
-.logout-btn-header:hover {
-    background: white;
-    color: #1E3A8A;
-}
+.logout-btn-header:hover { background: white; color: #1E3A8A; }
 
 /* ==================================================
    3. 레이아웃
    ================================================== */
 .bmi-page {
-    padding-top: 80px; /* 헤더 높이만큼 여유 */
+    padding-top: 80px; /* 헤더 공간 */
     padding-bottom: 60px;
 }
 
 /* ==================================================
-   4. 카드 박스 (수정됨: 연한 테두리 적용)
+   4. 카드 박스 (Glass Effect)
    ================================================== */
 .card-box {
     background: #ffffff;
-
-    /* ⬇️ 핵심: 아주 연한 회색 테두리를 줍니다. (투명도 0.06) */
     border: 1px solid rgba(0, 0, 0, 0.06);
-
     border-radius: var(--radius-md);
-
-    /* 그림자는 부드럽게 유지 */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
     0 2px 4px -1px rgba(0, 0, 0, 0.03);
-
     margin-bottom: 24px;
     padding: 24px !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* 호버 시 테두리 색을 살짝 진하게 + 그림자 강화 */
 .card-box:hover {
     transform: translateY(-2px);
-    border-color: rgba(0, 0, 0, 0.1); /* 테두리가 살짝 선명해짐 */
+    border-color: rgba(251, 146, 60, 0.3); /* 호버시 살짝 오렌지색 */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
     0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
 /* ==================================================
-   5. 아바타 & 타이틀
+   5. 아바타 & 탭
    ================================================== */
 .avatar-circle-bmi {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: var(--primary-gradient);
+    width: 52px; height: 52px; border-radius: 50%;
+
+    /* 아바타는 브랜드(Navy) or BMI(Orange)? -> BMI 테마로 변경! */
+    background: var(--bmi-gradient);
+
     color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 20px;
-    box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 20px;
+    box-shadow: 0 4px 10px rgba(234, 88, 12, 0.3);
 }
 
-/* ==================================================
-   6. 탭 네비게이션
-   ================================================== */
-.nav-pills {
-    gap: 8px;
-    margin-bottom: 10px; /* 모바일 줄바꿈 대비 */
-}
+.nav-pills { gap: 8px; margin-bottom: 10px; }
 
 .nav-pills .nav-link {
     color: var(--text-sub) !important;
-    font-weight: 600;
-    font-size: 0.95rem;
-    padding: 8px 16px;
-    border-radius: var(--radius-full);
-    transition: all 0.2s;
-    background: transparent;
+    font-weight: 600; font-size: 0.95rem;
+    padding: 8px 16px; border-radius: var(--radius-full);
+    transition: all 0.2s; background: transparent;
 }
+.nav-pills .nav-link:hover { background: #f1f5f9; color: var(--text-main) !important; }
 
-.nav-pills .nav-link:hover {
-    background: #f1f5f9;
-    color: var(--text-main) !important;
-}
-
+/* 탭 활성화 (BMI 테마 적용) */
 .nav-pills .nav-link.bmi-active {
-    background: var(--primary-gradient);
+    background: var(--bmi-gradient);
     color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
 }
 
 /* ==================================================
-    프로필 버튼 (캡슐 스타일 - 수정됨)
+   6. 프로필 버튼 (캡슐)
    ================================================== */
 .profile-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px; /* 버튼 사이 간격 */
-
-    /* 전체를 감싸는 유리통 */
+    display: inline-flex; align-items: center; gap: 8px;
     background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(10px);
-    padding: 6px 8px;
-    border-radius: 999px;
+    padding: 6px 8px; border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
 .profile-sm-btn {
-    /* 캡슐 모양 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 36px;
-    padding: 0 18px;
-    border-radius: 999px;
-
-    /* 폰트 */
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #64748b; /* 평소 회색 글씨 */
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* 배경 없음 (투명) */
-    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    height: 36px; padding: 0 18px; border-radius: 999px;
+    font-size: 0.9rem; font-weight: 600; color: #64748b;
+    text-decoration: none; transition: all 0.3s; background: transparent;
 }
-
 .profile-sm-btn:hover {
     background: rgba(255, 255, 255, 0.8);
-    color: #1E3A8A; /* 네이비 */
+    color: var(--bmi-color); /* 주황색 */
     transform: translateY(-2px);
 }
 
-/* ✅ 선택된 버튼 (홈 화면 Hero 색상 적용) */
+/* 활성화된 버튼 (BMI 테마) */
 .profile-sm-btn.active {
-    background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+    background: var(--bmi-gradient);
     color: #ffffff;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); /* 파란 그림자 */
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
     font-weight: 700;
 }
 
 /* ==================================================
-   8. 버튼 스타일
+   7. 버튼 스타일
    ================================================== */
+/* 메인 버튼 (BMI 계산) - 주황색 테마 적용! */
 .btn-bmi {
-    background: var(--primary-gradient);
-    color: white;
-    font-weight: 700;
-    border: none;
-    padding: 8px 20px;
-    border-radius: var(--radius-full);
-    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+    background: var(--bmi-gradient);
+    color: white; font-weight: 700; border: none;
+    padding: 8px 20px; border-radius: var(--radius-full);
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
     transition: all 0.2s;
 }
-
 .btn-bmi:hover {
     transform: translateY(-1px);
-    filter: brightness(1.05);
-    color: white;
+    filter: brightness(1.05); color: white;
 }
 
-/* 날짜 검색 버튼 스타일 업그레이드 */
+/* 날짜 검색 버튼 */
 .btn-outline-secondary {
-    background: rgba(255, 255, 255, 0.5); /* 반투명 배경 */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* 연한 테두리 */
-    color: #475569;
-    backdrop-filter: blur(4px);
-    transition: all 0.2s;
-    border-radius: 999px; /* 둥글게 */
-    font-weight: 600;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #475569; backdrop-filter: blur(4px);
+    transition: all 0.2s; border-radius: 999px; font-weight: 600;
 }
-
 .btn-outline-secondary:hover {
     background: #ffffff;
-    color: #2563EB; /* 호버시 파란색 포인트 */
-    border-color: #2563EB;
+    color: var(--bmi-color); border-color: var(--bmi-color);
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* ==================================================
-   9. BMI 시각화 (수정됨: 글자 표시 & 테마 통일)
-   ================================================== */
-.bmi-wrapper {
-    position: relative;
-    margin-top: 35px; /* 말풍선 공간 확보를 위해 여백 늘림 */
-    margin-bottom: 10px;
-    padding: 0 10px;
-}
-
-.bmi-track {
-    display: flex;
-    height: 24px; /* 글씨가 들어가야 하므로 높이를 키움 (16px -> 24px) */
-    border-radius: 12px;
-    overflow: hidden;
-    /* 안쪽 그림자를 줘서 파인 듯한 느낌 */
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.bmi-seg {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 11px;
-    font-weight: 700;
-    color: #ffffff; /* 흰색 글씨 */
-
-    /* ⬇️ 수정: 그림자를 조금 더 진하게 줘서 노란색 위에서도 잘 보이게 함 */
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-/* 부드러운 파스텔톤 컬러 (유지) */
-.bmi-track[data-type="adult"] .bmi-seg { width: 20%; }
-.bmi-track[data-type="child"] .bmi-seg { width: 25%; }
-
-.seg-1 { background: #60a5fa; } /* 저체중 */
-.seg-2 { background: #34d399; } /* 정상 */
-.seg-3 { background: #fbbf24; } /* 과체중 */
-.seg-4 { background: #fb923c; } /* 비만 */
-.seg-5 { background: #f87171; } /* 고도비만 */
-
-/* 포인터 디자인 (홈페이지 네이비 테마 적용) */
-.bmi-pointer {
-    position: absolute;
-    top: -40px; /* 바 높이가 커졌으니 조금 더 위로 */
-    transform: translateX(-50%);
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: left 0.5s ease-out; /* 부드러운 이동 애니메이션 */
-}
-
-.bmi-pointer-label {
-    /* 홈 화면(CareFinder) 브랜드 컬러인 진한 네이비 적용 */
-    background: #1E3A8A;
-    color: #fff;
-    padding: 5px 12px;
-    border-radius: 99px; /* 완전 둥근 캡슐형 */
-    font-size: 13px;
-    font-weight: 800;
-
-    /* 그림자를 줘서 떠있는 느낌 */
-    box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
-}
-
-/* 역삼각형 화살표 */
-.bmi-pointer::after {
-    content: "";
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-
-    /* 말풍선 색과 동일한 네이비 */
-    border-top: 8px solid #1E3A8A;
-    margin-top: -1px;
-}
-
-/* 기준선 텍스트 (숫자) */
-.bmi-cuts {
-    position: relative;
-    height: 20px;
-    margin-top: 6px;
-    font-family: 'Pretendard', sans-serif; /* 폰트 통일 */
-}
-
-.bmi-cuts .cut {
-    position: absolute;
-    transform: translateX(-50%);
-    font-size: 11px;
-    color: #94a3b8; /* 연한 회색 */
-    font-weight: 500;
-    top: 0;
-}
-
-.bmi-desc {
-    text-align: right;
-    font-size: 11px;
-    color: #94a3b8;
-    margin-top: 2px;
-}
-
-/* ==================================================
-   10. 테이블 디자인
-   ================================================== */
-.table {
-    margin-bottom: 0;
-}
-
-.table thead th {
-    /* ⬇️ 수정: 진한 회색(#f8fafc) 대신, 반투명한 흰색/회색 혼합 */
-    background: rgba(241, 245, 249, 0.5);
-    color: #64748b; /* 글자색은 그대로 유지 */
-
-    font-weight: 700;
-    font-size: 0.85rem;
-    border-bottom: 1px solid rgba(0,0,0,0.05); /* 아래 구분선만 살짝 */
-    padding: 12px;
-}
-
-.table tbody td {
-    border-bottom: 1px solid #f1f5f9;
-    padding: 16px 12px;
-    font-size: 0.9rem;
-    color: var(--text-main);
-}
-
-.table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-/* 삭제 버튼 */
-.btn-outline-danger {
-    border: 1px solid #fee2e2;
-    color: #ef4444;
-    background: #fff;
-    padding: 4px 10px;
-    font-size: 12px;
-    border-radius: 6px;
-}
-.btn-outline-danger:hover {
-    background: #fee2e2;
-    color: #b91c1c;
-    border-color: #fee2e2;
-}
-
-/* ==================================================
-   11. 상태 뱃지 (파스텔톤)
-   ================================================== */
-.badge-status {
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    display: inline-block;
-    min-width: 60px;
-}
-
-.badge-under  { background: #eff6ff; color: #3b82f6; } /* Blue */
-.badge-normal { background: #ecfdf5; color: #10b981; } /* Green */
-.badge-over   { background: #fffbeb; color: #f59e0b; } /* Yellow */
-.badge-obese  { background: #fff7ed; color: #f97316; } /* Orange */
-.badge-severe { background: #fef2f2; color: #ef4444; } /* Red */
-.badge-none   { background: #f8fafc; color: #94a3b8; } /* Gray */
-
-/* ==================================================
-   12. 모달 커스텀 (Home.css 스타일 적용)
-   ================================================== */
-.modal-content {
-    /* 배경을 투명한 유리처럼 (Home.css의 .modal-content 참고) */
-    background: rgba(255, 255, 255, 0.85); /* 가독성을 위해 홈보다 약간 더 불투명하게 */
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-
-    border-radius: 24px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-}
-
-.modal-header {
-    background: rgba(255, 255, 255, 0.4); /* 헤더도 투명하게 */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-    color: #1e293b;
-}
-
-.modal-footer {
-    border-top: none;
-    background: transparent;
-}
-
-/* 입력창도 Home.css 검색창 느낌으로 */
-.form-control {
-    background: rgba(255, 255, 255, 0.5); /* 반투명 흰색 */
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    padding: 12px;
-    transition: 0.3s;
-}
-
-.form-control:focus {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: #2563EB; /* 블루 포인트 */
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-/* ==================================================
-   [추가] 날짜 검색 박스 내부 스타일링 (Glass Theme)
-   ================================================== */
-
-/* 1. 검색 박스 전체 배경도 투명 유리처럼 */
-#dateSearchBox .card-box {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-}
-
-/* 2. 날짜 입력창 (input)을 뽀얗고 예쁘게 */
-#dateSearchBox input[type="date"] {
-    background: rgba(255, 255, 255, 0.7); /* 반투명 흰색 */
-    border: 1px solid rgba(0, 0, 0, 0.08); /* 아주 연한 테두리 */
-    border-radius: 12px; /* 둥글게 */
-    color: #334155;
-    font-weight: 600;
-    padding: 10px 14px;
-}
-
-#dateSearchBox input[type="date"]:focus {
-    background: #ffffff;
-    border-color: #2563EB; /* 포커스시 파란색 */
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
-/* 3. [검색] 버튼을 회색 -> 메인 그라데이션으로 변경 */
+/* 날짜 검색 박스 내부 버튼 */
 #dateSearchBox .btn-secondary {
-    background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%); /* 브랜드 컬러 */
-    border: none;
-    font-weight: 700;
-    padding: 8px 20px;
-    border-radius: 999px;
-    transition: transform 0.2s;
+    background: var(--bmi-gradient); /* 여기도 주황색 */
+    border: none; font-weight: 700;
+    padding: 8px 20px; border-radius: 999px; transition: transform 0.2s;
 }
-
 #dateSearchBox .btn-secondary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
 }
 
-/* 4. [전체] 버튼 스타일 다듬기 */
-#dateSearchBox .btn-outline-secondary {
-    background: #fff;
-    border: 1px solid #cbd5e1;
-    color: #64748b;
+/* ==================================================
+   8. BMI 시각화 (막대, 포인터)
+   ================================================== */
+.bmi-wrapper {
+    position: relative; margin-top: 35px; margin-bottom: 10px; padding: 0 10px;
 }
-#dateSearchBox .btn-outline-secondary:hover {
-    background: #f1f5f9;
-    color: #0f172a;
+.bmi-track {
+    display: flex; height: 24px; border-radius: 12px; overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
-/* 1. 체중계용: 주황색 그라데이션 (측정, 주의 느낌) */
+.bmi-seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+/* 섹션별 색상 */
+.bmi-track[data-type="adult"] .bmi-seg { width: 20%; }
+.bmi-track[data-type="child"] .bmi-seg { width: 25%; }
+.seg-1 { background: #60a5fa; }
+.seg-2 { background: #34d399; }
+.seg-3 { background: #fbbf24; }
+.seg-4 { background: #fb923c; }
+.seg-5 { background: #f87171; }
+
+/* 말풍선 포인터 (브랜드 컬러 Navy로 유지 - 신뢰감) */
+.bmi-pointer {
+    position: absolute; top: -40px; transform: translateX(-50%); z-index: 10;
+    display: flex; flex-direction: column; align-items: center;
+    transition: left 0.5s ease-out;
+}
+.bmi-pointer-label {
+    background: #1E3A8A; color: #fff;
+    padding: 5px 12px; border-radius: 99px;
+    font-size: 13px; font-weight: 800;
+    box-shadow: 0 4px 10px rgba(30, 58, 138, 0.3);
+}
+.bmi-pointer::after {
+    content: ""; width: 0; height: 0;
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-top: 8px solid #1E3A8A; margin-top: -1px;
+}
+
+/* 기준선 */
+.bmi-cuts { position: relative; height: 20px; margin-top: 6px; font-family: 'Pretendard', sans-serif; }
+.bmi-cuts .cut { position: absolute; transform: translateX(-50%); font-size: 11px; color: #94a3b8; top: 0; }
+.bmi-desc { text-align: right; font-size: 11px; color: #94a3b8; margin-top: 2px; }
+
+/* ==================================================
+   9. 테이블 & 모달
+   ================================================== */
+.table { margin-bottom: 0; }
+.table thead th {
+    background: rgba(241, 245, 249, 0.5); color: #64748b;
+    font-weight: 700; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 12px;
+}
+.table tbody td {
+    border-bottom: 1px solid #f1f5f9; padding: 16px 12px; color: var(--text-main);
+}
+.table tbody tr:hover { background: #fff7ed !important; } /* 호버시 아주 연한 오렌지색 */
+
+/* 상태 뱃지 */
+.badge-status {
+    padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+    display: inline-block; min-width: 60px;
+}
+.badge-under  { background: #eff6ff; color: #3b82f6; }
+.badge-normal { background: #ecfdf5; color: #10b981; }
+.badge-over   { background: #fffbeb; color: #f59e0b; }
+.badge-obese  { background: #fff7ed; color: #f97316; }
+.badge-severe { background: #fef2f2; color: #ef4444; }
+.badge-none   { background: #f8fafc; color: #94a3b8; }
+
+/* 모달 */
+.modal-content {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.modal-header { background: rgba(255, 255, 255, 0.4); border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+.modal-footer { border-top: none; background: transparent; }
+.form-control {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 12px; padding: 12px;
+}
+.form-control:focus {
+    background: #fff; border-color: #ea580c; /* 오렌지색 포인트 */
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+}
+
+/* 날짜 검색 박스 */
+#dateSearchBox .card-box {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.8);
+}
+#dateSearchBox input[type="date"] {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 12px; padding: 10px 14px;
+}
+#dateSearchBox input[type="date"]:focus {
+    background: #ffffff; border-color: #ea580c;
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+}
+
+/* ==================================================
+   10. 아이콘 그라데이션 (JSP에서 사용하는 클래스들)
+   ================================================== */
+/* 체중계: 주황색 */
 .icon-orange {
-    background: linear-gradient(135deg, #FDBA74 0%, #EA580C 100%); /* 연한 주황 -> 진한 주황 */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 1.3rem;
-    filter: drop-shadow(0 2px 4px rgba(234, 88, 12, 0.2)); /* 주황 그림자 */
+    background: linear-gradient(135deg, #FDBA74 0%, #EA580C 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    font-size: 1.3rem; filter: drop-shadow(0 2px 4px rgba(234, 88, 12, 0.2));
 }
-
-/* 2. 기록용: 초록색 그라데이션 (차트, 문서 느낌) */
+/* 기록: 초록색 */
 .icon-green {
-    background: linear-gradient(135deg, #34D399 0%, #059669 100%); /* 민트 -> 진한 초록 */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 1.3rem;
-    filter: drop-shadow(0 2px 4px rgba(5, 150, 105, 0.2)); /* 초록 그림자 */
+    background: linear-gradient(135deg, #34D399 0%, #059669 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    font-size: 1.3rem; filter: drop-shadow(0 2px 4px rgba(5, 150, 105, 0.2));
+}
+/* 기준: 네이비 */
+.icon-navy {
+    background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    font-size: 1.3rem; filter: drop-shadow(0 2px 4px rgba(30, 58, 138, 0.2));
 }
