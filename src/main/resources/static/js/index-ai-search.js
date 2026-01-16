@@ -43,8 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // 1️⃣ 사용자가 입력한 증상 저장
             sessionStorage.setItem("symptom", message);
 
-            if (data.summary) {
-                sessionStorage.setItem("chatbotIntroMessage", data.summary);
+            if (data.message) {
+                sessionStorage.setItem("chatbotIntroMessage", data.message);
             }
 
             // 자동 클릭 플래그 저장
@@ -71,7 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
             /* =========================
                ❗ 증상 아님 → toast 피드백
             ========================= */
-            showToast(data.summary || "증상을 통해 쉽고 빠르게 근처 병원을 안내해드리는 검색창입니다. 증상을 입력해주세요. Q&A 궁금하신점은 우측 하단 챗봇을 이용해주세요!");
+            /*data.summary 변경전*/
+            showToast(data.message || "증상을 통해 쉽고 빠르게 근처 병원을 안내해드리는 검색창입니다. 증상을 입력해주세요. Q&A 궁금하신점은 우측 하단 챗봇을 이용해주세요!");
 
         } catch (e) {
             console.error(e);
