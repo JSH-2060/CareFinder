@@ -1,33 +1,31 @@
 /* =========================================
-   1. 기본 설정 & 레이아웃
+   My Page - Main Theme Unified (Dark & Glass)
    ========================================= */
+
+/* 1. 배경 설정 (로그인 페이지와 동일한 오로라 배경) */
 body {
     margin: 0;
     font-family: 'Pretendard', sans-serif;
 
-
-    /* 기본 배경색 (아주 연한 회색) */
-    background-color: #F8FAFC;
-
-    /* [핵심] 배경에 은은한 오로라 조명 추가 */
-    /* 위에서 아래로: 파란빛 -> 투명 */
-    background-image:
-            radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 60%),
-            radial-gradient(circle at 80% 10%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
-
-    /* 배경 고정 (스크롤해도 빛 위치 유지) */
-    background-attachment: fixed;
-
-    color: #1e293b;
+    /* 화면 전체 채우기 */
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    min-height: 100vh;
     box-sizing: border-box;
-    padding-top: 100px;
+    padding-top: 100px; /* 헤더 공간 확보 */
+
+    /* Index/Login Hero와 같은 계열, 부드러운 그라데이션 */
+    background:
+            linear-gradient(135deg, #1E3A8A 0%, #10B981 100%),
+            radial-gradient(at 0% 0%, hsla(253,16%,7%,0.35) 0, transparent 50%),
+            radial-gradient(at 100% 0%, hsla(160,84%,39%,0.25) 0, transparent 55%);
+    background-attachment: fixed; /* 스크롤 시 배경 고정 */
+
+    color: #ffffff; /* 기본 텍스트 화이트 */
 }
 
 /* =========================================
-   2. 헤더 스타일 (홈페이지 index.css 스타일 이식)
+   2. 헤더 스타일 (Glass Header)
    ========================================= */
 .header {
     height: 70px;
@@ -35,13 +33,20 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 0 24px;
-    position: fixed; /* 상단 고정 */
+
+    position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 1000;
 
-    /* [핵심] 홈페이지의 브랜드 컬러 그라데이션 */
-    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    /* [핵심 변경 사항] */
+    background: transparent;  /* 배경색을 투명하게 변경 */
+    border-bottom: none;      /* 하단 경계선 제거 */
+    box-shadow: none;         /* 입체감(그림자) 제거 */
+
+    /* (선택사항) 스크롤 시 글자가 겹쳐 보이지 않게 하려면 아래 블러 효과는 남겨도 됩니다.
+       완전히 투명한 느낌을 원하시면 아래 줄도 지우세요. */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .logo {
@@ -49,17 +54,16 @@ body {
     align-items: center;
     gap: 10px;
     font-size: 24px;
-    font-weight: 700;
-    color: white;
+    font-weight: 700; /* 폰트 굵기 강조 */
+    color: #ffffff;
     cursor: pointer;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
     text-decoration: none;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .logo-icon {
-    font-size: 28px;     /* 아이콘 크기 28px (중요) */
+    font-size: 28px;
     color: #fff;
-    opacity: 0.95;
 }
 
 /* 헤더 우측 유저 메뉴 */
@@ -78,19 +82,19 @@ body {
     color: white;
     font-weight: 600;
     font-size: 15px;
-    /* 반투명 유리 효과 */
     background: rgba(255, 255, 255, 0.15);
     padding: 8px 16px;
     border-radius: 20px;
     backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
 .logout-btn-header {
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.5);
     color: white;
     padding: 8px 16px;
-    border-radius: 20px; /* 둥글게 */
+    border-radius: 20px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
@@ -103,7 +107,7 @@ body {
 }
 
 /* =========================================
-   3. 마이페이지 컨텐츠 영역
+   3. 마이페이지 컨텐츠 영역 (Glass Card)
    ========================================= */
 .container {
     width: 100%;
@@ -112,37 +116,41 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding: 0 20px; /* 모바일 여백 */
+}
+
+/* 카드 스타일 - 로그인 박스와 동일한 Glassmorphism */
+.card {
+    background: rgba(255, 255, 255, 0.12); /* 투명도 조절 */
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+
+    border-radius: 28px;
+    padding: 42px 36px;
+
+    /* 테두리와 그림자로 입체감 */
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    box-shadow:
+            0 40px 80px -20px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255,255,255,0.3);
 }
 
 .page-header h2 {
     text-align: center;
     font-size: 28px;
     font-weight: 800;
-    color: #1e3a8a; /* 브랜드 컬러 */
+    color: #ffffff;
     margin: 0 0 10px 0;
-}
-
-/* 카드 스타일 (홈페이지 느낌의 유리 카드) */
-.card {
-    background: rgba(255, 255, 255, 0.8); /* 약간 불투명하게 */
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-
-    border-radius: 24px;
-    padding: 40px;
-
-    /* 테두리와 그림자로 입체감 */
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    box-shadow: 0 20px 50px -10px rgba(30, 58, 138, 0.1);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .section-title {
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 25px;
-    color: #334155;
+    color: rgba(255, 255, 255, 0.9); /* 부드러운 화이트 */
     padding-bottom: 15px;
-    border-bottom: 2px solid #f1f5f9;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 /* =========================================
@@ -158,11 +166,12 @@ body {
 .info-row span:first-child {
     font-size: 14px;
     font-weight: 700;
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.85); /* 라벨 색상 밝게 */
     margin-left: 4px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
-/* 입력창 및 읽기전용 공통 */
+/* 입력창 공통 (Glass Input) */
 .info-row input,
 .info-row .readonly {
     width: 100%;
@@ -170,30 +179,29 @@ body {
     border-radius: 12px;
     font-size: 15px;
     box-sizing: border-box;
-    transition: all 0.2s ease;
+    transition: 0.2s;
+
+    /* 로그인 페이지 인풋 스타일 적용 */
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    color: #1e293b; /* 입력 텍스트는 가독성을 위해 어둡게 */
 }
 
-/* 수정 가능한 입력창 */
-.info-row input {
-    background: #ffffff;
-    border: 1px solid #cbd5e1;
-    color: #1e293b;
-}
-
+/* 포커스 효과 */
 .info-row input:focus {
     outline: none;
     border-color: #2563EB;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
 }
 
-/* 읽기 전용 (이메일 등) */
+/* 읽기 전용 (이메일 등) - 약간 어둡게 처리 */
 .info-row .readonly {
-    background: #f1f5f9; /* 연한 회색 */
-    color: #64748b;
-    border: 1px solid transparent;
-    display: flex;
-    align-items: center;
-    font-weight: 600;
+    background: rgba(255, 255, 255, 0.3);
+    color: #475569;
+    cursor: default;
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 /* =========================================
@@ -203,28 +211,56 @@ body {
     margin-top: 30px;
 }
 
+/* 저장 버튼 - 로그인 버튼 스타일 적용 */
 .btn-save {
     width: 100%;
-    padding: 16px 0;
-    border-radius: 12px;
+    height: 52px;
+    border-radius: 14px;
     border: none;
-    background: linear-gradient(135deg, #1E3A8A, #2563EB); /* 브랜드 그라데이션 */
+
+    /* 로그인 버튼과 동일한 그라데이션 */
+    background: linear-gradient(
+            135deg,
+            #1E3A8A 0%,
+            #2563EB 40%,
+            #10B981 100%
+    );
+
     color: white;
     font-size: 16px;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-    transition: all 0.2s ease;
+
+    box-shadow:
+            0 10px 25px -5px rgba(16, 185, 129, 0.35),
+            0 4px 12px rgba(30, 58, 138, 0.25);
+
+    transition: all 0.3s ease;
 }
 
+/* Hover */
 .btn-save:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+    transform: translateY(-3px);
+    background: linear-gradient(
+            135deg,
+            #1E40AF 0%,
+            #2563EB 35%,
+            #34D399 100%
+    );
+    box-shadow:
+            0 18px 40px -8px rgba(16, 185, 129, 0.5),
+            0 8px 20px rgba(30, 58, 138, 0.35);
 }
+
+/* Active */
+.btn-save:active {
+    transform: translateY(-1px) scale(0.99);
+}
+
 
 /* 에러 메시지 */
 .error-msg {
-    color: #ef4444;
+    color: #FECACA; /* 어두운 배경에서 잘 보이도록 밝은 빨강 */
     font-size: 13px;
     font-weight: 600;
     margin-top: -10px;
@@ -232,30 +268,32 @@ body {
     display: flex;
     align-items: center;
     gap: 5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .error-msg::before { content: '⚠️'; }
 
 /* =========================================
-   6. 회원탈퇴 (수정된 스타일)
+   6. 회원탈퇴 (스타일 조정)
    ========================================= */
 .withdraw-area {
     margin-top: 15px;
-    display: flex;       /* 플렉스 박스 적용 */
-    justify-content: flex-end; /* 오른쪽 정렬 */
+    display: flex;
+    justify-content: flex-end;
 }
 
 .withdraw-area a {
-    font-size: 12px;     /* 글씨 크기 줄임 (덜 강조되게) */
-    color: #cbd5e1;      /* 아주 연한 회색 (눈에 덜 띄게) */
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5); /* 은은한 화이트 */
     text-decoration: none;
     font-weight: 500;
     transition: all 0.2s;
-    padding: 5px 0;      /* 클릭 영역 살짝 확보 */
+    padding: 5px 0;
 }
 
 .withdraw-area a:hover {
-    color: #ef4444;      /* 마우스를 올렸을 때만 빨간색 경고 */
+    color: #ff8fa3; /* 호버 시 밝은 핑크/레드 */
     text-decoration: underline;
+    text-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
 }
 
 /* PC 화면 대응 */
