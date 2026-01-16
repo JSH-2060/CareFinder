@@ -231,6 +231,13 @@ a { text-decoration: none; color: inherit; }
     color: #64748b; font-weight: 700; font-size: 0.85rem;
     border-bottom: 1px solid rgba(0,0,0,0.05); padding: 12px;
 }
+/* ✅ [추가됨] 여기에 커서 설정을 넣어야 합니다! */
+.table tbody tr {
+    cursor: pointer; /* ✨ 마우스를 올리면 손가락 모양으로 변경 */
+    transition: background 0.2s; /* 배경색이 부드럽게 바뀌도록 */
+}
+
+
 .table tbody td {
     border-bottom: 1px solid #f1f5f9; padding: 16px 12px;
     font-size: 0.9rem; color: var(--text-main);

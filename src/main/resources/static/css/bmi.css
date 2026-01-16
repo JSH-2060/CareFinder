@@ -279,6 +279,14 @@ a { text-decoration: none; color: inherit; }
 }
 .table tbody tr:hover { background: #fff7ed !important; } /* 호버시 아주 연한 오렌지색 */
 
+.btn-outline-danger {
+    border: 1px solid #fee2e2; color: #ef4444; background: #fff;
+    padding: 4px 10px; font-size: 12px; border-radius: 6px;
+}
+.btn-outline-danger:hover {
+    background: #fee2e2; color: #b91c1c; border-color: #fee2e2;
+}
+
 /* 상태 뱃지 */
 .badge-status {
     padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 700;

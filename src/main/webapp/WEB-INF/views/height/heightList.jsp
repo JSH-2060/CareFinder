@@ -160,7 +160,7 @@
                     <td class="fw-bold text-primary">${h.height}</td>
                     <td>
                         <form action="/height/delete" method="post" onclick="event.stopPropagation();"
-                              onsubmit="return confirm('삭제할까요?');">
+                              onsubmit="return confirm('삭제하시겠습니까?');">
                             <input type="hidden" name="heightId" value="${h.heightId}">
                             <input type="hidden" name="childId" value="${childId}">
                             <input type="hidden" name="childName" value="${childName}">
@@ -218,26 +218,38 @@
     <div class="modal-dialog modal-dialog-centered">
         <form action="/height/insert" method="post" class="w-100">
             <div class="modal-content">
-                <div class="modal-header fw-bold">키 입력
+                <div class="modal-header fw-bold"> ${childName} 키 입력
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="childId" value="${childId}">
                     <input type="hidden" name="childName" value="${childName}">
                     <div class="mb-3">
-                        <label class="form-label">측정 날짜</label>
+                        <c:if test="${not empty list}">
+                            <div class="text-muted text-center mb-3" style="font-size: 13px; margin-bottom: 5px;">
+                                이전 기록(${fn:substring(list[0].recordDate, 0, 10)}) 기준으로 자동 입력되었습니다.
+                            </div>
+                        </c:if>
+                        <label class="form-label fw-bold">측정 날짜</label>
                         <input type="date" name="recordDate" class="form-control"
-                               value="<%= java.time.LocalDate.now() %>" readonly>
-                    </div>
+                               value="<%= java.time.LocalDate.now() %>"
+                               readonly> </div>
+
                     <div class="mb-3">
-                        <label class="form-label">키 (cm)</label>
+                        <label class="form-label fw-bold">키 (cm)</label>
+
+
                         <input type="number" step="0.1" min="80" max="250"
                                name="height" id="heightInput" class="form-control"
-                               placeholder="예: 175.5" required>
+                               placeholder="예: 175.5"
+                               value="${not empty list ? list[0].height : ''}"
+                               required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-main w-100">저장</button>
+                    <button type="submit" class="btn btn-height w-100">
+                        저장
+                    </button>
                 </div>
             </div>
         </form>
@@ -264,7 +276,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-main w-100">수정 저장</button>
+                    <button type="submit" class="btn btn-height w-100">
+                        수정 저장
+                    </button>
                 </div>
             </div>
         </form>
