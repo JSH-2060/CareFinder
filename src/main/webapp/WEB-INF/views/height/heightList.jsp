@@ -63,6 +63,9 @@
                     <small class="text-muted">키 성장 기록장</small>
                 </div>
             </div>
+            <a href="/" class="btn-home">
+                홈으로
+            </a>
         </div>
 
         <div class="d-flex justify-content-between align-items-end border-top pt-3">

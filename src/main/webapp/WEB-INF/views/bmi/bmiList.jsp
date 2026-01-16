@@ -65,6 +65,9 @@
                         <small class="text-muted">BMI 기록장</small>
                     </div>
                 </div>
+                <a href="/" class="btn-home">
+                    홈으로
+                </a>
             </div>
 
         <!-- ===== 탭 + 프로필 ===== -->

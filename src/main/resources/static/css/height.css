@@ -91,6 +91,29 @@ a { text-decoration: none; color: inherit; }
     color: #1E3A8A; /* 호버 시 글자색은 브랜드 네이비로 */
 }
 
+/* 홈으로 버튼 (기본) */
+.btn-home {
+    display: inline-flex; justify-content: center; align-items: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    padding: 6px 20px;
+    border-radius: 99px;
+    font-size: 13px; font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    transition: all 0.2s ease;
+}
+
+/* 🌿 키 성장 테마 (호버 시 청록색) */
+.btn-home:hover {
+    background: linear-gradient(135deg, #2dd4bf 0%, #06b6d4 100%);
+    color: #ffffff;
+    border-color: #2dd4bf;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+}
+
 /* ==================================================
    3. 레이아웃
    ================================================== */
