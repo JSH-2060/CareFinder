@@ -79,8 +79,8 @@ async function showWalkingRoute(place, map, myPos) {
 
             // UI 업데이트 (올리브 그라디언트)
             const infoHTML = `
-                <div style="padding: 15px; background: linear-gradient(135deg, #378ba8 0%, #1b5087 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
-                    <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
+                <div style="padding: 12px; background: linear-gradient(135deg, #378ba8 0%, #1b5087 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
                         도보 약 ${walkingTime}분
                     </div>
                     <div style="font-size: 0.95rem; opacity: 0.9;">
@@ -175,7 +175,7 @@ async function showDrivingRoute(place, map, myPos) {
             const layer1 = new kakao.maps.Polyline({
                 path: path,
                 strokeWeight: 9.4,
-                strokeColor: '#f5576c',
+                strokeColor: '#10af7c',
                 strokeOpacity: 0.8,
                 map: map
             });
@@ -183,7 +183,7 @@ async function showDrivingRoute(place, map, myPos) {
             const layer2 = new kakao.maps.Polyline({
                 path: path,
                 strokeWeight: 7,
-                strokeColor: '#f093fb',
+                strokeColor: '#12a982',
                 strokeOpacity: 0.6,
                 map: map
             });
@@ -205,8 +205,8 @@ async function showDrivingRoute(place, map, myPos) {
 
             // UI 업데이트
             const infoHTML = `
-                <div style="padding: 15px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
-                    <div style="font-size: 1.3rem; font-weight: bold; margin-bottom: 8px;">
+                <div style="padding: 12px; background: linear-gradient(135deg, #12a982 0%, #10af7c 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
                         차량 약 ${timeText}
                     </div>
                     <div style="font-size: 0.95rem; opacity: 0.9;">

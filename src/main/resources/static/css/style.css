@@ -82,20 +82,6 @@ html, body {
     background: #d0d0d0;
 }
 
-/* =========================
-   거리 표시 뱃지 (리스트용)
-========================= */
-.place-meta .distance {
-    display: inline-block;
-    background: #e3f2fd;
-    color: #1976d2;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-right: 8px;
-}
-
 .radius-toggle .label {
     color: #666;
 }
@@ -131,33 +117,27 @@ html, body {
 .home-btn {
     position: absolute;
     bottom: 40px;
-    left: 30px;
-    width: 64px;
-    height: 64px;
+    left: 25px;
+    width: 58px;
+    height: 58px;
 
-    background: rgba(255, 255, 255, 0.15);
+    background: white;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
 
-    /* 테두리 하이라이트 */
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
+    border: none;
+    border-radius: 12px;
 
-    font-size: 28px;
+    font-size: 24px;
     cursor: pointer;
 
-    /* 강한 네온 그림자 */
-    box-shadow:
-            0 8px 32px rgba(37, 99, 235, 0.5),
-            0 0 20px rgba(37, 99, 235, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
     z-index: 100;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-
 }
 
 .home-btn:hover {

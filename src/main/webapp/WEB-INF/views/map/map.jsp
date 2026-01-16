@@ -423,9 +423,13 @@
                             '<div class="place-item-main">' +
                             '<div class="place-name">' + esc(place.place_name) + '</div>' +
                             '<div class="place-meta">' +
+                            '<div class="meta-top">' +
                             '<span class="distance">' + distText + '</span>' +
                             '<span class="list-open-badge" data-open-badge>확인중...</span>' +
-                            esc(place.road_address_name || place.address_name) +
+                            '</div>' +
+                            '<div class="meta-address">' +
+                                esc(place.road_address_name || place.address_name) +
+                            '</div>' +
                             '</div>' +
                             '</div>' +
                             '<span class="accordion-chevron">▼</span>' +
