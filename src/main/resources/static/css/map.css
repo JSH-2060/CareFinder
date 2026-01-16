@@ -4,6 +4,86 @@ html, body {
     margin: 0;
 }
 
+/* =========================================
+   2. 헤더 스타일 (홈페이지 index.css 스타일 이식)
+   ========================================= */
+/* 헤더 높이를 변수로 관리 */
+:root {
+    --header-height: 70px;
+}
+.header {
+    height: var(--header-height);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    position: fixed; /* 상단 고정 */
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+
+    /* [핵심] 홈페이지의 브랜드 컬러 그라데이션 */
+    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+
+.logo-icon {
+    font-size: 28px;     /* 아이콘 크기 28px (중요) */
+    color: #fff;
+    opacity: 0.95;
+}
+
+/* 헤더 우측 유저 메뉴 */
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-name {
+    color: white;
+    font-weight: 600;
+    font-size: 15px;
+    /* 반투명 유리 효과 */
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.logout-btn-header {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px; /* 둥글게 */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.logout-btn-header:hover {
+    background: white;
+    color: #1E3A8A;
+}
+
 body {
     display: block !important;
 }
@@ -60,8 +140,10 @@ body {
     padding: 0;
 }
 
+/* =========================
+   ✅ 리스트 아이템 기본 스타일 (아코디언 구조)
+========================= */
 .place-item {
-    padding: 12px 14px;
     cursor: pointer;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     transition: background 0.2s ease;
@@ -69,6 +151,20 @@ body {
 
 .place-item:hover {
     background: rgba(255, 255, 255, 0.4);
+}
+
+/* ✅ 리스트 아이템 헤더 (클릭 영역) */
+.place-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    gap: 10px;
+}
+
+.place-item-main {
+    flex: 1;
+    min-width: 0;
 }
 
 .place-name {
@@ -79,12 +175,114 @@ body {
     flex-wrap: wrap;
 }
 
+.place-meta {
+    font-size: 13px;
+    color: #555;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+/* ✅ 아코디언 화살표 */
+.accordion-chevron {
+    font-size: 12px;
+    color: #999;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.accordion-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* ✅ 아코디언 콘텐츠 (영업시간) */
+.list-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.list-accordion-content.open {
+    max-height: 300px;
+    padding: 0 14px 14px 14px;
+}
+
+/* ✅ 영업시간 래퍼 - 박스 제거, 자연스럽게 이어짐 */
+.accordion-hours-wrapper {
+    background: transparent;
+    border-radius: 0;
+    padding: 8px 0 0 0;
+    margin-top: 0;
+    border: none;
+}
+
+.accordion-hours-title {
+    font-weight: 700;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.accordion-hours {
+    font-size: 12px;
+    color: #555;
+    line-height: 1.8;
+}
+
+.accordion-hours .hours-row {
+    padding: 2px 0;
+}
+
+/* ✅ 선택된 아이템 강조 - 메인 컬러 그라데이션 */
+.place-item.accordion-open {
+    /* 메인 컬러 (블루-연두) 은은한 그라데이션 */
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.12) 0%, rgba(16, 185, 129, 0.12) 100%);
+    border-left: none;
+    border-radius: 16px;
+    margin: 8px 10px;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    box-shadow: 0 4px 15px rgba(30, 58, 138, 0.08);
+}
+
+.place-item.accordion-open .place-item-header {
+    padding-left: 14px; /* 원래 패딩 유지 */
+}
+
+/* ✅ 펼쳐진 영업시간 영역도 통일 */
+.place-item.accordion-open .list-accordion-content {
+    background: transparent;
+}
+
+.place-item.accordion-open .accordion-hours-wrapper {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.place-item.accordion-open .accordion-hours-title {
+    color: #1E3A8A;
+    border-bottom-color: rgba(16, 185, 129, 0.25);
+}
+
+.place-item.accordion-open .accordion-hours {
+    color: #334155;
+}
+
+.place-item.accordion-open .place-name {
+    color: #1E3A8A;
+}
+
 #listPanel {
     transition: transform 0.3s ease;
     position: absolute;
     left: 0;
-    top: 0;
-    bottom: 0;
+    top: var(--header-height);     /* 헤더 높이만큼 내림 */
+    bottom: 0;              /* top: 0 대신 bottom: 0 유지 */
     width: 320px;
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(20px);
@@ -110,7 +308,7 @@ body {
 .list-toggle-btn {
     position: absolute;
     left: 320px;
-    top: 50%;
+    top: calc(50% + 35px);  /* ✅ 헤더 절반(35px) 만큼 보정 */
     transform: translateY(-50%);
     z-index: 3;
 
@@ -138,16 +336,6 @@ body {
 /* 버튼 hover */
 .list-toggle-btn:hover {
     background: #f5f5f5;
-}
-
-.place-meta {
-    font-size: 13px;
-    color: #555;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
 }
 
 /* =========================
@@ -231,7 +419,7 @@ body {
     margin-bottom: 8px;
 }
 
- 거리 태그 스타일
+/* 거리 태그 스타일 */
 .dist-tag {
     color: #3897FF;
     font-weight: bold;
@@ -766,40 +954,6 @@ body {
     line-height: 1.6;
 }
 
-/* =========================
-   아코디언 전체 박스
-========================= */
-.hours-accordion {
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.02);
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-/* 클릭하는 부분 (제목) */
-.hours-accordion summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 15px;
-    cursor: pointer;
-    list-style: none;
-    outline: none;
-    user-select: none;
-}
-
-/* 브라우저 기본 화살표 숨기기(Safari 등) */
-.hours-accordion summary::-webkit-details-marker {
-    display: none;
-}
-
-/* 펼쳐질 때 애니메이션 느낌 주기 */
-.hours-accordion[open] {
-    background: #fff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
 @keyframes pulse-green {
     0% { transform: scale(1); }
     50% { transform: scale(1.03); }
@@ -810,8 +964,4 @@ body {
     font-size: 10px;
     color: #999;
     transition: transform 0.3s ease;
-}
-
-.hours-accordion[open] .chevron {
-    transform: rotate(180deg);
 }
