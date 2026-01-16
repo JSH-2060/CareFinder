@@ -341,52 +341,63 @@
 <!-- BMI JS -->
 <script src="/js/bmi.js"></script>
 
-<!-- ===== 차트 ===== -->
 <c:if test="${not empty graphList}">
     <script>
-        const labels = [
-            <c:forEach var="b" items="${graphList}" varStatus="s">
-            "${b.dateStr}"<c:if test="${!s.last}">,</c:if>
-            </c:forEach>
-        ];
+        // 1. 데이터 배열 준비
+        const labels = [];
+        const values = [];
+        const results = []; // 판정 결과(정상, 비만 등)를 담을 배열
 
-        const values = [
-            <c:forEach var="b" items="${graphList}" varStatus="s">
-            ${b.bmiValue}<c:if test="${!s.last}">,</c:if>
-            </c:forEach>
-        ];
+        // JSP 반복문으로 데이터 채우기
+        <c:forEach var="b" items="${graphList}">
+        // 🟢 수정 후: 자르지 않고 "날짜+시간" 그대로 다 보여주기
+        labels.push("${b.dateStr}");
 
-        // 🔥 핵심: 시간 순서 뒤집기
+        values.push(${b.bmiValue});
+        results.push("${b.result}");
+        </c:forEach>
+
         labels.reverse();
         values.reverse();
+        results.reverse();
+
+        // (점 색깔 로직은 그대로 유지)
+        const pointColors = results.map(res => {
+            if (res === '저체중') return '#3b82f6';
+            if (res === '정상') return '#10b981';
+            if (res === '과체중') return '#f59e0b';
+            if (res === '비만') return '#f97316';
+            if (res === '고도비만') return '#ef4444';
+            return '#94a3b8';
+        });
 
         new Chart(document.getElementById('bmiChart'), {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
+                    label: 'BMI',
                     data: values,
-
-                    /* 1. 선 색상을 BMI 테마(주황색)로 변경 */
                     borderColor: '#ea580c',
-
-                    /* 2. 선 아래 채우기 색상 (선택사항: 은은한 주황색) */
                     backgroundColor: 'rgba(234, 88, 12, 0.1)',
-
-                    borderWidth: 3,       /* 선 두께를 조금 더 두껍게 (2 -> 3) */
-                    tension: 0.3,         /* 곡선 부드럽게 */
-                    fill: true,           /* 선 아래 색 채우기 */
-
-                    /* 3. 포인트(점) 디자인 */
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#ea580c',
-                    pointRadius: 4
+                    borderWidth: 3,
+                    tension: 0.3,
+                    fill: true,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: pointColors,
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
                 }]
             },
             options: {
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { suggestedMin: 15, suggestedMax: 35 }
+                    y: { grace: '10%' },
+                    x: {
+                        grid: { display: false },
+
+                    }
                 }
             }
         });
