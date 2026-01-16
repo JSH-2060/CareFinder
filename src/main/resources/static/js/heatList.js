@@ -56,12 +56,12 @@ function openEditModal(row) {
 
 
 /* =========================================
-   4. 차트 그리기 (JSP에서 데이터를 받아옴)
+   4. 차트 그리기 (가독성 개선: 흰 배경 대응)
    ========================================= */
 function renderHeatChart(labels, dataPoints) {
     const ctx = document.getElementById('tempChart').getContext('2d');
 
-    // 동적 Y축 최대값 계산 (40도 넘으면 그래프 확장)
+    // 동적 Y축 최대값
     let maxTemp = 40;
     if (dataPoints.length > 0) {
         const dataMax = Math.max(...dataPoints);
@@ -81,10 +81,10 @@ function renderHeatChart(labels, dataPoints) {
             const right = chartArea.right;
 
             const bands = [
-                { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.12)' },
-                { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.14)' },
-                { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.14)' },
-                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.14)' }
+                { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.1)' }, // 아주 연한 회색
+                { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.15)' }, // 연한 주황
+                { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.15)' }, // 연한 빨강
+                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.15)' } // 연한 보라
             ];
 
             ctx.save();
@@ -100,7 +100,7 @@ function renderHeatChart(labels, dataPoints) {
         }
     };
 
-    // [플러그인] 오른쪽 텍스트 라벨
+    // [플러그인] 오른쪽 라벨
     const temperatureRightLabels = {
         id: 'temperatureRightLabels',
         afterDraw(chart) {
@@ -112,19 +112,21 @@ function renderHeatChart(labels, dataPoints) {
             ctx.save();
             ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
-            ctx.font = '12px Pretendard, sans-serif';
+            ctx.font = 'bold 12px Pretendard';
 
             const lines = [
-                { v: 37.3, text: '37.3℃ · 미열',  color: '#f97316' },
-                { v: 38.0, text: '38.0℃ · 고열',  color: '#ef4444' },
-                { v: 39.0, text: '39.0℃ · 초고열', color: '#7e22ce' }
+                { v: 37.3, text: '37.3℃ 미열',  color: '#f97316' },
+                { v: 38.0, text: '38.0℃ 고열',  color: '#ef4444' },
+                { v: 39.0, text: '39.0℃ 초고열', color: '#7e22ce' }
             ];
 
             lines.forEach(l => {
                 if (l.v <= scales.y.max && l.v >= scales.y.min) {
                     const py = y.getPixelForValue(l.v);
-                    ctx.fillStyle = 'rgba(255,255,255,0.85)';
-                    ctx.fillRect(right + 4, py - 8, 95, 16);
+                    // 배경 흰색 박스 (글자 잘 보이게)
+                    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+                    ctx.fillRect(right + 2, py - 9, 85, 18);
+
                     ctx.fillStyle = l.color;
                     ctx.fillText(l.text, right + 6, py);
                 }
@@ -133,7 +135,6 @@ function renderHeatChart(labels, dataPoints) {
         }
     };
 
-    // 차트 생성
     new Chart(ctx, {
         type: 'line',
         plugins: [temperatureBands, temperatureRightLabels],
@@ -142,13 +143,14 @@ function renderHeatChart(labels, dataPoints) {
             datasets: [
                 {
                     data: dataPoints,
-                    borderColor: '#7f1d1d',
+                    borderColor: '#7f1d1d', // 선 색상: 진한 빨강
                     borderWidth: 2,
-                    tension: 0,
+                    tension: 0.1, // 약간 부드럽게
                     fill: false,
                     pointRadius: 4,
-                    pointBackgroundColor: '#7f1d1d',
-                    pointBorderWidth: 0
+                    pointBackgroundColor: '#ffffff', // 포인트 내부 흰색
+                    pointBorderColor: '#7f1d1d',     // 포인트 테두리
+                    pointBorderWidth: 2
                 },
                 // 기준선 (점선)
                 { data: labels.map(() => 37.3), borderColor: '#f97316', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
@@ -159,15 +161,26 @@ function renderHeatChart(labels, dataPoints) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            layout: { padding: { right: 110 } },
+            layout: { padding: { right: 90 } },
             scales: {
                 y: {
                     min: 35,
                     max: maxTemp,
-                    ticks: { stepSize: 0.5 }
+                    ticks: {
+                        stepSize: 0.5,
+                        color: '#64748b', // [중요] 눈금 글씨색 진하게
+                        font: { family: 'Pretendard', size: 11 }
+                    },
+                    grid: { color: '#e2e8f0' } // 격자 선 연하게
                 },
                 x: {
-                    ticks: { autoSkip: true, maxTicksLimit: 6 }
+                    ticks: {
+                        autoSkip: true,
+                        maxTicksLimit: 6,
+                        color: '#64748b', // [중요] 날짜 글씨색 진하게
+                        font: { family: 'Pretendard', size: 11 }
+                    },
+                    grid: { display: false }
                 }
             },
             plugins: {

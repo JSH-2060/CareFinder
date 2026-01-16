@@ -1,104 +1,312 @@
 @charset "UTF-8";
 
+/* ==================================================
+   1. GLOBAL & RESET
+   ================================================== */
+:root {
+    /* [수정] 체온 테마: 강렬한 레드 & 진한 주황 그라데이션 */
+    --heat-gradient: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
+    --heat-color: #DC2626; /* 진한 빨강 */
+
+    --bg-color: #f8fafc;
+    --text-main: #1e293b;
+    --text-sub: #64748b;
+    --radius-md: 16px;
+    --radius-full: 999px;
+}
+
 body {
-    background: #f0f2f5;
+    margin: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* 배경: 은은한 붉은빛 오로라 (키 성장 구조 동일) */
+    background-color: var(--bg-color);
+    background-image:
+            radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.15) 0%, transparent 60%), /* Red */
+            radial-gradient(circle at 80% 10%, rgba(245, 158, 11, 0.1) 0%, transparent 50%); /* Amber */
+    background-attachment: fixed;
+
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ==================================================
+   2. 헤더 스타일 (브랜드 공통 - 네이비)
+   ================================================== */
+.header {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    /* absolute로 배치하여 키 성장과 동일하게 맞춤 */
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+
+    /* 브랜드 공통 색상 */
+    background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     font-family: 'Pretendard', sans-serif;
 }
 
-.card-box {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    margin-bottom: 20px;
-    border: none;
+.logo {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 24px; font-weight: 700; color: white;
+    cursor: pointer; text-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
-.avatar-circle {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 18px;
-    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+.logo-icon { font-size: 28px; color: #fff; opacity: 0.95; }
+
+.header-right { display: flex; align-items: center; }
+.user-menu { display: flex; align-items: center; gap: 12px; }
+
+.user-name {
+    color: white; font-weight: 600; font-size: 15px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px; border-radius: 20px;
+    backdrop-filter: blur(5px);
 }
+
+.logout-btn-header {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 8px 16px; border-radius: 20px;
+    cursor: pointer; font-size: 14px; font-weight: 600;
+    transition: all 0.2s;
+}
+
+.logout-btn-header:hover {
+    background: white;
+    color: #1E3A8A;
+}
+
+/* ==================================================
+   3. 레이아웃
+   ================================================== */
+.heat-page {
+    /* 헤더 높이(70px) + 여유(10px) = 80px (키 성장과 동일) */
+    padding-top: 80px;
+    padding-bottom: 60px;
+}
+
+/* ==================================================
+   4. 카드 박스 (키 성장과 100% 동일한 흰색 카드)
+   ================================================== */
+.card-box {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    margin-bottom: 24px;
+    padding: 24px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-box:hover {
+    transform: translateY(-2px);
+    border-color: rgba(239, 68, 68, 0.3); /* 호버시 살짝 레드 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
+    0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+/* ==================================================
+   5. 아바타
+   ================================================== */
+.avatar-circle {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--heat-gradient); /* 레드 */
+    color: #ffffff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 20px;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+/* ==================================================
+   6. 탭 네비게이션
+   ================================================== */
+.nav-pills { gap: 8px; margin-bottom: 10px; }
 
 .nav-pills .nav-link {
-    color: #64748b;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 12px;
-    transition: 0.2s;
+    color: var(--text-sub) !important;
+    font-weight: 600; font-size: 0.95rem;
+    padding: 8px 16px; border-radius: var(--radius-full);
+    transition: all 0.2s; background: transparent;
 }
 
-.nav-pills .nav-link:hover {
-    background: #f1f5f9;
-    color: #334155;
-}
+.nav-pills .nav-link:hover { background: #f1f5f9; color: var(--text-main) !important; }
 
+/* 탭 활성화 색상 (체온 테마) */
 .nav-pills .nav-link.active {
-    background-color: #3b82f6;
-    color: white;
-    box-shadow: 0 4px 6px rgba(59, 130, 246, 0.25);
+    background: var(--heat-gradient);
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+}
+
+/* ==================================================
+   7. 프로필 버튼 (캡슐 스타일)
+   ================================================== */
+.profile-wrap {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 6px 8px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 
 .profile-sm-btn {
-    font-size: 0.85rem;
-    padding: 6px 14px;
-    border-radius: 99px;
-    border: 1px solid #e2e8f0;
-    background: white;
-    text-decoration: none;
-    color: #475569;
-    transition: all 0.2s;
-    font-weight: 500;
+    display: flex; align-items: center; justify-content: center;
+    height: 36px; padding: 0 18px;
+    border-radius: 999px;
+    font-size: 0.9rem; font-weight: 600; color: #64748b;
+    text-decoration: none; transition: all 0.3s;
+    background: transparent;
 }
 
 .profile-sm-btn:hover {
-    background: #f8fafc;
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--heat-color);
+    transform: translateY(-2px);
 }
 
+/* 활성화된 버튼 */
 .profile-sm-btn.active {
-    background: #eff6ff;
-    border-color: #3b82f6;
-    color: #2563eb;
+    background: var(--heat-gradient);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     font-weight: 700;
-    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
 }
 
-.table th {
+/* ==================================================
+   8. 버튼 스타일
+   ================================================== */
+/* 메인 버튼 (체온 기록 추가용) - .btn-heat */
+.btn-heat {
+    background: var(--heat-gradient);
+    color: white; font-weight: 700; border: none;
+    padding: 8px 20px; border-radius: var(--radius-full);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-heat:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05); color: white;
+}
+
+/* 홈/취소 버튼 (유리 스타일) */
+.btn-outline-secondary, .btn-outline-light {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #475569; backdrop-filter: blur(4px);
+    transition: all 0.2s; border-radius: 999px;
     font-weight: 600;
-    color: #64748b;
-    background: #f8fafc;
-    border-bottom: 2px solid #e2e8f0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
-.table td {
+.btn-outline-secondary:hover, .btn-outline-light:hover {
+    background: #ffffff;
+    color: var(--heat-color); border-color: var(--heat-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* ==================================================
+   9. 테이블 & 모달
+   ================================================== */
+.table { margin-bottom: 0; }
+
+.table thead th {
+    background: rgba(241, 245, 249, 0.5);
+    color: #64748b; font-weight: 700; font-size: 0.85rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05); padding: 12px;
+}
+
+.table tbody tr {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.table tbody tr:hover { background: #fef2f2 !important; } /* 호버시 아주 연한 빨강 */
+
+.table tbody td {
+    border-bottom: 1px solid #f1f5f9; padding: 16px 12px;
+    font-size: 0.9rem; color: var(--text-main);
     vertical-align: middle;
 }
+.table tbody tr:last-child td { border-bottom: none; }
 
-tr.record-row {
-    transition: 0.2s;
+/* 상태 배지 (가독성: 진한 배경 + 흰 글씨) */
+.badge-custom {
+    padding: 6px 12px; border-radius: 8px;
+    font-weight: 700; font-size: 0.85rem;
+    color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.bg-danger-super { background-color: #7E22CE; }
+.bg-danger-high  { background-color: #EF4444; }
+.bg-warning-mild { background-color: #F97316; }
+.bg-success-ok   { background-color: #10B981; }
+.bg-info-low     { background-color: #3B82F6; }
+
+/* 삭제 버튼 (키 성장 스타일 아웃라인 유지, 호버 시 빨강) */
+.btn-delete-row {
+    border: 1px solid #fee2e2; color: #ef4444; background: #fff;
+    padding: 4px 10px; font-size: 12px; border-radius: 6px;
+}
+.btn-delete-row:hover {
+    background: #fee2e2; color: #b91c1c; border-color: #fee2e2;
 }
 
-tr.record-row:hover {
-    background-color: #f8fafc !important;
-    cursor: pointer;
-    transform: scale(1.005);
+/* 모달 */
+.modal-content {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.15);
+}
+.modal-header {
+    background: rgba(255, 255, 255, 0.4);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3); color: #1e293b;
+}
+.modal-footer { border-top: none; background: transparent; }
+
+.form-control {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.08); border-radius: 12px; padding: 12px;
+}
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #EF4444; /* Red Focus */
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-.flatpickr-calendar {
-    z-index: 9999 !important;
+/* 모달 내 버튼 */
+.modal .btn-heat {
+    background: var(--heat-gradient);
+    color: white; font-weight: 700; border: none;
+    padding: 10px 20px; border-radius: var(--radius-full);
+    width: 100%; transition: all 0.2s;
+}
+.modal .btn-heat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+
+/* ==================================================
+   10. 아이콘 그라데이션 (체온 전용)
+   ================================================== */
+/* 체온계 아이콘 - 빨강 */
+.icon-red {
+    background: linear-gradient(135deg, #F87171 0%, #DC2626 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    font-size: 1.3rem; filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.2));
 }
 
-.badge-custom { padding: 6px 10px; border-radius: 8px; font-weight: 500; font-size: 0.8rem; }
-.bg-danger-super { background-color: #f3e8ff; color: #7e22ce; border: 1px solid #d8b4fe; }
-.bg-danger-high  { background-color: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; }
-.bg-warning-mild { background-color: #fff7ed; color: #f97316; border: 1px solid #fdba74; }
-.bg-success-ok   { background-color: #dcfce7; color: #16a34a; border: 1px solid #86efac; }
-.bg-info-low     { background-color: #eff6ff; color: #3b82f6; border: 1px solid #93c5fd; }
+.flatpickr-calendar { z-index: 1060 !important; }
