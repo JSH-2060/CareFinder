@@ -546,7 +546,18 @@
             );
         }
     }
-    requestLocation();
+    // requestLocation();
+    document.addEventListener("DOMContentLoaded", () => {
+        const afterReload = sessionStorage.getItem("afterPermissionReload");
+
+        if (afterReload === "true") {
+            console.log("권한 허용 후 새로고침 감지 → 위치 요청");
+            sessionStorage.removeItem("afterPermissionReload");
+            requestLocation();
+        } else {
+            requestLocation();
+        }
+    });
 
     // 위치 정보 권한 거부 시에 주소 검색
     function searchAddress() {
@@ -580,9 +591,36 @@
         });
     }
 
+    // function retryLocation() {
+    //     document.getElementById('addressModal').style.display = 'none';
+    //     requestLocation();
+    // }
+
     function retryLocation() {
-        document.getElementById('addressModal').style.display = 'none';
-        requestLocation();
+        if (!navigator.permissions) {
+            sessionStorage.setItem("afterPermissionReload", "true");
+            location.reload();
+            return;
+        }
+
+        navigator.permissions.query({ name: 'geolocation' }).then(result => {
+            if (result.state === 'granted' || result.state === 'prompt') {
+                // ⭐ 허용 or 팝업 가능 상태 → 새로고침 플래그 저장
+                sessionStorage.setItem("afterPermissionReload", "true");
+                location.reload();
+            } else if (result.state === 'denied') {
+                showLocationPermissionGuide();
+            }
+        });
+    }
+
+    function showLocationPermissionGuide() {
+        alert(
+            "위치 권한이 차단되어 있습니다.\n\n" +
+            "브라우저 주소창 왼쪽 i 아이콘을 클릭한 후\n" +
+            "위치 권한을 '허용'으로 변경해주세요.\n\n" +
+            "변경 후 페이지를 새로고침 해주세요."
+        );
     }
 
     document.addEventListener("DOMContentLoaded", function() {
