@@ -22,7 +22,7 @@ public class GoogleController {
     private final GoogleService googleService;
     private final GoogleLoginService googleLoginService;
 
-    // ✅ application.properties 값 주입
+    // application.properties 값 주입
     @Value("${google.oauth.client-id}")
     private String clientId;
 
@@ -69,7 +69,7 @@ public class GoogleController {
         GoogleMemberDTO loginUser =
                 googleLoginService.loginOrJoin(userInfo, people);
 
-        // ✅ 세션 통일
+        // 세션
         session.setAttribute("userPk", loginUser.getMno());
         session.setAttribute("userName", loginUser.getName());
         session.setAttribute("loginType", "구글");
