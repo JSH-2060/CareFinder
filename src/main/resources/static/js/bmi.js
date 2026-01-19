@@ -1,6 +1,4 @@
-/* =========================
-   날짜 검색 토글
-   ========================= */
+/* 날짜 검색 토글 */
 function toggleDateSearch() {
     const box = document.getElementById('dateSearchBox');
     if (!box) return;
@@ -10,9 +8,7 @@ function toggleDateSearch() {
         : 'none';
 }
 
-/* =========================
-   BMI 수정 모달
-   ========================= */
+/* BMI 수정 모달 */
 function openBmiEditModal(bmiNo, height, weight) {
     const bmiNoInput = document.getElementById('editBmiNo');
     const heightInput = document.getElementById('editHeight');

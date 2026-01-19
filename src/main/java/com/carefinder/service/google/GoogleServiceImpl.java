@@ -28,7 +28,7 @@ public class GoogleServiceImpl implements GoogleService {
     @Value("${google.oauth.redirect-uri}")
     private String REDIRECT_URI;
 
-    // 1️⃣ access_token 발급
+    // access_token 발급
     @Override
     public GoogleTokenResponseDTO getAccessToken(String code) {
 
@@ -65,7 +65,7 @@ public class GoogleServiceImpl implements GoogleService {
         }
     }
 
-    // 2️⃣ OpenID userinfo
+    // OpenID userinfo
     @Override
     public GoogleUserInfoDTO getUserInfo(String accessToken) {
 
@@ -97,7 +97,7 @@ public class GoogleServiceImpl implements GoogleService {
         }
     }
 
-    // 3️⃣ People API (⭐ DTO 분리)
+    // People API
     @Override
     public GooglePeopleDTO getPeopleInfo(String accessToken) {
 
@@ -161,12 +161,12 @@ public class GoogleServiceImpl implements GoogleService {
                     String birth =
                             String.format("%04d%02d%02d", year, month, day);
 
-                    people.setBirth(birth);   // 또는 userInfo.setBirth(birth);
+                    people.setBirth(birth);
                 }
             }
 
         } catch (Exception e) {
-            // People API 실패는 무시
+
         }
 
         return people;

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/mypage.css">
 </head>
 <body>
-
+<%-- 헤더 --%>
 <div class="header">
     <div class="logo" onclick="location.href='/'">
         <i class="fa-solid fa-laptop-medical logo-icon"></i>

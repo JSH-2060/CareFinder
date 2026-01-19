@@ -1,13 +1,10 @@
 @charset "UTF-8";
 
-/* ==================================================
-   1. GLOBAL & RESET
-   ================================================== */
 :root {
-    /* 브랜드 공통 테마 (헤더용) */
+    /* 브랜드 공통 테마 헤더 */
     --brand-gradient: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
 
-    /* BMI 전용 테마: 활기찬 오렌지 & 코랄 */
+    /* BMI 전용 테마 */
     --bmi-gradient: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
     --bmi-color: #ea580c; /* 진한 주황색 (텍스트용) */
 
@@ -22,7 +19,7 @@ body {
     margin: 0;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
-    /* [수정] 배경 조명을 BMI 테마(따뜻한 오렌지빛)로 변경 */
+    /* 배경 조명을 BMI 테마 */
     background-color: var(--bg-color);
     background-image:
             radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.15) 0%, transparent 60%), /* Orange 빛 */
@@ -35,9 +32,7 @@ body {
 
 a { text-decoration: none; color: inherit; }
 
-/* ==================================================
-   2. 헤더 스타일 (브랜드 통일 - 진한 네이비)
-   ================================================== */
+/* 헤더 스타일  */
 .header {
     height: 70px;
     display: flex;
@@ -49,7 +44,7 @@ a { text-decoration: none; color: inherit; }
     top: 0; left: 0; right: 0;
     z-index: 1000;
 
-    /* ✨ 헤더는 브랜드 공통색(Navy)으로 통일! */
+    /*  헤더 브랜드 공통색 */
     background: var(--brand-gradient);
 
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -106,17 +101,13 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* ==================================================
-   3. 레이아웃
-   ================================================== */
+/* 3. 레이아웃 */
 .bmi-page {
     padding-top: 80px; /* 헤더 공간 */
     padding-bottom: 60px;
 }
 
-/* ==================================================
-   4. 카드 박스 (Glass Effect)
-   ================================================== */
+/* 카드 박스  */
 .card-box {
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -135,13 +126,11 @@ a { text-decoration: none; color: inherit; }
     0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* ==================================================
-   5. 아바타 & 탭
-   ================================================== */
+/*  아바타 & 탭 */
 .avatar-circle-bmi {
     width: 52px; height: 52px; border-radius: 50%;
 
-    /* 아바타는 브랜드(Navy) or BMI(Orange)? -> BMI 테마로 변경! */
+    /* 아바타 BMI 테마 */
     background: var(--bmi-gradient);
 
     color: #ffffff;
@@ -160,16 +149,14 @@ a { text-decoration: none; color: inherit; }
 }
 .nav-pills .nav-link:hover { background: #f1f5f9; color: var(--text-main) !important; }
 
-/* 탭 활성화 (BMI 테마 적용) */
+/* 탭 활성화 */
 .nav-pills .nav-link.bmi-active {
     background: var(--bmi-gradient);
     color: #ffffff !important;
     box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
 }
 
-/* ==================================================
-   6. 프로필 버튼 (캡슐)
-   ================================================== */
+/* 프로필 버튼  */
 .profile-wrap {
     display: inline-flex; align-items: center; gap: 8px;
     background: rgba(255, 255, 255, 0.5);
@@ -191,7 +178,7 @@ a { text-decoration: none; color: inherit; }
     transform: translateY(-2px);
 }
 
-/* 활성화된 버튼 (BMI 테마) */
+/* 활성화된 버튼 BMI 테마 */
 .profile-sm-btn.active {
     background: var(--bmi-gradient);
     color: #ffffff;
@@ -199,10 +186,8 @@ a { text-decoration: none; color: inherit; }
     font-weight: 700;
 }
 
-/* ==================================================
-   7. 버튼 스타일
-   ================================================== */
-/* 메인 버튼 (BMI 계산) - 주황색 테마 적용! */
+/* 버튼 스타일 */
+/* 메인 버튼 (BMI 계산) */
 .btn-bmi {
     background: var(--bmi-gradient);
     color: white; font-weight: 700; border: none;
@@ -231,7 +216,7 @@ a { text-decoration: none; color: inherit; }
 
 /* 날짜 검색 박스 내부 버튼 */
 #dateSearchBox .btn-secondary {
-    background: var(--bmi-gradient); /* 여기도 주황색 */
+    background: var(--bmi-gradient);
     border: none; font-weight: 700;
     padding: 8px 20px; border-radius: 999px; transition: transform 0.2s;
 }
@@ -240,9 +225,7 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
 }
 
-/* ==================================================
-   8. BMI 시각화 (막대, 포인터)
-   ================================================== */
+/* BMI 시각화 (막대, 포인터) */
 .bmi-wrapper {
     position: relative; margin-top: 35px; margin-bottom: 10px; padding: 0 10px;
 }
@@ -264,7 +247,7 @@ a { text-decoration: none; color: inherit; }
 .seg-4 { background: #fb923c; }
 .seg-5 { background: #f87171; }
 
-/* 말풍선 포인터 (브랜드 컬러 Navy로 유지 - 신뢰감) */
+/* 말풍선 포인터 */
 .bmi-pointer {
     position: absolute; top: -40px; transform: translateX(-50%); z-index: 10;
     display: flex; flex-direction: column; align-items: center;
@@ -287,9 +270,8 @@ a { text-decoration: none; color: inherit; }
 .bmi-cuts .cut { position: absolute; transform: translateX(-50%); font-size: 11px; color: #94a3b8; top: 0; }
 .bmi-desc { text-align: right; font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
-/* ==================================================
-   9. 테이블 & 모달
-   ================================================== */
+/* 테이블 & 모달 */
+/* 테이블 */
 .table { margin-bottom: 0; }
 .table thead th {
     background: rgba(241, 245, 249, 0.5); color: #64748b;
@@ -351,9 +333,7 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
 }
 
-/* ==================================================
-   10. 아이콘 그라데이션 (JSP에서 사용하는 클래스들)
-   ================================================== */
+/* 아이콘 그라데이션*/
 /* 체중계: 주황색 */
 .icon-orange {
     background: linear-gradient(135deg, #FDBA74 0%, #EA580C 100%);

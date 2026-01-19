@@ -26,14 +26,15 @@ public class BmiDTO {
     private String result;
     private Boolean adult;
     private Double bmiPercent;
-    // ===== BMI 기준 표시용 =====
+
+    //  BMI 기준 표시용
     private Double cut1;
     private Double cut2;
     private Double cut3;
     private Double cut4; // 성인만 사용 (고도비만 기준)
 
 
-    // 화면용 (자동 계산)
+    // 화면용
     public String getDateStr() {
         if (recordDate == null) return "";
         return recordDate.format(DateTimeFormatter.ofPattern("MM-dd HH:mm"));

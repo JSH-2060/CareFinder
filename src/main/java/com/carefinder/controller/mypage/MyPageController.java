@@ -18,9 +18,7 @@ public class MyPageController {
 
     private final MemberAccountService memberAccountService;
 
-    /**
-     * 마이페이지 메인 화면
-     */
+    /* 마이페이지 메인 화면 */
     @GetMapping("")
     public String mypage(HttpSession session, Model model) {
 
@@ -39,11 +37,7 @@ public class MyPageController {
         return "mypage/mypage";
     }
 
-    /**
-     * 마이페이지 정보 수정
-     * - 이름
-     * - 휴대폰 번호
-     */
+    /* 마이페이지 정보 수정 */
     @PostMapping("/update")
     public String updateMyInfo(
             @RequestParam String name,
@@ -55,16 +49,16 @@ public class MyPageController {
             return "redirect:/Nologin";
         }
 
-        // 1️⃣ 숫자만 남기기
+        // 숫자만 남기기
         String onlyNumber = phonenumber.replaceAll("[^0-9]", "");
 
-        // 2️⃣ 11자리 검증
+        // 11자리 검증
         if (!onlyNumber.matches("^01[0-9]{9}$")) {
-            // 간단 처리 (실서비스면 에러 페이지/메시지)
+
             return "redirect:/mypage?error=phone";
         }
 
-        // 3️⃣ 하이픈 포맷 적용 (010-1234-5678)
+        // 하이픈 포맷 (010-1234-5678)
         String formattedPhone =
                 onlyNumber.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
 
@@ -75,16 +69,14 @@ public class MyPageController {
 
         memberAccountService.updateAccountInfo(dto);
 
-        // 헤더 이름 즉시 반영
+
         session.setAttribute("userName", name);
 
-        // 저장 후 홈으로 이동
+
         return "redirect:/";
     }
 
-    /**
-     * 회원 탈퇴
-     */
+    /* 회원 탈퇴 */
     @GetMapping("/withdraw")
     public String withdraw(HttpSession session) {
 

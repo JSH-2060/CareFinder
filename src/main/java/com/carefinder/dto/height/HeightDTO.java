@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class HeightDTO {
 
     private Long heightId;
-    private Long mno;          // ✅ 추가
+    private Long mno;
     private Integer childId;
     private Double height;
     private LocalDate recordDate;

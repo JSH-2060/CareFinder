@@ -27,7 +27,7 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
             throw new IllegalStateException("Google sub is null");
         }
 
-        // 1️⃣ 이미 구글 연동
+        // 구글 연동
         GoogleMemberDTO member =
                 googleMemberDAO.findByGoogleId(userInfo.getSub());
 
@@ -39,7 +39,7 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
             return member;
         }
 
-        // 2️⃣ 기존 일반 회원
+        // 기존 일반 회원
         member = googleMemberDAO.findByEmail(userInfo.getEmail());
 
         if (member != null) {
@@ -57,7 +57,7 @@ public class GoogleLoginServiceImpl implements GoogleLoginService {
             return member;
         }
 
-        // 3️⃣ 신규 회원
+        // 신규 회원
         GoogleMemberDTO newMember = new GoogleMemberDTO();
 
         newMember.setId("G_" + userInfo.getSub());
