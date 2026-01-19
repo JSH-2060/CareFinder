@@ -1,6 +1,4 @@
-/* =========================================
-   1. Flatpickr (달력) 초기화
-   ========================================= */
+/* 1. 달력(Flatpickr) 초기화 */
 const fpConfig = {
     locale: "ko",
     dateFormat: "Y-m-d",
@@ -11,9 +9,7 @@ const addPicker = flatpickr("#addModal .datepicker", fpConfig);
 const editPicker = flatpickr("#editModal .datepicker", fpConfig);
 
 
-/* =========================================
-   2. 수정 모달 열기 함수
-   ========================================= */
+/* 2. 수정 모달 열기 함수 */
 function openEditModal(row) {
     const no = row.getAttribute('data-no');
     const name = row.getAttribute('data-name');
@@ -30,9 +26,7 @@ function openEditModal(row) {
 }
 
 
-/* =========================================
-   3. 차트 그리기 (흰색 배경 대응)
-   ========================================= */
+/* 3. 차트 */
 function renderVaccineChart(doneCnt, yetCnt) {
     const ctx = document.getElementById('vaccineChart');
     if (!ctx) return;
@@ -43,7 +37,6 @@ function renderVaccineChart(doneCnt, yetCnt) {
             labels: ['접종 완료', '미접종'],
             datasets: [{
                 data: [doneCnt, yetCnt],
-                // 선명한 파랑, 선명한 빨강 (가독성 UP)
                 backgroundColor: ['#2563EB', '#EF4444'],
                 borderWidth: 0,
                 hoverOffset: 6

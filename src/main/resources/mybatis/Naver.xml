@@ -27,11 +27,11 @@
 
     <update id="updateNaverMember" parameterType="com.carefinder.dto.member.NaverDTO">
         UPDATE member
-        SET naver_id = #{naver_id},
-            gender = #{gender},
-            age = #{age},
+        SET naver_id    = #{naver_id},
+            gender      = #{gender},
+            age         = #{age},
             phonenumber = #{mobile},
-            birth = #{birth}
+            birth       = #{birth}
         WHERE mno = #{mno}
     </update>
 

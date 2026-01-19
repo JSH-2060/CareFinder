@@ -1,5 +1,4 @@
 window.onload = function() {
-    // URL 파라미터 확인 (로그인 실패/취소 메시지 처리)
     const urlParams = new URLSearchParams(window.location.search);
     const message = urlParams.get('message');
 

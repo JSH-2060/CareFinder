@@ -20,17 +20,17 @@ public class ChildService {
         return childDAO.getChildList(mno);
     }
 
-    // ★ [추가 1] ID로 아이 정보 한 명 가져오기
+    // 1. ID로 아이 정보 한 명 가져오기
     public ChildDTO getChildById(Integer childId) {
         return childDAO.selectOne(childId);
     }
 
-    // ★ [추가 2] 수정
+    // 2. 수정
     public void updateChild(ChildDTO dto) {
         childDAO.update(dto);
     }
 
-    // ★ [추가 3] 삭제
+    // 3. 삭제
     public void deleteChild(Integer childId) {
         childDAO.delete(childId);
     }

@@ -2,7 +2,7 @@ package com.carefinder.controller.naver;
 
 import jakarta.servlet.http.HttpSession;
 import com.carefinder.service.naver.NaverService;
-import com.carefinder.dto.member.NaverDTO; // ★ member 패키지 확인
+import com.carefinder.dto.member.NaverDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -23,6 +23,7 @@ public class NaverController {
         return "redirect:" + naverService.getAuthorizationUrl(session);
     }
 
+    // 네이버 콜백 함수
     @GetMapping("/callback")
     public String callback(@RequestParam(required = false) String code,
                            @RequestParam(required = false) String state,
@@ -38,13 +39,11 @@ public class NaverController {
         String token = naverService.getAccessToken(code, state);
         if (token == null) return "redirect:/Nologin";
 
-        // ★ 여기서도 dto.naver... 라고 적힌거 수정함
         NaverDTO naverDTO = naverService.getUserProfile(token);
         if (naverDTO == null) return "redirect:/Nologin";
 
         naverDTO.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
 
-        // ★ 여기도 수정
         NaverDTO loginMember = naverService.loginOrJoin(naverDTO);
 
         if (loginMember != null) {

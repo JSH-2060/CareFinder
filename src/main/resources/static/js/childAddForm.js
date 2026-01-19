@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // 1. 오늘 날짜 구하기
     const today = new Date();
 
-    // 2. 120년 전 날짜 계산 (만 나이 120세 제한)
+    // 2. 만 나이 120세 제한
     const minDate = new Date();
     minDate.setFullYear(today.getFullYear() - 120);
 

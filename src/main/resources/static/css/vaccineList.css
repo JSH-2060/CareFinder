@@ -1,12 +1,8 @@
 @charset "UTF-8";
 
-/* ==================================================
-   1. GLOBAL & RESET (백신 테마: Trustworthy Blue)
-   ================================================== */
 :root {
-    /* [수정] 백신 전용 블루 그라디언트 */
     --vaccine-gradient: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
-    --vaccine-color: #1D4ED8; /* 진한 파랑 */
+    --vaccine-color: #1D4ED8;
 
     --bg-color: #f8fafc;
     --text-main: #1e293b;
@@ -19,7 +15,6 @@ body {
     margin: 0;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
-    /* 배경: 맑은 블루 오로라 */
     background-color: var(--bg-color);
     background-image:
             radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%), /* Blue */
@@ -32,9 +27,7 @@ body {
 
 a { text-decoration: none; color: inherit; }
 
-/* ==================================================
-   2. 헤더 스타일 (브랜드 공통 - 네이비)
-   ================================================== */
+/* 2. 헤더 스타일 */
 .header {
     height: 70px;
     display: flex;
@@ -45,7 +38,6 @@ a { text-decoration: none; color: inherit; }
     top: 0; left: 0; right: 0;
     z-index: 1000;
 
-    /* 브랜드 공통 색상 */
     background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     font-family: 'Pretendard', sans-serif;
@@ -83,17 +75,13 @@ a { text-decoration: none; color: inherit; }
     color: #1E3A8A;
 }
 
-/* ==================================================
-   3. 레이아웃
-   ================================================== */
+/*  3. 레이아웃 */
 .container {
     padding-top: 80px; /* 헤더 여백 (키 성장과 동일) */
     padding-bottom: 60px;
 }
 
-/* ==================================================
-   4. 카드 박스 (키 성장과 100% 동일한 구조)
-   ================================================== */
+/* 4. 카드 박스 */
 .card-box {
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -112,19 +100,14 @@ a { text-decoration: none; color: inherit; }
     0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* 차트/요약용 흰색 배경 명시 */
 .card-box.white {
     background: #ffffff;
     color: #1e293b;
 }
-/* 요약 카드 내부 텍스트 강제 색상 (배경이 흰색이라 진해야 함) */
 .card-box.white h6, .card-box.white li, .card-box.white span {
     color: #1e293b;
 }
-
-/* ==================================================
-   5. 아바타
-   ================================================== */
+/* 5. 아바타 */
 .avatar-circle {
     width: 52px; height: 52px; border-radius: 50%;
     background: var(--vaccine-gradient); /* 블루 */
@@ -134,9 +117,7 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
 }
 
-/* ==================================================
-   6. 탭 네비게이션
-   ================================================== */
+/* 6. 네비게이션 */
 .nav-pills { gap: 8px; margin-bottom: 10px; }
 
 .nav-pills .nav-link {
@@ -148,16 +129,13 @@ a { text-decoration: none; color: inherit; }
 
 .nav-pills .nav-link:hover { background: #f1f5f9; color: var(--text-main) !important; }
 
-/* 탭 활성화 (블루 테마) */
 .nav-pills .nav-link.active {
     background: var(--vaccine-gradient);
     color: #ffffff !important;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
-/* ==================================================
-   7. 프로필 버튼 (캡슐 스타일)
-   ================================================== */
+/* 7. 프로필  */
 .profile-wrap {
     display: inline-flex; align-items: center; gap: 8px;
     background: rgba(255, 255, 255, 0.5);
@@ -183,7 +161,6 @@ a { text-decoration: none; color: inherit; }
     transform: translateY(-2px);
 }
 
-/* 활성화된 버튼 */
 .profile-sm-btn.active {
     background: var(--vaccine-gradient);
     color: #ffffff;
@@ -191,10 +168,6 @@ a { text-decoration: none; color: inherit; }
     font-weight: 700;
 }
 
-/* ==================================================
-   8. 버튼 스타일
-   ================================================== */
-/* 메인 버튼 (일정 추가) - .btn-vaccine */
 .btn-vaccine-main {
     background: var(--vaccine-gradient);
     color: white; font-weight: 700; border: none;
@@ -208,7 +181,6 @@ a { text-decoration: none; color: inherit; }
     filter: brightness(1.05); color: white;
 }
 
-/* 홈으로 버튼 */
 .btn-outline-secondary, .btn-outline-light {
     background: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -228,9 +200,6 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-/* ==================================================
-   9. 테이블 & 모달
-   ================================================== */
 .table { margin-bottom: 0; }
 
 .table thead th {
@@ -243,7 +212,7 @@ a { text-decoration: none; color: inherit; }
     cursor: pointer;
     transition: background 0.2s;
 }
-.table tbody tr:hover { background: #eff6ff !important; } /* 호버시 연한 파랑 */
+.table tbody tr:hover { background: #eff6ff !important; }
 
 .table tbody td {
     border-bottom: 1px solid #f1f5f9; padding: 16px 12px;
@@ -251,7 +220,6 @@ a { text-decoration: none; color: inherit; }
 }
 .table tbody tr:last-child td { border-bottom: none; }
 
-/* 상태 배지 */
 .badge-status {
     padding: 6px 12px; border-radius: 8px;
     font-weight: 700; font-size: 0.85rem;
@@ -261,7 +229,6 @@ a { text-decoration: none; color: inherit; }
 .badge-yet  { background: #EF4444; } /* 미접종: 빨강 */
 .badge-dday { background: #3B82F6; margin-left: 4px; } /* D-Day: 파랑 */
 
-/* 액션 버튼 (접종/미접종) */
 .btn-action {
     border: none; border-radius: 8px;
     padding: 6px 12px; font-size: 0.85rem; font-weight: 700;
@@ -277,7 +244,6 @@ a { text-decoration: none; color: inherit; }
 .btn-cancel { background-color: #F59E0B; } /* 미접종 */
 .btn-cancel:hover { background-color: #D97706; }
 
-/* 삭제 버튼 (아웃라인 스타일) */
 .btn-delete-row {
     border: 1px solid #fee2e2; color: #ef4444; background: #fff;
     padding: 6px 12px; font-size: 0.85rem; border-radius: 8px;
@@ -316,9 +282,7 @@ a { text-decoration: none; color: inherit; }
 
 .modal .btn-primary { width: 100%; height: 50px; font-size: 16px; background: var(--vaccine-gradient); border: none; }
 
-/* ==================================================
-   10. 아이콘 그라데이션 (백신 전용)
-   ================================================== */
+/*  10. 아이콘 */
 .icon-blue {
     background: linear-gradient(135deg, #60A5FA 0%, #2563EB 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
