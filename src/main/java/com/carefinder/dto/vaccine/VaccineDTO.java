@@ -13,12 +13,10 @@ public class VaccineDTO {
     private String childName;
     private String vaccineName;
     private Integer chasu;
-    private String inoculationDate; // YYYY-MM-DD
+    private String inoculationDate;
     private String status;          // Y or N
-    private Long dayDiff;       // 접종여부 (Y/N)
+    private Long dayDiff;       // 접종여부
 
-    // ★ D-Day 계산 로직 (JSP에서 편하게 쓰기 위해 DTO에 기능 추가)
-    // inoculationDate를 기준으로 오늘과의 날짜 차이를 계산
     public long getDayDiff() {
         if (inoculationDate == null || inoculationDate.isEmpty()) return 0;
         try {

@@ -1,12 +1,7 @@
 @charset "UTF-8";
-
-/* ==================================================
-   1. GLOBAL & RESET
-   ================================================== */
 :root {
-    /* [수정] 체온 테마: 강렬한 레드 & 진한 주황 그라데이션 */
     --heat-gradient: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
-    --heat-color: #DC2626; /* 진한 빨강 */
+    --heat-color: #DC2626;
 
     --bg-color: #f8fafc;
     --text-main: #1e293b;
@@ -19,7 +14,6 @@ body {
     margin: 0;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
 
-    /* 배경: 은은한 붉은빛 오로라 (키 성장 구조 동일) */
     background-color: var(--bg-color);
     background-image:
             radial-gradient(circle at 50% 0%, rgba(239, 68, 68, 0.15) 0%, transparent 60%), /* Red */
@@ -31,22 +25,16 @@ body {
 }
 
 a { text-decoration: none; color: inherit; }
-
-/* ==================================================
-   2. 헤더 스타일 (브랜드 공통 - 네이비)
-   ================================================== */
 .header {
     height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 24px;
-    /* absolute로 배치하여 키 성장과 동일하게 맞춤 */
     position: absolute;
     top: 0; left: 0; right: 0;
     z-index: 1000;
 
-    /* 브랜드 공통 색상 */
     background: linear-gradient(135deg, #1E3A8A 0%, #10B981 100%);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     font-family: 'Pretendard', sans-serif;
@@ -83,19 +71,10 @@ a { text-decoration: none; color: inherit; }
     background: white;
     color: #1E3A8A;
 }
-
-/* ==================================================
-   3. 레이아웃
-   ================================================== */
 .heat-page {
-    /* 헤더 높이(70px) + 여유(10px) = 80px (키 성장과 동일) */
     padding-top: 80px;
     padding-bottom: 60px;
 }
-
-/* ==================================================
-   4. 카드 박스 (키 성장과 100% 동일한 흰색 카드)
-   ================================================== */
 .card-box {
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.06);
@@ -113,10 +92,6 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08),
     0 4px 6px -2px rgba(0, 0, 0, 0.04);
 }
-
-/* ==================================================
-   5. 아바타
-   ================================================== */
 .avatar-circle {
     width: 52px; height: 52px; border-radius: 50%;
     background: var(--heat-gradient); /* 레드 */
@@ -125,10 +100,6 @@ a { text-decoration: none; color: inherit; }
     font-weight: 800; font-size: 20px;
     box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
-
-/* ==================================================
-   6. 탭 네비게이션
-   ================================================== */
 .nav-pills { gap: 8px; margin-bottom: 10px; }
 
 .nav-pills .nav-link {
@@ -140,16 +111,11 @@ a { text-decoration: none; color: inherit; }
 
 .nav-pills .nav-link:hover { background: #f1f5f9; color: var(--text-main) !important; }
 
-/* 탭 활성화 색상 (체온 테마) */
 .nav-pills .nav-link.active {
     background: var(--heat-gradient);
     color: #ffffff !important;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
 }
-
-/* ==================================================
-   7. 프로필 버튼 (캡슐 스타일)
-   ================================================== */
 .profile-wrap {
     display: inline-flex; align-items: center; gap: 8px;
     background: rgba(255, 255, 255, 0.5);
@@ -175,18 +141,12 @@ a { text-decoration: none; color: inherit; }
     transform: translateY(-2px);
 }
 
-/* 활성화된 버튼 */
 .profile-sm-btn.active {
     background: var(--heat-gradient);
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     font-weight: 700;
 }
-
-/* ==================================================
-   8. 버튼 스타일
-   ================================================== */
-/* 메인 버튼 (체온 기록 추가용) - .btn-heat */
 .btn-heat {
     background: var(--heat-gradient);
     color: white; font-weight: 700; border: none;
@@ -200,7 +160,6 @@ a { text-decoration: none; color: inherit; }
     filter: brightness(1.05); color: white;
 }
 
-/* 홈/취소 버튼 (유리 스타일) */
 .btn-outline-secondary, .btn-outline-light {
     background: rgba(255, 255, 255, 0.5);
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -220,10 +179,6 @@ a { text-decoration: none; color: inherit; }
     transform: translateY(-1px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
-
-/* ==================================================
-   9. 테이블 & 모달
-   ================================================== */
 .table { margin-bottom: 0; }
 
 .table thead th {
@@ -236,7 +191,7 @@ a { text-decoration: none; color: inherit; }
     cursor: pointer;
     transition: background 0.2s;
 }
-.table tbody tr:hover { background: #fef2f2 !important; } /* 호버시 아주 연한 빨강 */
+.table tbody tr:hover { background: #fef2f2 !important; }
 
 .table tbody td {
     border-bottom: 1px solid #f1f5f9; padding: 16px 12px;
@@ -245,7 +200,6 @@ a { text-decoration: none; color: inherit; }
 }
 .table tbody tr:last-child td { border-bottom: none; }
 
-/* 상태 배지 (가독성: 진한 배경 + 흰 글씨) */
 .badge-custom {
     padding: 6px 12px; border-radius: 8px;
     font-weight: 700; font-size: 0.85rem;
@@ -258,7 +212,6 @@ a { text-decoration: none; color: inherit; }
 .bg-success-ok   { background-color: #10B981; }
 .bg-info-low     { background-color: #3B82F6; }
 
-/* 삭제 버튼 (키 성장 스타일 아웃라인 유지, 호버 시 빨강) */
 .btn-delete-row {
     border: 1px solid #fee2e2; color: #ef4444; background: #fff;
     padding: 4px 10px; font-size: 12px; border-radius: 6px;
@@ -267,7 +220,6 @@ a { text-decoration: none; color: inherit; }
     background: #fee2e2; color: #b91c1c; border-color: #fee2e2;
 }
 
-/* 모달 */
 .modal-content {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -290,7 +242,6 @@ a { text-decoration: none; color: inherit; }
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
 }
 
-/* 모달 내 버튼 */
 .modal .btn-heat {
     background: var(--heat-gradient);
     color: white; font-weight: 700; border: none;
@@ -299,10 +250,6 @@ a { text-decoration: none; color: inherit; }
 }
 .modal .btn-heat:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
 
-/* ==================================================
-   10. 아이콘 그라데이션 (체온 전용)
-   ================================================== */
-/* 체온계 아이콘 - 빨강 */
 .icon-red {
     background: linear-gradient(135deg, #F87171 0%, #DC2626 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;

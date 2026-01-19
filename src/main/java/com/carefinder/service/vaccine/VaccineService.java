@@ -6,25 +6,25 @@ import java.util.List;
 
 public interface VaccineService {
 
-    // 1. 조회: memberId(String) -> mno(Long), childName(String) -> childId(Integer)
+    // 1. 조회
     List<VaccineDTO> getVaccineList(Long mno, Integer childId);
 
     // 2. 추가
     void addVaccine(VaccineDTO dto);
     VaccineDTO getVaccine(Long vaccineNo);
 
-    // 3. 접종 완료 처리: vacId(int) -> vaccineNo(Long)
+    // 3. 접종 완료
     Integer completeVaccination(Long vaccineNo);
 
-    // 4. 삭제: vacId(int) -> vaccineNo(Long)
+    // 4. 삭제
     Integer deleteVaccine(Long vaccineNo);
 
     // 5. 수정
     void updateVaccine(VaccineDTO dto);
 
-    // 6. 접종 취소: vacId(int) -> vaccineNo(Long)
+    // 6. 접종 취소
     Integer cancelVaccination(Long vaccineNo);
 
-    // 7. 자녀목록 가져오기
+    // 7. 자녀목록
     List<ChildDTO> getChildList(Long mno);
 }

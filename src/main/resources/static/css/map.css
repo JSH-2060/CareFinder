@@ -179,10 +179,25 @@ body {
     font-size: 13px;
     color: #555;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    /*flex-wrap: wrap;*/
+    /*align-items: center;*/
+    /*gap: 6px;*/
     margin-top: 4px;
+}
+
+.meta-top {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.meta-address {
+    font-size: 12.5px;
+    color: #777;
+    line-height: 1.4;
 }
 
 /* ✅ 아코디언 화살표 */
@@ -407,8 +422,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
-    gap: 20px;
+    padding: 16px 18px;
+    gap: 14px;
 }
 
 /* 상세 카드 헤더 정렬 */
@@ -439,13 +454,14 @@ body {
 
 .detail-title {
     margin: 0;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 800;
     color: #1a1a1a;
     display: flex;
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    line-height: 1.2;
 }
 
 .detail-badge {
@@ -515,14 +531,14 @@ body {
 }
 
 .drive-btn {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: linear-gradient(135deg, #12a982 0%, #10af7c 100%);
     border: none;
     color: white;
     transition: all 0.3s ease;
 }
 .drive-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(240, 98, 146, 0.4);
+    box-shadow: 0 4px 8px rgb(12, 115, 85);
     filter: brightness(1.05);
 }
 
@@ -551,7 +567,7 @@ body {
    경로 정보 표시 영역
 ========================= */
 .route-info {
-    padding: 15px 24px;
+    padding: 10px 14px;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -605,7 +621,7 @@ body {
 .address-input-wrap {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .address-input-wrap input {
@@ -613,18 +629,18 @@ body {
     padding: 14px 16px;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
-    font-size: 15px;
+    font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
 }
 
 .address-input-wrap input:focus {
-    border-color: #4a7c59;
+    border-color: #1b5087;
 }
 
 .address-input-wrap button, .retry-location-btn {
     padding: 14px 24px;
-    background: linear-gradient(135deg, #4a7c59 0%, #3d6849 100%);
+    background: linear-gradient(135deg, #378ba8 0%, #1b5087 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -657,7 +673,7 @@ body {
 
 .address-result-item:hover {
     background: #f5f8ff;
-    border-color: #4a7c59;
+    border-color: #378ba8;
 }
 
 .address-result-item .addr-name {
@@ -863,12 +879,6 @@ body {
     font-size: 28px;
     cursor: pointer;
 
-    /* 강한 네온 그림자 */
-    box-shadow:
-            0 8px 32px rgba(37, 99, 235, 0.5),
-            0 0 20px rgba(37, 99, 235, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
-
     z-index: 100;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -878,15 +888,9 @@ body {
 }
 
 .home-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
     transform: translateY(-6px) scale(1.05);
-
-    box-shadow:
-            0 12px 40px rgba(37, 99, 235, 0.7),
-            0 0 40px rgba(37, 99, 235, 0.6),
-            0 0 60px rgba(37, 99, 235, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    background: #f5f5f5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .home-btn:active {
@@ -895,11 +899,13 @@ body {
 
 /* 리스트 패널이 열려있을 때 홈 버튼 위치 조정 */
 #listPanel:not(.closed) ~ #map .home-btn {
-    left: calc(320px + 70px);
+    left: calc(320px + 30px);
+    top: calc(320px + 500px);
 }
 
 #listPanel.closed ~ #map .home-btn {
-    left: 70px;
+    left: 50px;
+    top: 820px;
 }
 
 .hover-label {

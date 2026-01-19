@@ -6,7 +6,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Pretendard', sans-serif; /* 폰트 통일 */
+    font-family: 'Pretendard', sans-serif;
 }
 
 .login-card {
@@ -19,7 +19,7 @@ body {
 }
 
 .naver-btn {
-    display: block; /* a태그 블록 처리 */
+    display: block;
     transition: opacity 0.2s;
 }
 

@@ -32,19 +32,16 @@
 
 
     <insert id="insertHeat">
-        INSERT INTO heat (
-            mno,
-            childId,
-            temperature,
-            memo,
-            recordDate
-        ) VALUES (
-                     #{mno},
-                     #{childId, jdbcType=INTEGER},
-                     #{temperature},
-                     #{memo},
-                     #{recordDate}
-                 )
+        INSERT INTO heat (mno,
+                          childId,
+                          temperature,
+                          memo,
+                          recordDate)
+        VALUES (#{mno},
+                #{childId, jdbcType=INTEGER},
+                #{temperature},
+                #{memo},
+                #{recordDate})
     </insert>
 
     <delete id="deleteHeat">
