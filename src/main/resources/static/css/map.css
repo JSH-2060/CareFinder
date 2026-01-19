@@ -621,7 +621,7 @@ body {
 .address-input-wrap {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .address-input-wrap input {
@@ -629,18 +629,18 @@ body {
     padding: 14px 16px;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
-    font-size: 15px;
+    font-size: 14px;
     outline: none;
     transition: border-color 0.2s;
 }
 
 .address-input-wrap input:focus {
-    border-color: #4a7c59;
+    border-color: #1b5087;
 }
 
 .address-input-wrap button, .retry-location-btn {
     padding: 14px 24px;
-    background: linear-gradient(135deg, #4a7c59 0%, #3d6849 100%);
+    background: linear-gradient(135deg, #378ba8 0%, #1b5087 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -673,7 +673,7 @@ body {
 
 .address-result-item:hover {
     background: #f5f8ff;
-    border-color: #4a7c59;
+    border-color: #378ba8;
 }
 
 .address-result-item .addr-name {
