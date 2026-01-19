@@ -113,6 +113,9 @@ async function showWalkingRoute(place, map, myPos) {
 // 🚗 카카오 자동차 경로
 // ========================================
 async function showDrivingRoute(place, map, myPos) {
+
+    let path = [];
+
     // 토글 체크
     if (activeRouteType === 'driving') {
         clearRoute();
@@ -157,8 +160,6 @@ async function showDrivingRoute(place, map, myPos) {
         }
 
         const data = await response.json();
-
-        let path = [];
 
         if (data.routes && data.routes.length > 0) {
             const route = data.routes[0];
