@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        console.log("🔍 검색 시작:", message);
+        console.log("검색 시작:", message);
 
         try {
             const res = await fetch("/api/chat", {
@@ -37,10 +37,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
             console.log(" AI 응답:", data);
 
-            /* =========================
-               사용자 입력 / 챗봇 메시지 저장
-            ========================= */
-            // 1️⃣ 사용자가 입력한 증상 저장
+
+            // 사용자가 입력한 증상 저장
             sessionStorage.setItem("symptom", message);
 
             if (data.message) {
@@ -50,9 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
             // 자동 클릭 플래그 저장
             sessionStorage.setItem("isAiSearch", "true");
 
-            /* =========================
-               이동 로직
-            ========================= */
+
+               // 이동 로직
             if (data.action === "MOVE_EMERGENCY") {
                 location.href = "/map?mode=emergency";
                 return;
@@ -68,10 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            /* =========================
-               ❗ 증상 아님 → toast 피드백
-            ========================= */
-            /*data.summary 변경전*/
+
+            // 증상 아닐때 toast 피드백
             showToast(data.message || "증상을 통해 쉽고 빠르게 근처 병원을 안내해드리는 검색창입니다. 증상을 입력해주세요. Q&A 궁금하신점은 우측 하단 챗봇을 이용해주세요!");
 
         } catch (e) {

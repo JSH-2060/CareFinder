@@ -24,11 +24,11 @@ public class RegisterServiceImple implements RegisterService {
             return "이미 사용 중인 아이디입니다.";
         }
 
-        // 2. 전화번호 유효성 검사 (먼저 체크)
+        // 2. 전화번호 유효성 검사
         if (member.getPhonenumber() != null && !member.getPhonenumber().isEmpty()) {
             String formattedPhone = formatPhoneNumber(member.getPhonenumber());
 
-            // 형식이 틀리면 에러 메시지 리턴 (DB 저장 안 함)
+            // 형식이 틀리면 에러 메시지 리턴 DB 저장 안 함
             if (formattedPhone == null) {
                 return "휴대폰 번호 형식이 올바르지 않습니다. (010-0000-0000 또는 숫자 11자리)";
             }
@@ -38,7 +38,7 @@ public class RegisterServiceImple implements RegisterService {
             return "휴대폰 번호를 입력해주세요.";
         }
 
-        // 3. 생년월일 → 나이 계산
+        // 3. 생년월일  나이 계산
         if (member.getBirth() != null && !member.getBirth().isEmpty()) {
             LocalDate birthDate = LocalDate.parse(member.getBirth());
             int age = Period.between(birthDate, LocalDate.now()).getYears();
@@ -50,7 +50,7 @@ public class RegisterServiceImple implements RegisterService {
             member.setEmail(member.getEmailId() + member.getEmailDomain());
         }
 
-        // 5. 비밀번호 암호화
+        // 비밀번호 암호화
         String encodedPw = passwordEncoder.encode(member.getPw());
         member.setPw(encodedPw);
 
