@@ -9,21 +9,13 @@
     <meta charset="UTF-8">
     <title>BMI 기록</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- BMI CSS -->
     <link rel="stylesheet" href="/css/bmi.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
 
 </head>
 <body>
@@ -45,10 +37,10 @@
     </div>
 </div>
 
-<!-- ================= 컨텐츠 ================= -->
+
 <div class="container bmi-page" style="max-width:900px;">
 
-        <!-- ===== 기존 상단 카드 ===== -->
+        <!-- 기존 상단 카드 -->
         <div class="card-box p-3">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="d-flex align-items-center gap-3">
@@ -67,10 +59,10 @@
                 </div>
             </div>
 
-        <!-- ===== 탭 + 프로필 ===== -->
+
         <div class="d-flex justify-content-between align-items-end border-top pt-3">
 
-            <!-- ✅ 탭 : 체온 → 백신 → BMI -->
+            <!-- 체온 → 백신 → BMI -> 키성장 -->
             <ul class="nav nav-pills">
                 <li class="nav-item">
                     <c:url value="/heat/list" var="heatUrl">
@@ -102,7 +94,7 @@
 
             </ul>
 
-            <!-- ✅ 프로필 : 나 → 자녀 → + -->
+            <!-- 프로필 -->
             <div class="profile-wrap d-flex gap-1">
 
                 <!-- 나 -->
@@ -127,13 +119,13 @@
                     </a>
                 </c:forEach>
 
-                <!-- 추가 -->
+                <!-- 자녀추가 -->
                 <a href="/child/add" class="profile-sm-btn">+</a>
             </div>
         </div>
     </div>
 
-    <!-- ===== 버튼 (기존 BMI 기능 그대로) ===== -->
+    <!-- 버튼  -->
     <div class="d-flex justify-content-end gap-2 my-3">
         <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">
             <i class="fa-solid fa-calendar-days"></i> 날짜 검색
@@ -150,12 +142,11 @@
         </button>
     </div>
 
-    <!-- ===== 날짜 검색 박스 ===== -->
+    <!-- 날짜 검색 -->
     <div id="dateSearchBox" style="display:none;">
         <div class="card-box p-3 mb-3">
             <form action="/bmi/list" method="get" class="row g-2 align-items-end">
 
-                <!-- child 유지 -->
                 <input type="hidden" name="childId" value="${childId}">
                 <input type="hidden" name="childName" value="${childName}">
 
@@ -186,7 +177,7 @@
         </div>
     </div>
 
-    <!-- ===== 그래프 ===== -->
+    <!--  BMI 그래프  -->
     <div class="card-box p-3">
         <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
             <i class="fa-solid fa-weight-scale icon-orange"></i>
@@ -204,7 +195,7 @@
     </div>
 
     <c:if test="${not empty bmiList}">
-        <!-- 사이드바 기준 BMI: 현재 화면(날짜검색 반영) 기준 최신 -->
+        <!-- 사이드바 기준 BMI: 현재 화면(날짜검색 반영) 기준 -->
         <c:set var="sidebarBmi" value="${bmiList[0]}" />
 
         <!-- 성인 -->
@@ -276,7 +267,7 @@
         </c:if>
     </c:if>
 
-    <!-- ===== 테이블 ===== -->
+    <!-- 기록 테이블 -->
     <div class="card-box p-3">
         <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
             <i class="fa-solid fa-clipboard-list icon-green"></i>
@@ -347,14 +338,14 @@
 
 <c:if test="${not empty graphList}">
     <script>
-        // 1. 데이터 배열 준비
+        // 데이터 배열
         const labels = [];
         const values = [];
-        const results = []; // 판정 결과(정상, 비만 등)를 담을 배열
+        const results = []; // 판정 결과(정상, 비만 등) 배열
 
-        // JSP 반복문으로 데이터 채우기
+
         <c:forEach var="b" items="${graphList}">
-        // 🟢 수정 후: 자르지 않고 "날짜+시간" 그대로 다 보여주기
+
         labels.push("${b.dateStr}");
 
         values.push(${b.bmiValue});
@@ -365,7 +356,7 @@
         values.reverse();
         results.reverse();
 
-        // (점 색깔 로직은 그대로 유지)
+        // 판정결과 색
         const pointColors = results.map(res => {
             if (res === '저체중') return '#3b82f6';
             if (res === '정상') return '#10b981';
@@ -408,7 +399,7 @@
     </script>
 </c:if>
 
-<!-- ===== BMI 입력 모달 ===== -->
+<!-- BMI 입력 모달 -->
 <div class="modal fade" id="bmiModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <form action="/bmi/insert" method="post" class="w-100">
@@ -421,7 +412,7 @@
 
                 <div class="modal-body">
 
-                    <!-- 이전 기록 안내 -->
+
                     <c:if test="${not empty latestBmi}">
                         <div class="text-muted text-center mb-3" style="font-size:12px;">
                             이전 기록(${latestBmi.recordDate}) 기준으로 자동 입력되었습니다.
@@ -471,7 +462,7 @@
     </div>
 </div>
 
-<!-- ===== BMI 수정 모달 ===== -->
+<!-- BMI 수정 모달  -->
 <div class="modal fade" id="bmiEditModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <form action="/bmi/update" method="post" class="w-100">
