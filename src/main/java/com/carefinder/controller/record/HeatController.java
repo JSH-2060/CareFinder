@@ -1,6 +1,5 @@
 package com.carefinder.controller.record;
 
-import com.carefinder.dto.child.ChildDTO;
 import com.carefinder.dto.heat.HeatDTO;
 import com.carefinder.service.heat.HeatService;
 import jakarta.servlet.http.HttpSession;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Controller
 @RequestMapping("/heat")
@@ -59,7 +57,7 @@ public class HeatController {
         if (mno == null) return "redirect:/Nologin";
 
         dto.setMno(mno);
-        dto.setRecordDate(LocalDateTime.now()); // ✅ 자동 시간
+        dto.setRecordDate(LocalDateTime.now());
 
         if (dto.getChildId() != null && dto.getChildId() == 0) {
             dto.setChildId(null);

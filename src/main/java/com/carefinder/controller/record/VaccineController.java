@@ -78,22 +78,17 @@ public class VaccineController {
         return "redirect:/vaccine/list";
     }
 
-    // ★ [핵심 수정] 토글 기능이 작동 안 했던 이유를 해결했습니다.
     @GetMapping("/complete")
     public String complete(@RequestParam("vaccineNo") Long vaccineNo,
                            @RequestParam("childId") Integer childId,
                            @RequestParam("childName") String childName,
                            RedirectAttributes rttr) {
 
-        // 1. 현재 상태 확인
         VaccineDTO vaccine = vaccineService.getVaccine(vaccineNo);
 
-        // 2. 상태에 따라 확실한 메서드 호출 (XML updateStatus 사용)
         if ("Y".equals(vaccine.getStatus())) {
-            // 이미 접종완료 상태면 -> 취소(미접종) 처리
             vaccineService.cancelVaccination(vaccineNo);
         } else {
-            // 미접종 상태면 -> 접종완료 처리
             vaccineService.completeVaccination(vaccineNo);
         }
 
@@ -111,7 +106,7 @@ public class VaccineController {
 
         model.addAttribute("childList", vaccineService.getChildList(mno));
 
-        // ★ JSP에 bmi 모드 전달
+        // mode 전달
         model.addAttribute("mode", "vaccine");
 
         return "heat/childSelect";

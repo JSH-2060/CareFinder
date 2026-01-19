@@ -18,7 +18,7 @@ public interface HeatDAO {
     // 3. 체온 삭제
     void deleteHeat(Long heatNo);
 
-    // 4. 자녀 목록 조회 (상단 프로필바용)
+    // 4. 자녀 목록 조회
     List<ChildDTO> selectChildList(Long mno);
 
     // 5. 체온 기록 수정
