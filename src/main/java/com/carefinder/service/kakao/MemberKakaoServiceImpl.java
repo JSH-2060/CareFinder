@@ -32,6 +32,7 @@ public class MemberKakaoServiceImpl implements MemberKakaoService {
             member.setName((String) kakaoUser.get("nickname"));
             member.setEmail((String) kakaoUser.get("email"));
             member.setGender((String) kakaoUser.get("gender"));
+
             //생년월일 데이터
             String pnum = calculatePhoneNumber((String) kakaoUser.get("phoneNumber"));
             member.setPhonenumber(pnum);
@@ -94,6 +95,7 @@ public class MemberKakaoServiceImpl implements MemberKakaoService {
 
         return Period.between(birthDate, today).getYears();
     }
+
     //핸드폰 번호 형식 변환 +82 10-6803-2060 일 경우
     public String calculatePhoneNumber(String p){
         String [] arr = p.split(" ");

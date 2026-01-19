@@ -4,8 +4,6 @@ public class ChatRequest {
 
     private String message;
 
-    public ChatRequest() {} // 🔥 필수
-
     public String getMessage() {
         return message;
     }

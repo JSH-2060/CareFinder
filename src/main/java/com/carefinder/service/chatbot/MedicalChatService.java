@@ -29,13 +29,13 @@ public class MedicalChatService {
     public ChatResponse ask(String userMessage) {
 
         try {
-            // 1️⃣ 프롬프트 파일 로드
+            //프롬프트 파일 로드
             String promptTemplate = loadPrompt("prompts/medical_prompt.txt");
 
-            // 2️⃣ 사용자 메시지 치환
+            //사용자 메시지 변환
             String prompt = promptTemplate.replace("{{USER_MESSAGE}}", userMessage);
 
-            // 3️⃣ OpenAI 요청 JSON 생성
+            //OpenAI 요청 JSON 생성
             ObjectNode root = mapper.createObjectNode();
             root.put("model", model);
 
@@ -49,7 +49,7 @@ public class MedicalChatService {
 
             String requestBody = mapper.writeValueAsString(root);
 
-            // 4️⃣ OpenAI 요청
+            // OpenAI 요청
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.openai.com/v1/chat/completions"))
                     .header("Authorization", "Bearer " + apiKey)
@@ -61,20 +61,20 @@ public class MedicalChatService {
             HttpResponse<String> response =
                     client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // 🔥 OpenAI 원본 응답 로그 (문제 생기면 여기 보면 됨)
-            System.out.println("🔥 OpenAI RAW RESPONSE ↓↓↓");
+            //확인용
+            System.out.println("OpenAI RAW RESPONSE");
             System.out.println(response.body());
 
-            // 5️⃣ 응답 파싱 (🔥 안정화 버전)
+            //응답 파싱
             JsonNode res = mapper.readTree(response.body());
 
-// 🔥 OpenAI 에러 응답 방어 (rate limit 등)
+            //에러 응답 처리
             if (res.has("error")) {
                 String errorMessage = res.path("error")
                         .path("message")
                         .asText("AI 호출 중 오류가 발생했습니다.");
 
-                System.out.println("❌ OpenAI ERROR = " + errorMessage);
+                System.out.println("OpenAI ERROR = " + errorMessage);
 
                 return new ChatResponse(
                         "요청이 많아 잠시 후 다시 시도해주세요.",
@@ -85,28 +85,29 @@ public class MedicalChatService {
                 );
             }
 
-
+            //첫번째 초이스
             JsonNode choice0 = res.path("choices").path(0);
             if (choice0.isMissingNode()) {
                 throw new RuntimeException("choices[0] 없음");
             }
 
-
+            //gpt 실제 응답 저장
             String content = choice0.path("message").path("content").asText();
 
+            //json 형태로 응답하지 않을경우
             if (content == null || !content.trim().startsWith("{")) {
                 throw new RuntimeException("AI 응답이 JSON이 아님:\n" + content);
             }
 
             JsonNode result = mapper.readTree(content);
 
-            // 6️⃣ 결과 추출
+            //결과 추출
             String target = result.path("target").asText("human");
             String dept = result.path("dept").asText(null);
             boolean emergency = result.path("emergency").asBoolean(false);
             String summary = result.path("summary").asText("병원을 추천드립니다.");
 
-            // 7️⃣ 액션 결정
+            //액션 결정
             String action;
             if ("pet".equals(target)) {
                 action = "MOVE_VET";
@@ -130,7 +131,7 @@ public class MedicalChatService {
         }
     }
 
-    // 📄 프롬프트 파일 읽기
+    //프롬프트 파일 읽기
     private String loadPrompt(String path) throws Exception {
         ClassPathResource resource = new ClassPathResource(path);
         return new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);

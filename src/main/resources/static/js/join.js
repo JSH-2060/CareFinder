@@ -3,28 +3,28 @@ let isIdSafe = false;
 
 $(document).ready(function () {
 
-    /* [추가] 1. 만 120세 제한 날짜 계산 */
+    /*만 120세 제한 날짜 계산 */
     const today = new Date();
     const minDate = new Date();
     minDate.setFullYear(today.getFullYear() - 120); // 오늘 기준 120년 전
 
-    /* 2. flatpickr 적용 */
+    /* flatpickr 적용 */
     flatpickr(".datepicker", {
         locale: "ko",
         dateFormat: "Y-m-d",
         maxDate: "today",     // 미래 날짜 선택 불가
-        minDate: minDate,     // [추가] 120년 전까지만 선택 가능
+        minDate: minDate,     // 120년 전까지만 선택 가능
         disableMobile: true,
-        allowInput: false     // (선택사항) 직접 타이핑 방지
+        allowInput: false     // 직접 타이핑 방지
     });
 
-    /* [중요] 페이지 로딩 시, 서버에서 받아온 아이디가 이미 있다면 중복 체크 통과 처리 */
+    /*페이지 로딩 시, 서버에서 받아온 아이디가 이미 있다면 중복 체크 통과 처리 */
     if ($("#id").val() && $("#id").val().trim() !== "") {
         isIdSafe = true;
         $(".submit-btn").prop("disabled", false);
     }
 
-    /* 3. 아이디 중복 체크 */
+    /*아이디 중복 체크 */
     $("#id").on("keyup", function () {
         const userId = $(this).val().trim();
 
@@ -40,7 +40,7 @@ $(document).ready(function () {
             type: "GET",
             data: { id: userId },
             success: function (response) {
-                // 서버 응답이 문자열 "1" 인지, 숫자 1인지에 따라 유연하게 대처 권장
+                // 서버 응답이 문자열 1 인지, 숫자 1인지에 따라 유연하게 대처 권장
                 if (response == "1") {
                     $("#msg").html("<span class='txt-red'>이미 사용 중인 아이디입니다.</span>");
                     isIdSafe = false;
@@ -57,7 +57,7 @@ $(document).ready(function () {
         });
     });
 
-    /* 4. 휴대폰 번호 수정 시 에러 메시지 삭제 */
+    /* 휴대폰 번호 수정 시 에러 메시지 삭제 */
     $('input[name="phonenumber"]').on('input', function() {
         var val = $(this).val();
         // 숫자만 추출
@@ -69,7 +69,7 @@ $(document).ready(function () {
         }
     });
 
-    /* 5. 최종 제출 검사 */
+    /* 최종 제출 검사 */
     $("#joinForm").on("submit", function () {
         if (!isIdSafe) {
             alert("아이디 중복 확인을 해주세요.");

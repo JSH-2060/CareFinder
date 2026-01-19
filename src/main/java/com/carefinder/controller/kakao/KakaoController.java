@@ -38,7 +38,7 @@ public class KakaoController {
 
         MemberKakaoDTO member = memberService.kakaoLogin(kakaoUser);
 
-        // ✅ 세션 구조 통일
+        //세션 구조 통일
         session.setAttribute("userPk", member.getMno()); // PK 저장
         session.setAttribute("loginUser", member);       // DTO 전체 저장
 

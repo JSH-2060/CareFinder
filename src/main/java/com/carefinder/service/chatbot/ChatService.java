@@ -26,23 +26,22 @@ public class ChatService {
     public ChatResponse ask(String userMessage) {
         try {
             String intent = intentService.detectIntent(userMessage);
-            System.out.println("🧠 DETECTED INTENT = " + intent);
+            System.out.println("DETECTED INTENT = " + intent);
 
             return switch (intent) {
-
+                    //증상 입력시 추천
                 case "RECOMMEND" ->
                         medicalChatService.ask(userMessage);
-
+                    //의료 관련 질문 할때
                 case "MEDICAL_QNA" ->
                         qnaChatService.ask(userMessage);
-
+                    //기능 질문시
                 case "SERVICE_INFO" ->
                         serviceInfoChatService.ask(userMessage);
 
-                // ⭐ 핵심 수정 포인트
                 default ->
                         new ChatResponse(
-                                "증상을 입력하셔야 병원을 추천해드릴 수 있어요 🙂\n" +
+                                "증상을 입력하셔야 병원을 추천해드릴 수 있어요.\n" +
                                         "예: \"넘어졌는데 무릎이 아파요\"",
                                 null,   // action 없음 → 프론트에서 맵 이동 안 함
                                 null,

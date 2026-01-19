@@ -61,7 +61,7 @@ public class ServiceInfoChatService {
                     .path("content")
                     .asText("서비스 정보를 제공하지 못했어요.");
 
-            // ✅ 이동 없음 / 액션 없음
+            //이동 없음 / 액션 없음
             return new ChatResponse(
                     content,
                     null,

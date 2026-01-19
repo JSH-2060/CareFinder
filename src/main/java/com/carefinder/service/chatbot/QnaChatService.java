@@ -26,10 +26,14 @@ public class QnaChatService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
+    //의료/건강 관련 질문에 대해 답변반환 메서드
     public ChatResponse ask(String userMessage) {
 
         try {
+            //Q&A 프롬프트 로드
             String promptTemplate = loadPrompt("prompts/medical_qna_prompt.txt");
+
+            //사용자 질문 저장
             String prompt = promptTemplate.replace("{{USER_MESSAGE}}", userMessage);
 
             ObjectNode root = mapper.createObjectNode();
@@ -42,6 +46,8 @@ public class QnaChatService {
             messages.add(msg);
             root.set("messages", messages);
 
+
+            //api 호출
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.openai.com/v1/chat/completions"))
                     .header("Authorization", "Bearer " + apiKey)
@@ -61,8 +67,7 @@ public class QnaChatService {
                     .path("content")
                     .asText("설명을 제공하지 못했어요.");
 
-            // ✅ JSON 파싱 안 함
-            // ✅ action / dept 없음
+
             return new ChatResponse(
                     content,
                     null,
@@ -83,6 +88,7 @@ public class QnaChatService {
         }
     }
 
+    //프롬프트 로드
     private String loadPrompt(String path) throws Exception {
         ClassPathResource r = new ClassPathResource(path);
         return new String(r.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
