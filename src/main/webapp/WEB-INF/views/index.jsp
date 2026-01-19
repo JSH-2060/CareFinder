@@ -151,13 +151,15 @@
             <button type="button" class="dept-btn" onclick="goMap('내과')">내과</button>
             <button type="button" class="dept-btn" onclick="goMap('이비인후과')">이비인후과</button>
             <button type="button" class="dept-btn" onclick="goMap('정형외과')">정형외과</button>
+            <button type="button" class="dept-btn" onclick="goMap('성형외과')">성형외과</button>
             <button type="button" class="dept-btn" onclick="goMap('소아청소년과')">소아과</button>
             <button type="button" class="dept-btn" onclick="goMap('피부과')">피부과</button>
             <button type="button" class="dept-btn" onclick="goMap('안과')">안과</button>
             <button type="button" class="dept-btn" onclick="goMap('치과')">치과</button>
             <button type="button" class="dept-btn" onclick="goMap('산부인과')">산부인과</button>
             <button type="button" class="dept-btn" onclick="goMap('비뇨의학과')">비뇨기과</button>
-            <button type="button" class="dept-btn" onclick="goMap('정신건강의학과')">정신과</button>
+            <button type="button" class="dept-btn" onclick="goMap('신경과')">신경과</button>
+            <button type="button" class="dept-btn" onclick="goMap('정신건강의학과')">정신건강의학과</button>
         </div>
         <button type="button" class="main-btn" style="padding: 10px; font-size: 14px; background: #64748b;" onclick="goMap('')">전체 병원 보기</button>
         <button type="button" class="modal-close" onclick="closeModal('departmentModal')">취소</button>

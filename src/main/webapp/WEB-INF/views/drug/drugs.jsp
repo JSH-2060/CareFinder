@@ -21,23 +21,19 @@
     <h1> 의약품 정보 검색</h1>
 
     <div class="search-container">
-        <!-- 이름 검색 -->
         <div class="search-box">
             <input type="text" id="searchInput" placeholder="의약품 이름을 입력하세요 (예: 타이레놀)" onkeypress="if(event.key==='Enter') searchDrug()">
             <button onclick="searchDrug()">검색</button>
         </div>
 
-        <!-- 모양 검색 토글 버튼 -->
         <button class="shape-toggle-btn" onclick="toggleShapeSearch()">
             <span id="toggleIcon">▼</span> 약 모양으로 찾기
         </button>
 
-        <!-- 모양 검색 폼 (접혀있음) -->
         <div id="shapeSearchForm" class="shape-search-form">
             <div class="shape-form-title">약의 특징을 선택하세요</div>
 
             <div class="shape-form-grid">
-                <!-- 모양 선택 -->
                 <div class="form-group">
                     <label>모양</label>
                     <select id="shapeSelect">
@@ -56,7 +52,6 @@
                     </select>
                 </div>
 
-                <!-- 색상 선택 -->
                 <div class="form-group">
                     <label>색상</label>
                     <select id="colorSelect">
@@ -80,7 +75,6 @@
                     </select>
                 </div>
 
-                <!-- 각인 입력 -->
                 <div class="form-group full-width">
                     <label>각인 (약에 적힌 글자)</label>
                     <input type="text" id="printInput" placeholder="예: kd, LA, 500">
@@ -93,7 +87,6 @@
 
     <div id="result"></div>
 
-    <!-- 📰 뉴스 섹션 -->
     <div class="news-section">
         <h2> 건강 뉴스</h2>
         <div id="newsList">
@@ -103,7 +96,6 @@
 </div>
 
 <script>
-    // 로딩 HTML 생성 함수
     function getLoadingHtml() {
         return '<div class="loading">' +
             '<img src="/img/loading_circle.gif" alt="로딩중">' +
@@ -111,24 +103,22 @@
             '</div>';
     }
 
-    // 모양 검색 폼 토글
     function toggleShapeSearch() {
         var form = document.getElementById('shapeSearchForm');
         var icon = document.getElementById('toggleIcon');
-        var button = document.querySelector('.shape-toggle-btn'); // 이 줄 추가
+        var button = document.querySelector('.shape-toggle-btn');
 
         if (form.classList.contains('open')) {
             form.classList.remove('open');
-            button.classList.remove('active'); // 이 줄 추가
+            button.classList.remove('active');
             icon.textContent = '▼';
         } else {
             form.classList.add('open');
-            button.classList.add('active'); // 이 줄 추가
+            button.classList.add('active');
             icon.textContent = '▲';
         }
     }
 
-    // 기존 이름 검색 기능
     function searchDrug() {
         var keyword = document.getElementById('searchInput').value.trim();
 
@@ -227,7 +217,6 @@
             });
     }
 
-    // 모양으로 검색 기능
     function searchByShape() {
         var shape = document.getElementById('shapeSelect').value;
         var color = document.getElementById('colorSelect').value;
@@ -331,7 +320,6 @@
             });
     }
 
-    // 뉴스 불러오기 기능
     window.addEventListener('DOMContentLoaded', function() {
         loadDrugNews();
     });
