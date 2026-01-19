@@ -13,14 +13,14 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <%-- 1. 카카오 맵 API --%>
+    <%-- 카카오 맵 API --%>
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapsKey}&libraries=services"></script>
 
-    <%-- 2. 구글 맵 API --%>
+    <%-- 구글 맵 API --%>
     <script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsKey}&libraries=places,geometry"></script>
 
     <script>
-        // 전역 변수 설정
+        // 전역 변수
         const KAKAO_REST_API_KEY = "${kakaoRestKey}";
         const TMAP_APP_KEY = "${tmapAppKey}";
 
@@ -29,7 +29,7 @@
         window.TMAP_APP_KEY = "${tmapAppKey}";
     </script>
 
-    <%-- 3. 커스텀 JS 파일들 --%>
+    <%-- 커스텀 JS 파일 --%>
     <script src="<c:url value='/js/route.js'/>"></script>
     <script src="<c:url value='/js/marker.js'/>"></script>
 
@@ -51,16 +51,14 @@
         <ul id="placeList"></ul>
     </div>
 
-    <!-- ✅ 리스트 접기/펼치기 버튼 -->
+    <!-- 리스트 접기/펼치기 버튼 -->
     <button id="listToggleBtn" class="list-toggle-btn">❮</button>
 
     <div id="map">
-        <!-- ✅ 홈 버튼 -->
-        <button class="home-btn" onclick="location.href='/'" title="메인으로 돌아가기">
-            🏠
-        </button>
+        <!-- 홈 버튼 -->
+        <button class="home-btn" onclick="location.href='/'" title="메인으로 돌아가기">🏠</button>
 
-        <!-- ✅ 내 위치로 돌아가기 버튼 -->
+        <!-- 내 위치로 돌아가기 버튼 -->
         <button class="my-location-btn" id="myLocationBtn" title="내 위치로 이동">
             <img src="/img/UserLocation.png" alt="내 위치">
         </button>
@@ -82,7 +80,7 @@
     </div>
 </div>
 
-<!-- ✅ 하단 상세정보 카드 (영업시간 아코디언 제거됨) -->
+<!-- 하단 상세정보 카드 -->
 <div id="detailCard">
     <div class="detail-card-inner">
         <div class="detail-info-section">
@@ -104,7 +102,7 @@
 
 <div class="address-modal" id="addressModal">
     <div class="address-modal-content">
-        <h2>📍 위치를 설정해주세요</h2>
+        <h2>위치를 설정해주세요</h2>
         <p>위치 권한이 거부되었습니다. 주소를 검색하여 위치를 설정하세요.</p>
 
         <div class="address-input-wrap">
@@ -116,7 +114,7 @@
         <div class="address-results" id="addressResults"></div>
 
         <button class="retry-location-btn" onclick="retryLocation()">
-            🔄 위치 권한 다시 요청
+            위치 권한 다시 요청
         </button>
     </div>
 </div>
