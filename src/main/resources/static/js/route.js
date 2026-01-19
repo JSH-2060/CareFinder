@@ -1,24 +1,19 @@
-// ========================================
 // 길찾기 관련 변수
-// ========================================
 let routeLayers = [];
-let activeRouteType = null;  // 👈 추가: 'walking' | 'driving' | null
+let activeRouteType = null;
 let arrowMarkers = [];
 
-// ========================================
-// 🚶 TMAP 보행자 경로 (도보)
-// ========================================
+// TMAP 보행자 경로 (도보)
 async function showWalkingRoute(place, map, myPos) {
-    // 토글 체크
     if (activeRouteType === 'walking') {
         clearRoute();
         activeRouteType = null;
-        return;  // 경로 지우고 종료
+        return;
     }
 
     if (!myPos) return;
     clearRoute();
-    activeRouteType = 'walking';  // 상태 설정
+    activeRouteType = 'walking';
 
     const url = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json";
     const body = {
@@ -56,6 +51,7 @@ async function showWalkingRoute(place, map, myPos) {
                 }
             });
 
+            // 도보 경로선 디자인
             const layer1 = new kakao.maps.Polyline({
                 path: path,
                 strokeWeight: 9.4,
@@ -79,7 +75,6 @@ async function showWalkingRoute(place, map, myPos) {
             const walkingTime = Math.ceil(totalDist / 67);
             const kcal = (totalDist * 0.04).toFixed(1);
 
-            // UI 업데이트
             const infoHTML = `
                 <div style="padding: 12px; background: linear-gradient(135deg, #378ba8 0%, #1b5087 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
                     <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
@@ -109,14 +104,11 @@ async function showWalkingRoute(place, map, myPos) {
     }
 }
 
-// ========================================
-// 🚗 카카오 자동차 경로
-// ========================================
+// 카카오 자동차 경로
 async function showDrivingRoute(place, map, myPos) {
 
     let path = [];
 
-    // 토글 체크
     if (activeRouteType === 'driving') {
         clearRoute();
         activeRouteType = null;
@@ -125,7 +117,7 @@ async function showDrivingRoute(place, map, myPos) {
 
     if (!myPos) return;
     clearRoute();
-    activeRouteType = 'driving';  // 상태 설정
+    activeRouteType = 'driving';
 
     const url = 'https://apis-navi.kakaomobility.com/v1/waypoints/directions';
     const body = {
@@ -179,7 +171,7 @@ async function showDrivingRoute(place, map, myPos) {
                 });
             });
 
-            // 3중 레이어 경로선
+            // 차량 경로선 디자인
             const layer1 = new kakao.maps.Polyline({
                 path: path,
                 strokeWeight: 9.4,
@@ -200,7 +192,7 @@ async function showDrivingRoute(place, map, myPos) {
 
             // 거리/시간 정보
             const distance = route.summary.distance;
-            const duration = route.summary.duration; // 초 단위
+            const duration = route.summary.duration;
 
             const distText = distance >= 1000
                 ? `${(distance / 1000).toFixed(1)}km`
@@ -211,7 +203,6 @@ async function showDrivingRoute(place, map, myPos) {
                 ? `${Math.floor(timeMinutes / 60)}시간 ${timeMinutes % 60}분`
                 : `${timeMinutes}분`;
 
-            // UI 업데이트
             const infoHTML = `
                 <div style="padding: 12px; background: linear-gradient(135deg, #12a982 0%, #10af7c 100%); border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; color: white;">
                     <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">
@@ -242,9 +233,7 @@ async function showDrivingRoute(place, map, myPos) {
     }
 }
 
-// ========================================
 // 경로 지우기
-// ========================================
 function clearRoute() {
     routeLayers.forEach(l => l.setMap(null));
     routeLayers = [];
@@ -259,9 +248,7 @@ function clearRoute() {
     }
 }
 
-// ========================================
 // 외부 export
-// ========================================
 window.showWalkingRoute = showWalkingRoute;
 window.showDrivingRoute = showDrivingRoute;
 window.clearRoute = clearRoute;
@@ -270,7 +257,7 @@ window.routeModule = {
 };
 
 function getDistanceMeter(p1, p2) {
-    const R = 6371000; // 지구 반지름 (m)
+    const R = 6371000;
     const lat1 = p1.getLat() * Math.PI / 180;
     const lat2 = p2.getLat() * Math.PI / 180;
     const dLat = lat2 - lat1;
@@ -333,8 +320,6 @@ function drawRouteArrows(path, map, mode) {
                         transform:
                             translate(-50%, -70%)
                             rotate(${angle}deg);
-                        /*opacity: 1;*/
-                        /*transform-origin: center center;*/
                         pointer-events: none;
                     "></div>
                 `,
