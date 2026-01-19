@@ -10,6 +10,6 @@ public interface GoogleService {
 
     GoogleUserInfoDTO getUserInfo(String accessToken);
 
-    // ⭐ People API 분리 메서드
+    // People API 분리 메서드
     GooglePeopleDTO getPeopleInfo(String accessToken);
 }

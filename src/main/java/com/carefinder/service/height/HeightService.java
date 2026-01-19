@@ -14,9 +14,7 @@ public class HeightService {
 
     private final HeightDAO heightDAO;
 
-    /**
-     * 키 목록 조회 (부모 + 자녀 공통)
-     */
+    /* 키 목록 조회 (부모 + 자녀 공통) */
     public List<HeightDTO> getList(
             Long mno,
             Integer childId,
@@ -30,37 +28,27 @@ public class HeightService {
         }
     }
 
-    /**
-     * 키 기록 단건 조회 (수정용)
-     */
+    /*키 기록 단건 조회 (수정용) */
     public HeightDTO getById(Long heightId) {
         return heightDAO.findById(heightId);
     }
 
-    /**
-     * 키 기록 저장
-     */
+    /* 키 기록 저장 */
     public void insert(HeightDTO dto) {
         heightDAO.insert(dto);
     }
 
-    /**
-     * 키 기록 수정
-     */
+    /* 키 기록 수정 */
     public void update(HeightDTO dto) {
         heightDAO.update(dto);
     }
 
-    /**
-     * 키 기록 삭제
-     */
+    /* 키 기록 삭제 */
     public void delete(Long heightId) {
         heightDAO.delete(heightId);
     }
 
-    /**
-     * 자녀 목록 (childSelect 재사용용)
-     */
+    /* 자녀 목록 */
     public List<ChildDTO> getChildList(Long mno) {
         return heightDAO.getChildList(mno);
     }
