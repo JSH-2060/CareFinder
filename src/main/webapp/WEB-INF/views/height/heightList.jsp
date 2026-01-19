@@ -26,7 +26,7 @@
 </c:if>
 
 <body>
-
+<%-- 헤더 --%>
 <div class="header">
     <div class="logo" onclick="location.href='/'">
         <i class="fa-solid fa-laptop-medical logo-icon"></i>
@@ -67,6 +67,7 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-end border-top pt-3">
+            <!-- 체온 → 백신 → BMI -> 키성장 -->
             <ul class="nav nav-pills">
                 <li class="nav-item">
                     <a class="nav-link" href="/heat/list?childId=${childId}&childName=${childName}">체온</a>
@@ -81,7 +82,7 @@
                     <a class="nav-link active" href="#">키성장</a>
                 </li>
             </ul>
-
+            <!-- 프로필 -->
             <div class="profile-wrap d-flex gap-1">
                 <a href="/height/list?childId=0&childName=${sessionScope.userName}"
                    class="profile-sm-btn ${childId==0?'active':''}">나</a>
@@ -97,7 +98,7 @@
             </div>
         </div>
     </div>
-
+    <%-- 버튼 --%>
     <div class="d-flex justify-content-end gap-2 my-3">
         <button class="btn btn-outline-secondary btn-sm" onclick="toggleDateSearch()">
             <i class="fa-solid fa-calendar-days"></i> 날짜 검색
@@ -111,7 +112,7 @@
             키 기록 추가
         </button>
     </div>
-
+    <%-- 날짜검색--%>
     <div id="dateSearchBox" style="display:none;">
         <div class="card-box p-3 mb-3">
             <form action="/height/list" method="get" class="row g-2 align-items-end">
@@ -202,7 +203,7 @@
                 labels:labels,
                 datasets:[{
                     data:data,
-                    // 그래프 선: 청록색
+
                     borderColor:'#06b6d4',
                     backgroundColor: 'rgba(6, 182, 212, 0.1)',
                     borderWidth: 3, tension:0.3, fill:true,

@@ -1,6 +1,4 @@
-/* =========================================
-   1. Flatpickr (달력) 초기화
-   ========================================= */
+/* 1. 달력(Flatpickr) 초기화 */
 const fpConfig = {
     locale: "ko",
     dateFormat: "Y-m-d H:i",
@@ -10,14 +8,11 @@ const fpConfig = {
     allowInput: true
 };
 
-// 모달 내부의 datepicker들을 초기화
 const addPicker = flatpickr("#addModal .datepicker", fpConfig);
 const editPicker = flatpickr("#editModal .datepicker", fpConfig);
 
 
-/* =========================================
-   2. 유효성 검사 (체온 범위 제한)
-   ========================================= */
+/* 2. 체온 범위 제한 */
 function validateForm(form) {
     const tempInput = form.querySelector('input[name="temperature"]');
     const val = parseFloat(tempInput.value);
@@ -32,36 +27,27 @@ function validateForm(form) {
 }
 
 
-/* =========================================
-   3. 수정 모달 열기
-   ========================================= */
+/* 3. 수정 모달 열기 */
 function openEditModal(row) {
-    // data 속성 읽기
     const no = row.getAttribute('data-no');
     const temp = row.getAttribute('data-temp');
     const date = row.getAttribute('data-date');
     const memo = row.getAttribute('data-memo');
 
-    // 폼에 값 채우기
     document.getElementById('edit_heatNo').value = no;
     document.getElementById('edit_temperature').value = temp;
     document.getElementById('edit_memo').value = memo;
 
-    // 날짜 설정
     if (date) editPicker.setDate(date);
 
-    // 부트스트랩 모달 띄우기
     new bootstrap.Modal(document.getElementById('editModal')).show();
 }
 
 
-/* =========================================
-   4. 차트 그리기 (가독성 개선: 흰 배경 대응)
-   ========================================= */
+/* 4. 차트 */
 function renderHeatChart(labels, dataPoints) {
     const ctx = document.getElementById('tempChart').getContext('2d');
 
-    // 동적 Y축 최대값
     let maxTemp = 40;
     if (dataPoints.length > 0) {
         const dataMax = Math.max(...dataPoints);
@@ -70,7 +56,6 @@ function renderHeatChart(labels, dataPoints) {
         }
     }
 
-    // [플러그인] 배경 색상 밴드
     const temperatureBands = {
         id: 'temperatureBands',
         beforeDraw(chart) {
@@ -81,10 +66,10 @@ function renderHeatChart(labels, dataPoints) {
             const right = chartArea.right;
 
             const bands = [
-                { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.1)' }, // 아주 연한 회색
-                { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.15)' }, // 연한 주황
-                { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.15)' }, // 연한 빨강
-                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.15)' } // 연한 보라
+                { min: 35.0, max: 36.0, color: 'rgba(148,163,184,0.1)' },
+                { min: 37.3, max: 38.0, color: 'rgba(253,186,116,0.15)' },
+                { min: 38.0, max: 39.0, color: 'rgba(252,165,165,0.15)' },
+                { min: 39.0, max: maxTemp + 2, color: 'rgba(216,180,254,0.15)' }
             ];
 
             ctx.save();
@@ -100,7 +85,6 @@ function renderHeatChart(labels, dataPoints) {
         }
     };
 
-    // [플러그인] 오른쪽 라벨
     const temperatureRightLabels = {
         id: 'temperatureRightLabels',
         afterDraw(chart) {
@@ -143,16 +127,16 @@ function renderHeatChart(labels, dataPoints) {
             datasets: [
                 {
                     data: dataPoints,
-                    borderColor: '#7f1d1d', // 선 색상: 진한 빨강
+                    borderColor: '#7f1d1d',
                     borderWidth: 2,
-                    tension: 0.1, // 약간 부드럽게
+                    tension: 0.1,
                     fill: false,
                     pointRadius: 4,
-                    pointBackgroundColor: '#ffffff', // 포인트 내부 흰색
-                    pointBorderColor: '#7f1d1d',     // 포인트 테두리
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#7f1d1d',
                     pointBorderWidth: 2
                 },
-                // 기준선 (점선)
+                // 기준선
                 { data: labels.map(() => 37.3), borderColor: '#f97316', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
                 { data: labels.map(() => 38.0), borderColor: '#ef4444', borderWidth: 1, pointRadius: 0, borderDash: [5,5] },
                 { data: labels.map(() => 39.0), borderColor: '#7e22ce', borderWidth: 1, pointRadius: 0, borderDash: [5,5] }
@@ -168,16 +152,16 @@ function renderHeatChart(labels, dataPoints) {
                     max: maxTemp,
                     ticks: {
                         stepSize: 0.5,
-                        color: '#64748b', // [중요] 눈금 글씨색 진하게
+                        color: '#64748b',
                         font: { family: 'Pretendard', size: 11 }
                     },
-                    grid: { color: '#e2e8f0' } // 격자 선 연하게
+                    grid: { color: '#e2e8f0' }
                 },
                 x: {
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 6,
-                        color: '#64748b', // [중요] 날짜 글씨색 진하게
+                        color: '#64748b',
                         font: { family: 'Pretendard', size: 11 }
                     },
                     grid: { display: false }

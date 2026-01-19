@@ -20,14 +20,14 @@ public class ChildController {
         return (pk != null) ? Long.valueOf(String.valueOf(pk)) : null;
     }
 
-    // 1. 추가 화면 (파일명: childAddForm.jsp 로 확정)
+    // 1. 아이 추가 화면
     @GetMapping("/add")
     public String addChildForm(HttpSession session) {
         if (getUserPk(session) == null) return "redirect:/Nologin";
         return "child/childAddForm";
     }
 
-    // 2. 저장 실행
+    // 2. 저장 및 실행
     @PostMapping("/add")
     public String addChild(ChildDTO dto, HttpSession session) {
         Long mno = getUserPk(session);
@@ -35,7 +35,6 @@ public class ChildController {
 
         dto.setMno(mno);
 
-        // DTO 이름이 childName으로 바뀌었으니 자동으로 매핑됨
         childService.insertChild(dto);
 
         return "redirect:/heat/select";
@@ -49,24 +48,22 @@ public class ChildController {
         return "child/childAddForm";
     }
 
-    // 4. 수정 실행
+    // 4. 수정 및 실행
     @PostMapping("/update")
     public String updateChild(ChildDTO dto, HttpSession session) {
         if (getUserPk(session) == null) return "redirect:/Nologin";
         childService.updateChild(dto);
         return "redirect:/heat/select";
     }
-    // ★★★ [추가] 삭제 요청 처리 메서드 ★★★
+
+    // 5. 삭제
     @GetMapping("/delete")
     public String deleteChild(@RequestParam("childId") Integer childId, HttpSession session) {
-        // 1. 로그인 체크
         Object userPk = session.getAttribute("userPk");
         if (userPk == null) return "redirect:/Nologin";
 
-        // 2. 서비스 호출 (삭제)
         childService.deleteChild(childId);
 
-        // 3. 삭제 후 다시 대상 선택 화면으로
         return "redirect:/heat/select";
     }
 }

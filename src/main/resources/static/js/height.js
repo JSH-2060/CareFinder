@@ -14,7 +14,7 @@ function openHeightEditModal(id, height, date) {
     modal.show();
 }
 
-// 키 입력 모달: 최근 키 자동 세팅
+// 키 입력 모달
 const heightModal = document.getElementById('heightModal');
 if (heightModal) {
     heightModal.addEventListener('show.bs.modal', function () {
@@ -28,10 +28,10 @@ if (heightModal) {
 }
 document.addEventListener("DOMContentLoaded", function() {
     flatpickr(".datepicker", {
-        enableTime: true,       // 시간 선택 활성화
-        dateFormat: "Y-m-d", // 날짜 형식 (예: 2026-01-16 14:47)
-        time_24hr: true,        // 24시간제 사용
-        locale: "ko",           // 한국어 설정
-        defaultDate: new Date() // 기본값: 현재 시간
+        enableTime: true,
+        dateFormat: "Y-m-d",
+        time_24hr: true,
+        locale: "ko",
+        defaultDate: new Date()
     });
 });

@@ -42,7 +42,6 @@ function connectChatbotToggle() {
         return;
     }
 
-    // 예비용 로직: 일반적인 ID를 찾아 토글
     const chatContainer = document.getElementById('chat-container') ||
         document.getElementById('chatbot-container') ||
         document.querySelector('.chat-window');

@@ -20,7 +20,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsKey}&libraries=places,geometry"></script>
 
     <script>
-        // 전역 변수 설정
+        // 전역 변수
         const KAKAO_REST_API_KEY = "${kakaoRestKey}";
         const TMAP_APP_KEY = "${tmapAppKey}";
         window.KAKAO_REST_API_KEY = "${kakaoRestKey}";
@@ -99,7 +99,7 @@
 
 <div class="address-modal" id="addressModal">
     <div class="address-modal-content">
-        <h2>📍 위치를 설정해주세요</h2>
+        <h2>위치를 설정해주세요</h2>
         <p>위치 권한이 거부되었습니다. 주소를 검색하여 위치를 설정하세요.</p>
 
         <div class="address-input-wrap">
@@ -111,7 +111,7 @@
         <div class="address-results" id="addressResults"></div>
 
         <button class="retry-location-btn" onclick="retryLocation()">
-            🔄 위치 권한 다시 요청
+            위치 권한 다시 요청
         </button>
     </div>
 </div>
@@ -388,9 +388,13 @@
                             '<div class="place-item-main">' +
                             '<div class="place-name">' + esc(place.place_name) + '</div>' +
                             '<div class="place-meta">' +
+                            '<div class="meta-top">' +
                             '<span class="distance">' + distText + '</span>' +
                             '<span class="list-open-badge" data-open-badge>확인중...</span>' +
-                            esc(place.road_address_name || place.address_name) +
+                            '</div>' +
+                            '<div class="meta-address">' +
+                                esc(place.road_address_name || place.address_name) +
+                            '</div>' +
                             '</div>' +
                             '</div>' +
                             '<span class="accordion-chevron">▼</span>' +

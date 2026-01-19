@@ -53,10 +53,10 @@
     </delete>
 
     <update id="update">
-        UPDATE vaccine SET
-                           vaccineName = #{vaccineName},
-                           chasu = #{chasu},
-                           inoculationDate = #{inoculationDate}
+        UPDATE vaccine
+        SET vaccineName     = #{vaccineName},
+            chasu           = #{chasu},
+            inoculationDate = #{inoculationDate}
         WHERE vaccineNo = #{vaccineNo}
     </update>
 

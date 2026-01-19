@@ -15,28 +15,29 @@ public class HeatService {
 
     private final HeatDAO heatDAO;
 
-    // [1] 자녀 목록 조회 (상단 프로필바용)
+    // 1. 자녀 목록 조회
     public List<ChildDTO> getChildList(Long mno) {
         return heatDAO.selectChildList(mno);
     }
 
-    // [2] 체온 기록 조회 (특정 자녀 or 본인)
+    // 2. 체온 기록 조회 (자녀 or 본인)
     public List<HeatDTO> getHeatListByChild(Long mno, Integer childId) {
         return heatDAO.selectByChild(mno, childId);
     }
 
-    // [3] 체온 기록 저장
+    // 3. 체온 기록 저장
     @Transactional
     public void insertHeat(HeatDTO dto) {
         heatDAO.insertHeat(dto);
     }
 
-    // [4] 체온 기록 삭제
+    // 4. 체온 기록 삭제
     @Transactional
     public void deleteHeat(Long heatNo) {
         heatDAO.deleteHeat(heatNo);
     }
 
+    // 5. 업데이트
     @Transactional
     public void updateHeat(HeatDTO dto) {
         if (dto.getChildId() != null && dto.getChildId() == 0) {

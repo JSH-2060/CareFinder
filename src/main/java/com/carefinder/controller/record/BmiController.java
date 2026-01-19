@@ -20,17 +20,17 @@ public class BmiController {
 
     private final BmiService bmiService;
 
-    // ==========================
-    // 공통: 로그인 PK
-    // ==========================
+
+    // 로그인 PK
+
     private Long getUserPk(HttpSession session) {
         Object pk = session.getAttribute("userPk");
         return (pk != null) ? Long.valueOf(String.valueOf(pk)) : null;
     }
 
-    // ==========================
-    // 1. BMI 목록
-    // ==========================
+
+    // BMI 목록
+
     @GetMapping("/list")
     public String bmiList(
             @RequestParam(value = "childId", required = false) Integer childId,
@@ -76,9 +76,7 @@ public class BmiController {
         return "bmi/bmiList";
     }
 
-    // ==========================
-    // 2. BMI 저장
-    // ==========================
+    // BMI 저장
     @PostMapping("/insert")
     public String bmiInsert(
             BmiDTO dto,
@@ -107,9 +105,7 @@ public class BmiController {
         return "redirect:/bmi/list";
     }
 
-    // ==========================
-    // 3. BMI 수정
-    // ==========================
+    // BMI 수정
     @PostMapping("/update")
     public String updateBmi(
             BmiDTO dto,
@@ -129,9 +125,8 @@ public class BmiController {
         return "redirect:/bmi/list";
     }
 
-    // ==========================
-    // 4. BMI 삭제
-    // ==========================
+    // BMI 삭제
+
     @PostMapping("/delete")
     public String deleteBmi(
             @RequestParam("bmiNo") Long bmiNo,
@@ -150,9 +145,9 @@ public class BmiController {
 
         return "redirect:/bmi/list";
     }
-    // ==========================
-    // 7. 대상 선택 (Height 방식 재사용)
-    // ==========================
+
+    // 대상 선택
+
     @GetMapping("/select")
     public String select(HttpSession session, Model model) {
 
@@ -161,7 +156,6 @@ public class BmiController {
 
         model.addAttribute("childList", bmiService.getChildList(mno));
 
-        // ★ JSP에 bmi 모드 전달
         model.addAttribute("mode", "bmi");
 
         return "heat/childSelect";

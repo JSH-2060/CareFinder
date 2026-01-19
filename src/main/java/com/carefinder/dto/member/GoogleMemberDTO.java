@@ -15,7 +15,7 @@ public class GoogleMemberDTO {
     private String name;
     private String email;
 
-    private String googleId;   // ⭐ 추가
+    private String googleId;
     private String kakaoId;
     private String naverId;
 
@@ -24,5 +24,5 @@ public class GoogleMemberDTO {
     private String phonenumber;
     private String birth;
 
-    // getter / setter
+
 }
