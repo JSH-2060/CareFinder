@@ -34,7 +34,6 @@ public class DrugController {
         return "drug/drugs";
     }
 
-    // 기존 이름 검색 API (e약은요 API)
     @GetMapping({"/drug/search"})
     @ResponseBody
     public List<Map<String, Object>> searchDrug(@RequestParam("name") String name) {
@@ -77,7 +76,6 @@ public class DrugController {
         return result;
     }
 
-    // 모양으로 검색 API (30개 찾으면 조기 종료)
     @GetMapping({"/drug/searchByShape"})
     @ResponseBody
     public List<Map<String, Object>> searchByShape(
@@ -123,7 +121,6 @@ public class DrugController {
 
                 if (items != null && items.isArray()) {
                     for (JsonNode item : items) {
-                        // 필터 조건 체크
                         if (!matchesFilter(item, shape, color, print)) {
                             continue;
                         }
@@ -147,7 +144,6 @@ public class DrugController {
                         drug.put("formCodeName", getJsonValue(item, "FORM_CODE_NAME"));
                         result.add(drug);
 
-                        // 30개 찾으면 즉시 종료
                         if (result.size() >= MAX_RESULTS) {
                             break outerLoop;
                         }
@@ -162,9 +158,7 @@ public class DrugController {
         return result;
     }
 
-    // 필터 매칭 메서드
     private boolean matchesFilter(JsonNode item, String shape, String color, String print) {
-        // 모양 필터
         if (shape != null && !shape.isEmpty()) {
             String drugShape = getJsonValue(item, "DRUG_SHAPE");
             if (drugShape == null || !drugShape.equals(shape)) {
@@ -172,7 +166,6 @@ public class DrugController {
             }
         }
 
-        // 색상 필터
         if (color != null && !color.isEmpty()) {
             String color1 = getJsonValue(item, "COLOR_CLASS1");
             String color2 = getJsonValue(item, "COLOR_CLASS2");
@@ -183,7 +176,6 @@ public class DrugController {
             }
         }
 
-        // 각인 필터
         if (print != null && !print.isEmpty()) {
             String printUpper = print.toUpperCase();
             String front = getJsonValue(item, "PRINT_FRONT");

@@ -13,23 +13,20 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <%-- 1. 카카오 맵 API --%>
+    <%--  카카오 맵 api --%>
     <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapsKey}&libraries=services"></script>
 
-    <%-- 2. 구글 맵 API --%>
+    <%-- 구글 맵 api --%>
     <script src="https://maps.googleapis.com/maps/api/js?key=${googleMapsKey}&libraries=places,geometry"></script>
 
     <script>
         // 전역 변수 설정
         const KAKAO_REST_API_KEY = "${kakaoRestKey}";
         const TMAP_APP_KEY = "${tmapAppKey}";
-
-        // window 객체에도 설정
         window.KAKAO_REST_API_KEY = "${kakaoRestKey}";
         window.TMAP_APP_KEY = "${tmapAppKey}";
     </script>
 
-    <%-- 3. 커스텀 JS 파일들 --%>
     <script src="<c:url value='/js/route.js'/>"></script>
     <script src="<c:url value='/js/marker.js'/>"></script>
 
@@ -51,16 +48,14 @@
         <ul id="placeList"></ul>
     </div>
 
-    <!-- ✅ 리스트 접기/펼치기 버튼 -->
+    <!-- 리스트 접기/펼치기 버튼 -->
     <button id="listToggleBtn" class="list-toggle-btn">❮</button>
 
     <div id="map">
-        <!-- ✅ 홈 버튼 -->
         <button class="home-btn" onclick="location.href='/'" title="메인으로 돌아가기">
             🏠
         </button>
 
-        <!-- ✅ 내 위치로 돌아가기 버튼 -->
         <button class="my-location-btn" id="myLocationBtn" title="내 위치로 이동">
             <img src="/img/UserLocation.png" alt="내 위치">
         </button>
@@ -82,7 +77,7 @@
     </div>
 </div>
 
-<!-- ✅ 하단 상세정보 카드 (영업시간 아코디언 제거됨) -->
+<%-- 하단 상세정보 카드 --%>
 <div id="detailCard">
     <div class="detail-card-inner">
         <div class="detail-info-section">
@@ -122,44 +117,34 @@
 </div>
 
 <script>
-    /* =========================
-       1. 초기 설정 및 모드 파악
-    ========================= */
+    <%-- 병원 종류 선택 --%>
     const mode = new URLSearchParams(location.search).get("mode") || "vet";
-
-    // ✅ 팀원 기능 추가: 진료과목별 병원 검색
     const hospitalType = new URLSearchParams(location.search).get("type");
 
     let titleByMode = (mode === "hospital") ? "일반병원" :
         (mode === "emergency") ? "응급실" :
             (mode === "pharmacy") ? "약국" : "동물병원";
 
-    // ✅ 팀원 기능: 진료과목이 선택된 경우 제목 변경
     if (hospitalType) titleByMode = hospitalType;
 
     document.title = "내 주변 " + titleByMode;
     document.getElementById("listTitle").textContent = titleByMode;
 
-    /* =========================
-       2. 지도 생성 및 모듈 초기화
-    ========================= */
+    // 지도 생성및 검색 초기화
     const map = new kakao.maps.Map(document.getElementById("map"), {
         center: new kakao.maps.LatLng(37.5665, 126.9780),
         level: 3
     });
 
-    // marker.js 모듈 초기화
     window.onload = () => {
         if(window.markerModule) window.markerModule.initMarkerModule(map);
     };
 
-    /* =========================
-       3. 마커 이미지 설정
-    ========================= */
+    // 마커 이미지
     const myMarker = new kakao.maps.Marker({
         map,
         image: new kakao.maps.MarkerImage("/img/UserLocation.png", new kakao.maps.Size(40, 44), { offset: new kakao.maps.Point(18, 40) }),
-        zIndex: 1000  // ✅ 내 위치 마커는 항상 최상단
+        zIndex: 1000
     });
 
     let markerImg = "/img/AnimalHosLocation.png";
@@ -169,12 +154,9 @@
 
     const placeMarkerImage = new kakao.maps.MarkerImage(markerImg, new kakao.maps.Size(40, 44), { offset: new kakao.maps.Point(16, 32) });
 
-    /* =========================
-       4. 공통 변수 및 유틸리티
-    ========================= */
     let myPos = null;
     let rangeCircle = null;
-    // 모드별 기본 반경 설정
+    // 모드별 기본 반경 설정 : 일반 1km, 응급실 3km, 약국 500m
     let currentRadius = (mode === "emergency") ? 3000 :
         (mode === "pharmacy") ? 500 : 1000;
 
@@ -195,18 +177,16 @@
         resultMarkers = [];
         placeListEl.innerHTML = "";
         placeResults.length = 0;
-        currentOpenAccordion = null;  // ✅ 아코디언 상태 초기화
+        currentOpenAccordion = null;
         if (rangeCircle) rangeCircle.setMap(null);
         if (window.markerModule) window.markerModule.clearAllMarkers();
         if (window.routeModule) window.routeModule.clearAllLayers();
     }
 
-    // ✅ 아코디언 토글 함수
     function toggleAccordion(li, place) {
         const accordionContent = li.querySelector('.list-accordion-content');
         const chevron = li.querySelector('.accordion-chevron');
 
-        // 이미 열려있는 다른 아코디언 닫기
         if (currentOpenAccordion && currentOpenAccordion !== li) {
             const prevContent = currentOpenAccordion.querySelector('.list-accordion-content');
             const prevChevron = currentOpenAccordion.querySelector('.accordion-chevron');
@@ -217,7 +197,6 @@
             if (prevChevron) prevChevron.classList.remove('open');
         }
 
-        // 현재 아코디언 토글
         if (accordionContent) {
             const isOpen = accordionContent.classList.toggle('open');
             li.classList.toggle('accordion-open', isOpen);
@@ -225,7 +204,6 @@
 
             currentOpenAccordion = isOpen ? li : null;
 
-            // 영업시간 로드 (아직 로드되지 않은 경우)
             if (isOpen) {
                 const hoursEl = accordionContent.querySelector('.accordion-hours');
                 if (hoursEl && hoursEl.textContent === '불러오는 중...') {
@@ -235,7 +213,7 @@
         }
     }
 
-    // ✅ 영업시간 로드 함수
+    // 영업시간 로드 함수
     function loadOpeningHours(place, hoursEl) {
         if (typeof window.fetchGoogleDetail !== 'function') {
             hoursEl.textContent = '영업시간 정보를 불러올 수 없습니다.';
@@ -272,15 +250,11 @@
             return a.distance - b.distance;
         });
 
-        // DOM 업데이트
         placeListEl.innerHTML = '';
         placeResults.forEach(item => {
             placeListEl.appendChild(item.li);
         });
 
-        /* ==========================================================
-       🔥 [추가] 가장 가까운 병원 자동 클릭 (AI 검색 유입 시)
-        ========================================================== */
         const isFromAiSearch = sessionStorage.getItem("isAiSearch") === "true";
 
         if (isFromAiSearch && placeResults.length > 0) {
@@ -293,9 +267,7 @@
         }
     }
 
-    /* =========================
-       5. 반경 드롭다운 로직
-    ========================= */
+    // 반경 드롭다운 선택 가능
     const radiusDropdown = document.getElementById('radiusDropdown');
     const radiusToggle = document.getElementById('radiusToggle');
     const radiusOptions = document.querySelectorAll('.radius-option');
@@ -316,19 +288,16 @@
             if (myPos) searchWithinRadiusByMode(false, true);
         });
     });
-    // 페이지 로드 시 초기값 반영
     updateRadiusUI(currentRadius);
 
-    // 외부 클릭 시 드롭다운 닫기
+    // 지도 빈 곳 클릭 시 드롭다운 닫기
     document.addEventListener('click', (e) => {
         if (!radiusDropdown.contains(e.target)) {
             radiusDropdown.classList.remove('open');
         }
     });
 
-    /* =========================
-       ✅ 내 위치로 돌아가기 버튼
-    ========================= */
+    // 내 위치로 버튼
     document.getElementById('myLocationBtn').addEventListener('click', () => {
         if (myPos) {
             map.panTo(myPos);
@@ -352,9 +321,7 @@
         }
     });
 
-    /* =========================
-       6. 장소 검색 및 결과 표시
-    ========================= */
+    // 장소 검색 및 결과 표시
     const addedIds = new Set();
     const radiusSteps = [300, 500, 1000, 2000, 3000];
     let userSelectedRadius = false;
@@ -411,11 +378,9 @@
                         const marker = new kakao.maps.Marker({ map, position: pos, image: placeMarkerImage });
                         resultMarkers.push(marker);
 
-                        // 거리 계산 및 리스트 아이템 생성
                         const dist = window.markerModule ? window.markerModule.calculateDistance(myPos, pos) : place.distance;
                         const distText = window.markerModule ? window.markerModule.formatDistance(dist) : (place.distance + 'm');
 
-                        // ✅ 새로운 리스트 아이템 구조 (아코디언 포함)
                         const li = document.createElement("li");
                         li.className = "place-item";
                         li.innerHTML =
@@ -439,7 +404,6 @@
 
                         placeListEl.appendChild(li);
 
-                        // 정렬용 배열에 저장
                         const placeItem = {
                             place,
                             li,
@@ -450,7 +414,6 @@
 
                         placeResults.push(placeItem);
 
-                        // 영업 상태 뱃지 업데이트
                         const badgeEl = li.querySelector("[data-open-badge]");
                         if (badgeEl && typeof window.fetchGoogleDetail === 'function') {
                             window.fetchGoogleDetail(
@@ -485,19 +448,15 @@
                             );
                         }
 
-                        // ✅ 이벤트 연결 (헤더 클릭 시 상세카드 + 아코디언)
                         const headerEl = li.querySelector('.place-item-header');
 
                         const openDetail = () => {
                             if (!window.markerModule) return;
 
-                            // 기존 길찾기 경로 제거
                             if (window.clearRoute) window.clearRoute();
 
-                            // 이전 선택으로 숨겨진 마커들 복원
                             window.markerModule.showAllMarkers(resultMarkers);
 
-                            // 상세 카드 갱신 (영업시간 제외)
                             window.markerModule.showDetailCard(
                                 place,
                                 map,
@@ -505,17 +464,13 @@
                                 distText
                             );
 
-                            // 선택 마커는 반드시 다시 보이게
                             marker.setVisible(true);
 
-                            // 마커 확대 + 나머지 숨김
                             window.markerModule.enlargeMarker(marker, markerImg);
                             window.markerModule.hideOtherMarkers(marker, resultMarkers);
 
-                            // 지도 이동
                             map.panTo(pos);
 
-                            // ✅ 아코디언 토글
                             toggleAccordion(li, place);
                         };
 
@@ -566,9 +521,7 @@
         runSearch();
     }
 
-    /* =========================
-       7. 위치 정보 획득
-    ========================= */
+    // 위치 정보
     window.selectAddress = (lat, lng) => {
         myPos = new kakao.maps.LatLng(lat, lng);
         map.setCenter(myPos); myMarker.setPosition(myPos);
@@ -591,9 +544,7 @@
     }
     requestLocation();
 
-    /* =========================
-       8. 주소 검색 (위치 권한 거부 시)
-    ========================= */
+    // 위치 정보 권한 거부 시에 주소 검색
     function searchAddress() {
         const input = document.getElementById('addressInput');
         const keyword = input.value.trim();
@@ -630,9 +581,6 @@
         requestLocation();
     }
 
-    /* =========================
-       9. 길찾기 버튼 이벤트
-    ========================= */
     document.addEventListener("DOMContentLoaded", function() {
         const walkBtn = document.getElementById("cardWalkBtn");
         if (walkBtn) {
@@ -655,16 +603,12 @@
         }
     });
 
-    /* =========================
-       ✅ Google Places 서비스
-    ========================= */
+    // 구글 places 서비스
     const googleService = new google.maps.places.PlacesService(
         document.createElement("div")
     );
 
-    /* =========================
-       ✅ Google 운영시간 조회
-    ========================= */
+    // 구글에서 가져온 영업시간 정보
     function fetchGoogleDetail(placeName, lat, lng, callback) {
         const location = new google.maps.LatLng(lat, lng);
 
@@ -703,9 +647,7 @@
     console.log("map element:", document.getElementById("map"));
     console.log("map height:", document.getElementById("map")?.offsetHeight);
 
-    /* =========================
-       리스트 접기 / 펼치기
-    ========================= */
+    // 리스트 펼치기/접기
     const listPanel = document.getElementById("listPanel");
     const listToggleBtn = document.getElementById("listToggleBtn");
 
@@ -714,16 +656,13 @@
         listToggleBtn.textContent = isClosed ? "❯" : "❮";
     });
 
-    /* =========================
-        ✅ 지도 클릭 시 상세 카드 닫기 + 아코디언 닫기 + 모든 마커 복원
-    ========================= */
+    // 지도 빈 곳 클릭 시 상세 정보창 닫기
     kakao.maps.event.addListener(map, 'click', function () {
         if (window.markerModule) {
             window.markerModule.closeDetailCard();
             window.markerModule.showAllMarkers(resultMarkers);
         }
 
-        // ✅ 열린 아코디언 닫기
         if (currentOpenAccordion) {
             const content = currentOpenAccordion.querySelector('.list-accordion-content');
             const chevron = currentOpenAccordion.querySelector('.accordion-chevron');
