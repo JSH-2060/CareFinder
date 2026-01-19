@@ -106,9 +106,7 @@
             )
     </insert>
 
-    <!-- ==========================
-         키 기록 수정
-         ========================== -->
+    <!-- 키 기록 수정-->
     <update id="update">
         UPDATE height_record
         SET
@@ -117,18 +115,13 @@
         WHERE heightId = #{heightId}
     </update>
 
-    <!-- ==========================
-         키 기록 삭제
-         ========================== -->
+    <!-- 키 기록 삭제 -->
     <delete id="delete">
         DELETE FROM height_record
         WHERE heightId = #{heightId}
     </delete>
 
-    <!-- ==========================
-         자녀 목록 (childSelect 용)
-         child 테이블 camelCase 기준
-         ========================== -->
+    <!-- 자녀 목록 -->
     <select id="getChildList" resultType="com.carefinder.dto.child.ChildDTO">
         SELECT
             childId,
