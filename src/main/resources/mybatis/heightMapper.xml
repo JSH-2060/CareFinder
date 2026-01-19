@@ -5,9 +5,7 @@
 
 <mapper namespace="com.carefinder.dao.height.HeightDAO">
 
-    <!-- ==========================
-         키 목록 조회 (자녀 기준)
-         ========================== -->
+    <!-- 키 목록 조회 (자녀 기준) -->
     <select id="findByChildId"
             resultType="com.carefinder.dto.height.HeightDTO">
         SELECT
@@ -23,9 +21,7 @@
         ORDER BY recordDate DESC
     </select>
 
-    <!-- ==========================
-         키 단건 조회 (수정용)
-         ========================== -->
+    <!-- 키 단건 조회 (수정용) -->
     <select id="findById" resultType="com.carefinder.dto.height.HeightDTO">
         SELECT
             heightId,
@@ -37,10 +33,7 @@
         WHERE heightId = #{heightId}
     </select>
 
-    <!-- ==========================
-     키 목록 조회 (본인 기준)
-     childId IS NULL
-     ========================== -->
+    <!-- 키 목록 조회 (본인 기준) -->
     <select id="findByMno"
             parameterType="long"
             resultType="com.carefinder.dto.height.HeightDTO">
@@ -95,9 +88,7 @@
         ORDER BY recordDate DESC
     </select>
 
-    <!-- ==========================
-         키 기록 추가
-         ========================== -->
+    <!-- 키 기록 추가 -->
     <insert id="insert">
         INSERT INTO height_record
         (
