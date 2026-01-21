@@ -40,7 +40,7 @@ public class DrugController {
         List<Map<String, Object>> result = new ArrayList<>();
 
         try {
-            String urlStr = "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList"
+            String urlStr = "https://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList"
                     + "?serviceKey=" + SERVICE_KEY
                     + "&itemName=" + URLEncoder.encode(name, "UTF-8")
                     + "&numOfRows=10&pageNo=1";

@@ -20,12 +20,6 @@ public class MapController {
     @Value("${tmap.app-key}")
     private String tmapAppKey;
 
-    // ❌ 이 메서드 삭제 - MainController와 충돌
-    // @GetMapping("/")
-    // public String index() {
-    //     return "index";
-    // }
-
     @GetMapping("/map")
     public String map(Model model) {
         model.addAttribute("kakaoMapsKey", kakaoMapsKey);
