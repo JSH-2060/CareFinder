@@ -77,7 +77,7 @@ public class KakaoApi {
         return accessToken;
     }
 
-    //사용자 정보 전부 가져오기 null safe
+    //사용자 정보 전부 가져오기
     public HashMap<String, Object> getUserInfo(String accessToken) {
         HashMap<String, Object> userInfo = new HashMap<>();
         String reqUrl = "https://kapi.kakao.com/v2/user/me";

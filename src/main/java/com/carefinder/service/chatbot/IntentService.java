@@ -66,7 +66,7 @@ public class IntentService {
                 .path("message").path("content").asText();
         String intent = mapper.readTree(content).path("intent").asText("ETC");
 
-        // 확인용
+
         System.out.println("DETECTED INTENT = " + intent);
 
         //intent 반환

@@ -38,19 +38,12 @@ public class KakaoController {
 
         MemberKakaoDTO member = memberService.kakaoLogin(kakaoUser);
 
-        //세션 구조 통일
+        //세션
         session.setAttribute("userPk", member.getMno()); // PK 저장
         session.setAttribute("loginUser", member);       // DTO 전체 저장
 
-        // ★ [핵심 수정] 이 줄이 없어서 이름이 안 나왔던 겁니다! ★
-        // (DTO에 이름 필드가 name인지 nickname인지 확인하세요. 보통 KakaoDTO는 nickname일 수 있습니다)
-        // 만약 DTO에 getName()이 있다면:
         session.setAttribute("userName", member.getName());
 
-        // 만약 DTO에 getNickname()이라면:
-        // session.setAttribute("userName", member.getNickname());
-
-        // 로그인 타입도 명시해주면 좋습니다 (JSP에서 괄호 안에 넣는 용도)
         session.setAttribute("loginType", "KAKAO");
 
         return "redirect:/";
