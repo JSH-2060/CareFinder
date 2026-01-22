@@ -128,10 +128,7 @@
         </div>
     </div>
 </div>
-<%----------------------------------------------짭봇 -------------------------------------%>
-<button class="chatbot-toggle-btn" id="floatingChatbotBtn" onclick="connectChatbotToggle()">
-    <i class="fa-solid fa-robot"></i>
-</button>
+
 
 <div id="hospitalModal" class="modal">
     <div class="modal-content">
