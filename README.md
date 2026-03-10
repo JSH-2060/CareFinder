@@ -89,11 +89,6 @@ CareFinder는 이러한 불편함을 줄이고, 사용자가 건강과 관련된
 - 개인 건강 기록과 연계 가능한 구조
 - 향후 AI 추천 기능 확장 가능
 
----
 
-## 4. 설치 방법
 
-### 1) 저장소 클론
-```bash
-git clone https://github.com/JSH-2060/CareFinder.git
-cd CareFinder
+
